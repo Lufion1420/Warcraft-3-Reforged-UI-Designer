@@ -60,6 +60,8 @@ export function MouseFunctions(div: CustomComplex): void {
                 posY1 = e.clientY
 
                 debugText('drag')
+                let movedX = false
+                let movedY = false
                 if (
                     ((div.getElement().offsetLeft - posX2 - (workspaceImage.getBoundingClientRect().x + actualMargin)) / workspaceImage.offsetWidth) * 800 >=
                         0 &&
@@ -69,6 +71,7 @@ export function MouseFunctions(div: CustomComplex): void {
                         800
                 ) {
                     div.getElement().style.left = `${div.getElement().offsetLeft - posX2}px`
+                    movedX = true
                 }
 
                 if (
@@ -76,8 +79,26 @@ export function MouseFunctions(div: CustomComplex): void {
                     workspaceImage.getBoundingClientRect().top - (div.getElement().getBoundingClientRect().top - posY2) <= 0
                 ) {
                     div.getElement().style.top = `${div.getElement().offsetTop - posY2}px`
+                    movedY = true
                 }
                 inputElementsUpdate(div, { x: true, y: true })
+                // Move linked children with the same delta
+                if ((movedX || movedY) && frame) {
+                    const dxPx = movedX ? -posX2 : 0
+                    const dyPx = movedY ? -posY2 : 0
+                    const rect = Editor.getInstance().workspaceImage.getBoundingClientRect()
+                    const horizontalMarginInner = EditorController.getInnerMargin()
+                    const dxCoord = (dxPx * 800) / (rect.width - 2 * horizontalMarginInner)
+                    const dyCoord = (-dyPx * 600) / rect.height
+                    for (const child of frame.getChildren()) {
+                        if (!child.custom.getLinkToParent()) continue
+                        const el = child.custom.getElement()
+                        if (movedX) el.style.left = `${el.offsetLeft + dxPx}px`
+                        if (movedY) el.style.top = `${el.offsetTop + dyPx}px`
+                        if (movedX) child.custom.setLeftX(child.custom.getLeftX() + dxCoord, true)
+                        if (movedY) child.custom.setBotY(child.custom.getBotY() + dyCoord, true)
+                    }
+                }
                 document.body.style.cursor = 'grabbing'
             }
         } else {

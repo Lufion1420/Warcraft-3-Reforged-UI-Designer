@@ -21,6 +21,7 @@ export class FrameBuilder implements CustomComplexProps {
     textureBackWc3Path = ''
     trigVar = ''
     isRelative = false
+    linkToParent = false
     text = 'Text'
     scale = 1
     color = '#FFCC00'
@@ -84,6 +85,7 @@ export class FrameBuilder implements CustomComplexProps {
             this.textureWc3Path = container.load(CustomComplex.SAVE_KEY_TEXTURE_WC3_PATH)
             this.trigVar = container.load(CustomComplex.SAVE_KEY_TRIGGER_VARIABLE_NAME)
             this.isRelative = container.load(CustomComplex.SAVE_KEY_TRIGGER_IS_RELATIVE)
+            this.linkToParent = container.load(CustomComplex.SAVE_KEY_LINK_TO_PARENT)
             this.textureBackDiskPath = container.load(CustomComplex.SAVE_KEY_TEXTURE_BACK_DISK_PATH)
             this.textureBackWc3Path = container.load(CustomComplex.SAVE_KEY_TEXTURE_BACK_WC3_PATH)
         } catch (e) {
@@ -148,6 +150,7 @@ export class FrameBuilder implements CustomComplexProps {
         frameBuilder.z = frame.custom.getZIndex()
         frameBuilder.trigVar = frame.custom.getTrigVar()
         frameBuilder.isRelative = frame.custom.getIsRelative()
+        frameBuilder.linkToParent = frame.custom.getLinkToParent()
         frameBuilder.textureDiskPath = frame.custom.getDiskTexture('normal')
         frameBuilder.textureWc3Path = frame.custom.getWc3Texture('normal')
         frameBuilder.textureBackDiskPath = frame.custom.getDiskTexture('back')

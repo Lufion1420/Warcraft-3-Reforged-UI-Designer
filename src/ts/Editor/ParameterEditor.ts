@@ -43,6 +43,7 @@ export class ParameterEditor {
     public readonly checkboxElementTooltip = document.getElementById('elementTooltip') as HTMLInputElement
     public readonly checkboxElementBorders = document.getElementById('CheckboxElementBorders') as HTMLInputElement
     public readonly checkboxElementRelative = document.getElementById('relativeCheckbox') as HTMLInputElement
+    public readonly checkboxElementLinkToParent = document.getElementById('linkToParentCheckbox') as HTMLInputElement
     public readonly inputElementWidth = document.getElementById('elementWidth') as HTMLInputElement
     public readonly inputElementHeight = document.getElementById('elementHeight') as HTMLInputElement
     public readonly inputElementCoordinateX = document.getElementById('elementCoordinateX') as HTMLInputElement
@@ -117,6 +118,7 @@ export class ParameterEditor {
         this.checkboxElementTooltip.onchange = ParameterEditor.ChangeTooltip
         this.checkboxElementBorders.onchange = ParameterEditor.HideBorders
         this.checkboxElementRelative.onchange = ParameterEditor.InputIsRelative
+        this.checkboxElementLinkToParent.onchange = ParameterEditor.InputLinkToParent
         this.inputElementCoordinateX.onchange = ParameterEditor.InputCoordinateX
         this.inputElementCoordinateY.onchange = ParameterEditor.InputCoordinateY
         this.inputElementDiskTexture.onchange = (ev) => ParameterEditor.TextInputDiskTexture(ev, 'normal')
@@ -403,6 +405,20 @@ export class ParameterEditor {
         }
     }
 
+    static InputLinkToParent(ev: Event): void {
+        try {
+            const val = (ev.target as HTMLInputElement).checked
+            const selected = ProjectTree.getSelected()
+
+            if (selected) {
+                selected.custom.setLinkToParent(val)
+                debugText(`Link to Parent has been ${val ? 'enabled' : 'disabled'} for this element.`)
+            }
+        } catch (e) {
+            console.log('LinkToParent toggle error: ' + e)
+        }
+    }
+
     static InputCoordinateX(ev: Event): void {
         const loc = (ev.target as HTMLInputElement).value
         const editor = Editor.getInstance()
@@ -667,6 +683,7 @@ export class ParameterEditor {
         this.selectElementParent.value = ''
         this.checkboxElementTooltip.checked = false
         this.checkboxElementRelative.checked = false
+        this.checkboxElementLinkToParent.checked = false
         this.inputElementCoordinateX.value = ''
         this.inputElementCoordinateY.value = ''
         this.inputElementDiskTexture.value = ''
@@ -686,6 +703,7 @@ export class ParameterEditor {
         this.selectElementParent.disabled = disable
         this.checkboxElementTooltip.disabled = disable
         this.checkboxElementRelative.disabled = disable
+        this.checkboxElementLinkToParent.disabled = disable
         this.inputElementCoordinateX.disabled = disable
         this.inputElementCoordinateY.disabled = disable
         this.inputElementDiskTexture.disabled = disable
@@ -1032,6 +1050,7 @@ export class ParameterEditor {
                 this.inputElementCoordinateX.value = frame.custom.getLeftX().toFixed(5)
                 this.inputElementCoordinateY.value = frame.custom.getBotY().toFixed(5)
                 this.checkboxElementTooltip.checked = frame.getTooltip()
+                this.checkboxElementLinkToParent.checked = frame.custom.getLinkToParent()
 
                 this.fieldElement.style.display = 'initial'
                 this.fieldGeneral.style.display = 'none'

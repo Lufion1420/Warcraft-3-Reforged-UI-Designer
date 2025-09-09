@@ -29,7 +29,14 @@ export default class ChangeFrameY extends SimpleCommand {
         }
 
         this.oldY = frame.custom.getBotY()
+        const dy = this.newY - this.oldY
         frame.custom.setBotY(this.newY)
+        if (dy !== 0) {
+            for (const child of frame.getChildren()) {
+                if (!child.custom.getLinkToParent()) continue
+                child.custom.setBotY(child.custom.getBotY() + dy)
+            }
+        }
     }
 
     public undo(): void {

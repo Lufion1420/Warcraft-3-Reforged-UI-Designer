@@ -27,6 +27,7 @@ export default class CustomComplex extends FrameBaseContent implements CustomCom
     public static readonly SAVE_KEY_TEXTURE_BACK_WC3_PATH = 'textureBackWc3Path'
     public static readonly SAVE_KEY_TRIGGER_VARIABLE_NAME = 'trig_var'
     public static readonly SAVE_KEY_TRIGGER_IS_RELATIVE = 'isRelative'
+    public static readonly SAVE_KEY_LINK_TO_PARENT = 'linkToParent'
 
     text = ''
     scale = 1
@@ -39,6 +40,7 @@ export default class CustomComplex extends FrameBaseContent implements CustomCom
     textureBackWc3Path = ''
     trigVar = ''
     isRelative = false
+    linkToParent = false
 
     private elemTextContainer?: HTMLDivElement
     private elemText?: HTMLParagraphElement
@@ -51,6 +53,7 @@ export default class CustomComplex extends FrameBaseContent implements CustomCom
         try {
             if (props) {
                 this.isRelative = props.isRelative
+                if ((props as any).linkToParent !== undefined) this.linkToParent = (props as any).linkToParent as boolean
                 this.specialTypesSetup(props)
             }
 
@@ -225,6 +228,14 @@ export default class CustomComplex extends FrameBaseContent implements CustomCom
         return this.isRelative
     }
 
+    public setLinkToParent(on: boolean): void {
+        this.linkToParent = on
+    }
+
+    public getLinkToParent(): boolean {
+        return this.linkToParent
+    }
+
     public save(container: SaveContainer): void {
         super.save(container)
         container.save(CustomComplex.SAVE_KEY_TEXT, this.text)
@@ -238,6 +249,7 @@ export default class CustomComplex extends FrameBaseContent implements CustomCom
         container.save(CustomComplex.SAVE_KEY_TEXTURE_BACK_DISK_PATH, this.textureBackDiskPath)
         container.save(CustomComplex.SAVE_KEY_TRIGGER_VARIABLE_NAME, this.trigVar)
         container.save(CustomComplex.SAVE_KEY_TRIGGER_IS_RELATIVE, this.isRelative)
+        container.save(CustomComplex.SAVE_KEY_LINK_TO_PARENT, this.linkToParent)
         // container.save(CustomComplex.SAVE_KEY_, this.);
     }
 
@@ -389,4 +401,5 @@ export interface CustomComplexProps {
     textureBackWc3Path: string
     trigVar: string
     isRelative: boolean
+    linkToParent: boolean
 }
