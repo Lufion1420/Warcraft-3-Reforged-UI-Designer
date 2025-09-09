@@ -341,3 +341,11 @@ body {
 .scroll_textarea::-webkit-scrollbar-track {
     background-color: rgb(29, 28, 29);
 }
+/* Highlight selected items in the tree by coloring the bullet (dot) */
+.tree-selected::marker {
+    color: rgba(255, 127, 0, 1);
+}
+/* Ensure a bullet is visible when selected (in case of custom list styles) */
+li.tree-selected {
+    list-style-type: disc;
+}

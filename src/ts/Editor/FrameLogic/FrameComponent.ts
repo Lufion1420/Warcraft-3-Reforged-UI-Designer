@@ -33,6 +33,7 @@ export class FrameComponent implements Saveable {
     parentOption: HTMLOptionElement
     readonly layerDiv: HTMLDivElement
     // private orderInParent = 0;
+    public treeColor?: string
 
     FieldsAllowed: ElementFieldsAllowed = JSON.parse(JSON.stringify(defaultFieldsAllowed))
 
@@ -139,6 +140,24 @@ export class FrameComponent implements Saveable {
 
         this.children.push(frame)
         this.treeElement.append(frame.treeElement)
+
+        // Colorize top-level containers and propagate color to descendants
+        try {
+            const li = frame.treeElement.firstChild as HTMLElement
+            if (this.type === FrameType.ORIGIN) {
+                const palette = ['#4FC3F7', '#9575CD', '#81C784', '#BA68C8', '#64B5F6', '#7986CB', '#4DB6AC', '#AED581', '#A1887F', '#90A4AE']
+                const idx = (this.children.length - 1) % palette.length
+                const color = palette[idx]
+                frame.treeColor = color
+                if (li) {
+                    li.style.color = color
+                    li.style.fontWeight = '600'
+                }
+            } else if (this.treeColor) {
+                frame.treeColor = this.treeColor
+                if (li) li.style.color = this.treeColor
+            }
+        } catch {}
     }
 
     private removeFrame(whatFrame: FrameComponent): boolean {

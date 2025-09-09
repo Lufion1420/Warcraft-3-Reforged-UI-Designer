@@ -219,6 +219,10 @@ export class ProjectTree implements IterableIterator<FrameComponent>, Saveable {
                 let color = ProjectTree.outlineUnSelected
                 if (sel.getTooltip()) color = ProjectTree.outlineUnSelected_Tooltip
                 sel.custom.getElement().style.outlineColor = color
+                // remove tree highlight
+                try {
+                    (sel.treeElement.firstChild as HTMLElement)?.classList.remove('tree-selected')
+                } catch {}
             }
             this.selectedSet.clear()
         }
@@ -235,15 +239,24 @@ export class ProjectTree implements IterableIterator<FrameComponent>, Saveable {
                 let color = ProjectTree.outlineUnSelected
                 if (fc.getTooltip()) color = ProjectTree.outlineUnSelected_Tooltip
                 fc.custom.getElement().style.outlineColor = color
+                try {
+                    (fc.treeElement.firstChild as HTMLElement)?.classList.remove('tree-selected')
+                } catch {}
             } else {
                 this.selectedSet.add(fc)
                 fc.custom.getElement().style.outlineColor = ProjectTree.outlineSelected
                 this.selectedFrame = fc
+                try {
+                    (fc.treeElement.firstChild as HTMLElement)?.classList.add('tree-selected')
+                } catch {}
             }
         } else {
             this.selectedSet.add(fc)
             this.selectedFrame = fc
             fc.custom.getElement().style.outlineColor = ProjectTree.outlineSelected
+            try {
+                (fc.treeElement.firstChild as HTMLElement)?.classList.add('tree-selected')
+            } catch {}
         }
 
         ParameterEditor.getInstance().updateFields(this.selectedFrame)
