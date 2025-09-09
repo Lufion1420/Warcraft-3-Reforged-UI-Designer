@@ -82,8 +82,30 @@ export function MouseFunctions(div: CustomComplex): void {
                     movedY = true
                 }
                 inputElementsUpdate(div, { x: true, y: true })
+
+                // Multi-select: move all selected frames by same delta (ignore hierarchy linking)
+                const selection = ProjectTree.getInstance().getSelectedFrames ? ProjectTree.getInstance().getSelectedFrames() : []
+                const multi = Array.isArray(selection) && selection.length > 1
+                if ((movedX || movedY) && multi) {
+                    const dxPx = movedX ? -posX2 : 0
+                    const dyPx = movedY ? -posY2 : 0
+                    const rect = Editor.getInstance().workspaceImage.getBoundingClientRect()
+                    const horizontalMarginInner = EditorController.getInnerMargin()
+                    const innerWidth = rect.width - 2 * horizontalMarginInner
+                    const dxCoord = (dxPx / innerWidth) * 0.8
+                    const dyCoord = (-dyPx / rect.height) * 0.6
+
+                    for (const sel of selection) {
+                        if (sel === frame) continue
+                        const el = sel.custom.getElement()
+                        if (movedX) el.style.left = `${el.offsetLeft + dxPx}px`
+                        if (movedY) el.style.top = `${el.offsetTop + dyPx}px`
+                        if (movedX) sel.custom.setLeftX(sel.custom.getLeftX() + dxCoord, true)
+                        if (movedY) sel.custom.setBotY(sel.custom.getBotY() + dyCoord, true)
+                    }
+                }
                 // Move linked descendants with the same delta when parent is linked
-                if ((movedX || movedY) && frame && frame.custom.getLinkChildren()) {
+                if ((movedX || movedY) && frame && frame.custom.getLinkChildren() && !multi) {
                     const dxPx = movedX ? -posX2 : 0
                     const dyPx = movedY ? -posY2 : 0
                     const rect = Editor.getInstance().workspaceImage.getBoundingClientRect()
@@ -358,18 +380,42 @@ export function MouseFunctions(div: CustomComplex): void {
             GUIEvents.isInteracting = false
             document.body.style.cursor = 'default'
 
-            if (startingX == div.getLeftX() && startingY == div.getBotY() && startingHeight == div.getHeight() && startingWidth == div.getWidth()) {
-                return
-                //Aka nothing has happened, user just did a selection, not undoing that shit, bye bye.
-            }
+            const selection = ProjectTree.getInstance().getSelectedFrames ? ProjectTree.getInstance().getSelectedFrames() : []
+            const multi = Array.isArray(selection) && selection.length > 1
 
-            const command = new MoveFrame(frame, div.getLeftX(), div.getBotY(), div.getWidth(), div.getHeight(), {
-                oldX: startingX,
-                oldY: startingY,
-                oldWidth: startingWidth,
-                oldHeight: startingHeight,
-            })
-            command.action(true)
+            if (!multi) {
+                if (
+                    startingX == div.getLeftX() &&
+                    startingY == div.getBotY() &&
+                    startingHeight == div.getHeight() &&
+                    startingWidth == div.getWidth()
+                ) {
+                    return
+                }
+
+                const command = new MoveFrame(frame, div.getLeftX(), div.getBotY(), div.getWidth(), div.getHeight(), {
+                    oldX: startingX,
+                    oldY: startingY,
+                    oldWidth: startingWidth,
+                    oldHeight: startingHeight,
+                })
+                command.action(true)
+            } else {
+                for (const sel of selection) {
+                    const oldX = sel.custom.getLeftX()
+                    const oldY = sel.custom.getBotY()
+                    const oldW = sel.custom.getWidth()
+                    const oldH = sel.custom.getHeight()
+
+                    const cmd = new MoveFrame(sel, sel.custom.getLeftX(), sel.custom.getBotY(), sel.custom.getWidth(), sel.custom.getHeight(), {
+                        oldX,
+                        oldY,
+                        oldWidth: oldW,
+                        oldHeight: oldH,
+                    })
+                    cmd.action(true)
+                }
+            }
         }
     }
 
