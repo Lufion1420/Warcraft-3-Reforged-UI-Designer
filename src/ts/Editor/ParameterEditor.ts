@@ -715,6 +715,12 @@ export class ParameterEditor {
 
     public updateFields(frame: FrameComponent | null): void {
         try {
+            // Disable panel while multi-select is active
+            if (ProjectTree.getInstance().hasMultiSelection()) {
+                this.disableFields(true)
+            } else {
+                this.disableFields(false)
+            }
             // const editor = Editor.GetDocumentEditor() // Not used
 
             // const horizontalMargin = Editor.getInnerMargin() // Not used

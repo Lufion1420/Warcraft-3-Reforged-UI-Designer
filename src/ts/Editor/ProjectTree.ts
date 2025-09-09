@@ -39,6 +39,7 @@ export class ProjectTree implements IterableIterator<FrameComponent>, Saveable {
     readonly rootFrame: FrameComponent
     readonly panelTree: HTMLElement
     private selectedFrame: FrameComponent | null
+    private selectedSet: Set<FrameComponent> = new Set()
 
     static LibraryName = 'REFORGEDUIMAKER'
     static HideGameUI = false
@@ -97,6 +98,9 @@ export class ProjectTree implements IterableIterator<FrameComponent>, Saveable {
 
     static getSelected() {
         return ProjectTree.getInstance().getSelectedFrame()
+    }
+    static getSelectedFrames(): FrameComponent[] {
+        return ProjectTree.getInstance().getSelectedFrames()
     }
 
     static saveGeneralOptions(): void {
@@ -189,25 +193,58 @@ export class ProjectTree implements IterableIterator<FrameComponent>, Saveable {
         return this.selectedFrame
     }
 
-    select(frame: FrameComponent | CustomComplex | CustomComplex | HTMLImageElement | HTMLDivElement | HTMLElement | null): void {
+    getSelectedFrames(): FrameComponent[] {
+        return Array.from(this.selectedSet)
+    }
+
+    hasMultiSelection(): boolean {
+        return this.selectedSet.size > 1
+    }
+
+    select(frame: FrameComponent | CustomComplex | CustomComplex | HTMLImageElement | HTMLDivElement | HTMLElement | null, additive = false): void {
         //should go to workspace class?
-        if (this.selectedFrame != null) {
-            let color = ProjectTree.outlineUnSelected
-            if (this.selectedFrame.getTooltip()) color = ProjectTree.outlineUnSelected_Tooltip
-            this.selectedFrame.custom.getElement().style.outlineColor = color
+        const resolve = (f: any): FrameComponent | null => {
+            if (f instanceof FrameComponent) return f
+            else if (f instanceof CustomComplex) return f.getFrameComponent()
+            else if (f instanceof HTMLImageElement) return CustomComplex.GetCustomComplexFromHTMLDivElement(f).getFrameComponent()
+            else if (f instanceof HTMLDivElement) return CustomComplex.GetCustomComplexFromHTMLDivElement(f).getFrameComponent()
+            else if (f instanceof HTMLElement) return FrameComponent.GetFrameComponent(f)
+            else return null
         }
 
-        if (frame instanceof FrameComponent) this.selectedFrame = frame
-        else if (frame instanceof CustomComplex) this.selectedFrame = frame.getFrameComponent()
-        else if (frame instanceof HTMLImageElement) this.selectedFrame = CustomComplex.GetCustomComplexFromHTMLDivElement(frame).getFrameComponent()
-        else if (frame instanceof HTMLDivElement) this.selectedFrame = CustomComplex.GetCustomComplexFromHTMLDivElement(frame).getFrameComponent()
-        else if (frame instanceof HTMLElement) this.selectedFrame = FrameComponent.GetFrameComponent(frame)
-        else {
+        const fc = resolve(frame)
+        if (!additive) {
+            // clear old selection outlines
+            for (const sel of this.selectedSet) {
+                let color = ProjectTree.outlineUnSelected
+                if (sel.getTooltip()) color = ProjectTree.outlineUnSelected_Tooltip
+                sel.custom.getElement().style.outlineColor = color
+            }
+            this.selectedSet.clear()
+        }
+
+        if (fc == null) {
             this.selectedFrame = null
             return
         }
 
-        this.selectedFrame.custom.getElement().style.outlineColor = ProjectTree.outlineSelected
+        if (additive) {
+            if (this.selectedSet.has(fc)) {
+                // deselect
+                this.selectedSet.delete(fc)
+                let color = ProjectTree.outlineUnSelected
+                if (fc.getTooltip()) color = ProjectTree.outlineUnSelected_Tooltip
+                fc.custom.getElement().style.outlineColor = color
+            } else {
+                this.selectedSet.add(fc)
+                fc.custom.getElement().style.outlineColor = ProjectTree.outlineSelected
+                this.selectedFrame = fc
+            }
+        } else {
+            this.selectedSet.add(fc)
+            this.selectedFrame = fc
+            fc.custom.getElement().style.outlineColor = ProjectTree.outlineSelected
+        }
 
         ParameterEditor.getInstance().updateFields(this.selectedFrame)
     }

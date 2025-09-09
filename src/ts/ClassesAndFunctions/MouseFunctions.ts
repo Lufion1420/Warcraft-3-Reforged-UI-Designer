@@ -25,7 +25,7 @@ export function MouseFunctions(div: CustomComplex): void {
         const startingWidth = div.getWidth()
         const startingHeight = div.getHeight()
 
-        projectTree.select(div)
+        projectTree.select(div, e.shiftKey)
 
         let posX1 = e.clientX
         let posY1 = e.clientY
