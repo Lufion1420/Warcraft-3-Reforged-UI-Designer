@@ -88,8 +88,9 @@ export function MouseFunctions(div: CustomComplex): void {
                     const dyPx = movedY ? -posY2 : 0
                     const rect = Editor.getInstance().workspaceImage.getBoundingClientRect()
                     const horizontalMarginInner = EditorController.getInnerMargin()
-                    const dxCoord = (dxPx * 800) / (rect.width - 2 * horizontalMarginInner)
-                    const dyCoord = (-dyPx * 600) / rect.height
+                    const innerWidth = rect.width - 2 * horizontalMarginInner
+                    const dxCoord = (dxPx / innerWidth) * 0.8
+                    const dyCoord = (-dyPx / rect.height) * 0.6
                     for (const child of frame.getChildren()) {
                         if (!child.custom.getLinkToParent()) continue
                         const el = child.custom.getElement()

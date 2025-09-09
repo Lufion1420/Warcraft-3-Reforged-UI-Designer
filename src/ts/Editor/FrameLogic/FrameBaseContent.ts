@@ -95,7 +95,12 @@ export default abstract class FrameBaseContent implements Saveable {
         const editor = Editor.getInstance()
         const rect = editor.workspaceImage.getBoundingClientRect()
         const horizontalMargin = EditorController.getInnerMargin()
-
+        // Clamp within allowed X limits so elements cannot go off-screen
+        const limits = EditorController.getMarginLimits()
+        const maxX = limits.max - this.getWidth()
+        if (maxX >= limits.min) {
+            newX = Math.max(limits.min, Math.min(newX, maxX))
+        }
         this.leftX = newX
         if (!noChange) this.element.style.left = `${(+newX * (rect.width - 2 * horizontalMargin)) / 0.8 + rect.left + horizontalMargin}px`
     }
@@ -106,7 +111,11 @@ export default abstract class FrameBaseContent implements Saveable {
 
     setBotY(newY: number, noChange?: boolean): void {
         const rect = Editor.getInstance().workspaceImage.getBoundingClientRect()
-
+        // Clamp within [0, 0.6 - height] so bottom Y stays visible
+        const maxY = 0.6 - this.getHeight()
+        if (maxY >= 0) {
+            newY = Math.max(0, Math.min(newY, maxY))
+        }
         this.botY = newY
         if (!noChange) this.element.style.top = `${rect.bottom - (newY * rect.height) / 0.6 - this.element.offsetHeight - 120}px`
     }
