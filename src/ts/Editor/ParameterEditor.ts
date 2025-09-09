@@ -1106,9 +1106,19 @@ export class ParameterEditor {
                     options.remove(0)
                 }
 
-                let option: HTMLOptionElement | undefined
+                // Collect all possible parents except the current frame
+                const parentCandidates: FrameComponent[] = []
                 for (const el of ProjectTree.getInstance().getIterator()) {
-                    if (el == frame) continue
+                    if (el === frame) continue
+                    parentCandidates.push(el)
+                }
+
+                // Sort alphabetically by element name (case-insensitive)
+                parentCandidates.sort((a, b) => a.getName().localeCompare(b.getName(), undefined, { sensitivity: 'base' }))
+
+                // Rebuild options in sorted order and select current parent
+                let option: HTMLOptionElement | undefined
+                for (const el of parentCandidates) {
                     options.add(el.parentOption)
                     el.parentOption.selected = false
                     if (frame.getParent() == el) option = el.parentOption
