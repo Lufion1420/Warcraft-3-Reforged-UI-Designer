@@ -31,11 +31,14 @@ export default class ChangeFrameX extends SimpleCommand {
         this.oldX = frame.custom.getLeftX()
         const dx = this.newX - this.oldX
         frame.custom.setLeftX(this.newX)
-        if (dx !== 0) {
-            for (const child of frame.getChildren()) {
-                if (!child.custom.getLinkToParent()) continue
-                child.custom.setLeftX(child.custom.getLeftX() + dx)
+        if (dx !== 0 && frame.custom.getLinkChildren()) {
+            const moveDescendants = (parent: any) => {
+                for (const child of parent.getChildren()) {
+                    child.custom.setLeftX(child.custom.getLeftX() + dx)
+                    moveDescendants(child)
+                }
             }
+            moveDescendants(frame)
         }
     }
 

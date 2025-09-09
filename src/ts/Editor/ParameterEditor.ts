@@ -411,8 +411,8 @@ export class ParameterEditor {
             const selected = ProjectTree.getSelected()
 
             if (selected) {
-                selected.custom.setLinkToParent(val)
-                debugText(`Link to Parent has been ${val ? 'enabled' : 'disabled'} for this element.`)
+                selected.custom.setLinkChildren(val)
+                debugText(`Link Children has been ${val ? 'enabled' : 'disabled'} for this element.`)
             }
         } catch (e) {
             console.log('LinkToParent toggle error: ' + e)
@@ -1050,7 +1050,9 @@ export class ParameterEditor {
                 this.inputElementCoordinateX.value = frame.custom.getLeftX().toFixed(5)
                 this.inputElementCoordinateY.value = frame.custom.getBotY().toFixed(5)
                 this.checkboxElementTooltip.checked = frame.getTooltip()
-                this.checkboxElementLinkToParent.checked = frame.custom.getLinkToParent()
+                this.checkboxElementLinkToParent.checked = frame.custom.getLinkChildren()
+                const hasChildren = frame.getChildren().length > 0
+                this.checkboxElementLinkToParent.disabled = !hasChildren
 
                 this.fieldElement.style.display = 'initial'
                 this.fieldGeneral.style.display = 'none'

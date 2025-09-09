@@ -82,8 +82,8 @@ export function MouseFunctions(div: CustomComplex): void {
                     movedY = true
                 }
                 inputElementsUpdate(div, { x: true, y: true })
-                // Move linked children with the same delta
-                if ((movedX || movedY) && frame) {
+                // Move linked descendants with the same delta when parent is linked
+                if ((movedX || movedY) && frame && frame.custom.getLinkChildren()) {
                     const dxPx = movedX ? -posX2 : 0
                     const dyPx = movedY ? -posY2 : 0
                     const rect = Editor.getInstance().workspaceImage.getBoundingClientRect()
@@ -91,14 +91,19 @@ export function MouseFunctions(div: CustomComplex): void {
                     const innerWidth = rect.width - 2 * horizontalMarginInner
                     const dxCoord = (dxPx / innerWidth) * 0.8
                     const dyCoord = (-dyPx / rect.height) * 0.6
-                    for (const child of frame.getChildren()) {
-                        if (!child.custom.getLinkToParent()) continue
-                        const el = child.custom.getElement()
-                        if (movedX) el.style.left = `${el.offsetLeft + dxPx}px`
-                        if (movedY) el.style.top = `${el.offsetTop + dyPx}px`
-                        if (movedX) child.custom.setLeftX(child.custom.getLeftX() + dxCoord, true)
-                        if (movedY) child.custom.setBotY(child.custom.getBotY() + dyCoord, true)
+
+                    const moveDescendants = (parent: any) => {
+                        const children = parent.getChildren()
+                        for (const child of children) {
+                            const el = child.custom.getElement()
+                            if (movedX) el.style.left = `${el.offsetLeft + dxPx}px`
+                            if (movedY) el.style.top = `${el.offsetTop + dyPx}px`
+                            if (movedX) child.custom.setLeftX(child.custom.getLeftX() + dxCoord, true)
+                            if (movedY) child.custom.setBotY(child.custom.getBotY() + dyCoord, true)
+                            moveDescendants(child)
+                        }
                     }
+                    moveDescendants(frame)
                 }
                 document.body.style.cursor = 'grabbing'
             }

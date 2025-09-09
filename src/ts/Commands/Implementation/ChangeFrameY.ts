@@ -31,11 +31,14 @@ export default class ChangeFrameY extends SimpleCommand {
         this.oldY = frame.custom.getBotY()
         const dy = this.newY - this.oldY
         frame.custom.setBotY(this.newY)
-        if (dy !== 0) {
-            for (const child of frame.getChildren()) {
-                if (!child.custom.getLinkToParent()) continue
-                child.custom.setBotY(child.custom.getBotY() + dy)
+        if (dy !== 0 && frame.custom.getLinkChildren()) {
+            const moveDescendants = (parent: any) => {
+                for (const child of parent.getChildren()) {
+                    child.custom.setBotY(child.custom.getBotY() + dy)
+                    moveDescendants(child)
+                }
             }
+            moveDescendants(frame)
         }
     }
 

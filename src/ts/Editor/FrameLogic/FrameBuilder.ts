@@ -22,6 +22,7 @@ export class FrameBuilder implements CustomComplexProps {
     trigVar = ''
     isRelative = false
     linkToParent = false
+    linkChildren = false
     text = 'Text'
     scale = 1
     color = '#FFCC00'
@@ -86,6 +87,7 @@ export class FrameBuilder implements CustomComplexProps {
             this.trigVar = container.load(CustomComplex.SAVE_KEY_TRIGGER_VARIABLE_NAME)
             this.isRelative = container.load(CustomComplex.SAVE_KEY_TRIGGER_IS_RELATIVE)
             this.linkToParent = container.load(CustomComplex.SAVE_KEY_LINK_TO_PARENT)
+            try { this.linkChildren = container.load(CustomComplex.SAVE_KEY_LINK_CHILDREN) } catch {}
             this.textureBackDiskPath = container.load(CustomComplex.SAVE_KEY_TEXTURE_BACK_DISK_PATH)
             this.textureBackWc3Path = container.load(CustomComplex.SAVE_KEY_TEXTURE_BACK_WC3_PATH)
         } catch (e) {
@@ -151,6 +153,7 @@ export class FrameBuilder implements CustomComplexProps {
         frameBuilder.trigVar = frame.custom.getTrigVar()
         frameBuilder.isRelative = frame.custom.getIsRelative()
         frameBuilder.linkToParent = frame.custom.getLinkToParent()
+        frameBuilder.linkChildren = frame.custom.getLinkChildren()
         frameBuilder.textureDiskPath = frame.custom.getDiskTexture('normal')
         frameBuilder.textureWc3Path = frame.custom.getWc3Texture('normal')
         frameBuilder.textureBackDiskPath = frame.custom.getDiskTexture('back')

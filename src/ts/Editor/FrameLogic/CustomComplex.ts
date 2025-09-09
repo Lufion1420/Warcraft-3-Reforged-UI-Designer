@@ -28,6 +28,7 @@ export default class CustomComplex extends FrameBaseContent implements CustomCom
     public static readonly SAVE_KEY_TRIGGER_VARIABLE_NAME = 'trig_var'
     public static readonly SAVE_KEY_TRIGGER_IS_RELATIVE = 'isRelative'
     public static readonly SAVE_KEY_LINK_TO_PARENT = 'linkToParent'
+    public static readonly SAVE_KEY_LINK_CHILDREN = 'linkChildren'
 
     text = ''
     scale = 1
@@ -41,6 +42,7 @@ export default class CustomComplex extends FrameBaseContent implements CustomCom
     trigVar = ''
     isRelative = false
     linkToParent = false
+    linkChildren = false
 
     private elemTextContainer?: HTMLDivElement
     private elemText?: HTMLParagraphElement
@@ -54,6 +56,7 @@ export default class CustomComplex extends FrameBaseContent implements CustomCom
             if (props) {
                 this.isRelative = props.isRelative
                 if ((props as any).linkToParent !== undefined) this.linkToParent = (props as any).linkToParent as boolean
+                if ((props as any).linkChildren !== undefined) this.linkChildren = (props as any).linkChildren as boolean
                 this.specialTypesSetup(props)
             }
 
@@ -236,6 +239,14 @@ export default class CustomComplex extends FrameBaseContent implements CustomCom
         return this.linkToParent
     }
 
+    public setLinkChildren(on: boolean): void {
+        this.linkChildren = on
+    }
+
+    public getLinkChildren(): boolean {
+        return this.linkChildren
+    }
+
     public save(container: SaveContainer): void {
         super.save(container)
         container.save(CustomComplex.SAVE_KEY_TEXT, this.text)
@@ -250,6 +261,7 @@ export default class CustomComplex extends FrameBaseContent implements CustomCom
         container.save(CustomComplex.SAVE_KEY_TRIGGER_VARIABLE_NAME, this.trigVar)
         container.save(CustomComplex.SAVE_KEY_TRIGGER_IS_RELATIVE, this.isRelative)
         container.save(CustomComplex.SAVE_KEY_LINK_TO_PARENT, this.linkToParent)
+        container.save(CustomComplex.SAVE_KEY_LINK_CHILDREN, this.linkChildren)
         // container.save(CustomComplex.SAVE_KEY_, this.);
     }
 
@@ -402,4 +414,5 @@ export interface CustomComplexProps {
     trigVar: string
     isRelative: boolean
     linkToParent: boolean
+    linkChildren: boolean
 }
