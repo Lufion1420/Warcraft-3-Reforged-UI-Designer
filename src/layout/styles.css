@@ -341,13 +341,38 @@ body {
 .scroll_textarea::-webkit-scrollbar-track {
     background-color: rgb(29, 28, 29);
 }
-/* Highlight selected items in the tree by coloring the bullet (dot) */
+/* Highlight selected items in the tree */
 .tree-selected::marker {
     color: rgba(255, 127, 0, 1);
 }
-/* Ensure a bullet is visible when selected (in case of custom list styles) */
 li.tree-selected {
     list-style-type: disc;
+    background-color: rgba(255, 127, 0, 0.18);
+    border-radius: 4px;
+    padding: 2px 4px;
+}
+
+/* Folding behavior: when a node is collapsed, hide its subsequent child ULs */
+ul > li.tree-collapsed ~ ul {
+    display: none;
+}
+/* Visual cue: nodes with children and collapsed/expanded marker tweaks */
+ul > li.tree-has-children {
+    list-style-type: disc;
+}
+ul > li.tree-has-children.tree-collapsed {
+    list-style-type: circle;
+}
+/* Ellipsis placeholder shown when collapsed (indicates hidden children) */
+ul > li.tree-has-children + li.tree-ellipsis {
+    display: none;
+    color: #bfbfbf;
+    list-style-type: none;
+    font-style: italic;
+    padding-left: 6px;
+}
+ul > li.tree-collapsed + li.tree-ellipsis {
+    display: list-item;
 }
 
 /* Drag-and-drop indicators in the tree */

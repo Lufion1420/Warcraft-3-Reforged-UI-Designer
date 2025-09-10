@@ -108,6 +108,49 @@ export class ProjectTree implements IterableIterator<FrameComponent>, Saveable {
     static getSelected() {
         return ProjectTree.getInstance().getSelectedFrame()
     }
+
+    // Recolor tree by first branching level (excluding Origin)
+    static applyContainerColors() {
+        const tree = ProjectTree.getInstance()
+        const palette = ['#4FC3F7', '#9575CD', '#81C784', '#BA68C8', '#64B5F6', '#7986CB', '#4DB6AC', '#AED581', '#A1887F', '#90A4AE']
+
+        // clear previous colors
+        for (const el of tree.getIterator()) {
+            const li = el.treeElement.firstChild as HTMLElement
+            if (li) {
+                li.style.removeProperty('color')
+                li.style.fontWeight = ''
+            }
+            el.treeColor = undefined
+        }
+
+        // find first branch level
+        let parent: FrameComponent = tree.rootFrame
+        while (parent.getChildren().length === 1) {
+            const only = parent.getChildren()[0]
+            if (!only) break
+            parent = only
+        }
+
+        const children = parent.getChildren()
+        if (children.length <= 1) return
+
+        const setColorRecursive = (node: FrameComponent, color: string, weightTopLevel = false) => {
+            node.treeColor = color
+            const li = node.treeElement.firstChild as HTMLElement
+            if (li) {
+                li.style.color = color
+                if (weightTopLevel) li.style.fontWeight = '600'
+            }
+            for (const ch of node.getChildren()) setColorRecursive(ch, color)
+        }
+
+        for (let i = 0; i < children.length; i++) {
+            const c = children[i]
+            const color = palette[i % palette.length]
+            setColorRecursive(c, color, true)
+        }
+    }
     static getSelectedFrames(): FrameComponent[] {
         return ProjectTree.getInstance().getSelectedFrames()
     }

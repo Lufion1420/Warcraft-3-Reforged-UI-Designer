@@ -43,6 +43,7 @@ export default class ChangeFrameParent extends SimpleCommand {
         this.oldParent = frame.getParent()?.getName()
         this.frameChildren = frame.getChildren().map((it: FrameComponent) => it.getName())
         parent.makeAsParentTo(frame)
+        try { ProjectTree.applyContainerColors() } catch {}
     }
 
     public undo(): void {

@@ -32,6 +32,7 @@ export class FrameComponent implements Saveable {
     readonly treeElement: HTMLElement
     parentOption: HTMLOptionElement
     readonly layerDiv: HTMLDivElement
+    private ellipsisElement?: HTMLLIElement
     // private orderInParent = 0;
     public treeColor?: string
 
@@ -62,6 +63,19 @@ export class FrameComponent implements Saveable {
         this.setName(frameBuildOptions.name)
         // ;(ul as any).frameComponent = this
         FrameMap.getInstance().frameComponent.set(ul, this)
+
+        // Toggle collapse when clicking near the left marker (dot)
+        li.addEventListener('mousedown', (ev: MouseEvent) => {
+            const target = ev.currentTarget as HTMLElement
+            const rect = target.getBoundingClientRect()
+            const offsetX = ev.clientX - rect.left
+            // If clicked within the first 14px from the left edge, toggle fold
+            if (offsetX <= 14) {
+                if (this.children.length > 0) target.classList.toggle('tree-collapsed')
+                ev.preventDefault()
+                ev.stopPropagation()
+            }
+        })
 
         li.onclick = (ev) => {
             const additive = (ev as MouseEvent).shiftKey
@@ -209,24 +223,29 @@ export class FrameComponent implements Saveable {
         this.layerDiv.appendChild(frame.layerDiv)
 
         this.children.push(frame)
+        // Ensure an ellipsis placeholder exists directly after this node label if it now has children
+        try {
+            if (this.children.length === 1 && !this.ellipsisElement) {
+                const li = this.treeElement.firstChild as HTMLElement
+                if (li) li.classList.add('tree-has-children')
+                this.ellipsisElement = document.createElement('li')
+                this.ellipsisElement.className = 'tree-ellipsis'
+                this.ellipsisElement.innerText = '…'
+                // Insert after the label (index 0)
+                if (this.treeElement.children.length > 1) this.treeElement.insertBefore(this.ellipsisElement, this.treeElement.children[1])
+                else this.treeElement.append(this.ellipsisElement)
+            }
+        } catch {}
         this.treeElement.append(frame.treeElement)
 
-        // Colorize top-level containers and propagate color to descendants
+        // Re-evaluate color groups based on first branching level
         try {
-            const li = frame.treeElement.firstChild as HTMLElement
-            if (this.type === FrameType.ORIGIN) {
-                const palette = ['#4FC3F7', '#9575CD', '#81C784', '#BA68C8', '#64B5F6', '#7986CB', '#4DB6AC', '#AED581', '#A1887F', '#90A4AE']
-                const idx = (this.children.length - 1) % palette.length
-                const color = palette[idx]
-                frame.treeColor = color
-                if (li) {
-                    li.style.color = color
-                    li.style.fontWeight = '600'
-                }
-            } else if (this.treeColor) {
-                frame.treeColor = this.treeColor
-                if (li) li.style.color = this.treeColor
-            }
+            ProjectTree.applyContainerColors()
+        } catch {}
+
+        // Mark this node as having children to enable folding affordance
+        try {
+            ;(this.treeElement.firstChild as HTMLElement)?.classList.add('tree-has-children')
         } catch {}
     }
 
@@ -251,6 +270,7 @@ export class FrameComponent implements Saveable {
         // DOM order in tree and layer
         targetParent.treeElement.insertBefore(this.treeElement, target.treeElement)
         targetParent.layerDiv.insertBefore(this.layerDiv, target.layerDiv)
+        try { ProjectTree.applyContainerColors() } catch {}
         return true
     }
 
@@ -273,6 +293,7 @@ export class FrameComponent implements Saveable {
         targetParent.treeElement.insertBefore(this.treeElement, next)
         const nextLayer = target.layerDiv.nextSibling
         targetParent.layerDiv.insertBefore(this.layerDiv, nextLayer)
+        try { ProjectTree.applyContainerColors() } catch {}
         return true
     }
 
@@ -282,6 +303,21 @@ export class FrameComponent implements Saveable {
         if (childIndex == -1) return false
 
         this.children.splice(childIndex, 1)
+
+        // If no children remain, remove ellipsis and child marker
+        try {
+            if (this.children.length === 0) {
+                const li = this.treeElement.firstChild as HTMLElement
+                if (li) {
+                    li.classList.remove('tree-has-children')
+                    li.classList.remove('tree-collapsed')
+                }
+                if (this.ellipsisElement) {
+                    this.ellipsisElement.remove()
+                    this.ellipsisElement = undefined
+                }
+            }
+        } catch {}
 
         return true
     }
