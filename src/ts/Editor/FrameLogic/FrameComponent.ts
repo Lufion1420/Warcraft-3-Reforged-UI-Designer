@@ -63,8 +63,9 @@ export class FrameComponent implements Saveable {
         // ;(ul as any).frameComponent = this
         FrameMap.getInstance().frameComponent.set(ul, this)
 
-        li.onclick = () => {
-            ProjectTree.getInstance().select(this)
+        li.onclick = (ev) => {
+            const additive = (ev as MouseEvent).shiftKey
+            ProjectTree.getInstance().select(this, additive)
         }
 
         // Enable drag and drop on tree items

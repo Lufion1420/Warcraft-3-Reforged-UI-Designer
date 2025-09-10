@@ -246,23 +246,15 @@ export class ProjectTree implements IterableIterator<FrameComponent>, Saveable {
         }
 
         if (additive) {
-            if (this.selectedSet.has(fc)) {
-                // deselect
-                this.selectedSet.delete(fc)
-                let color = ProjectTree.outlineUnSelected
-                if (fc.getTooltip()) color = ProjectTree.outlineUnSelected_Tooltip
-                fc.custom.getElement().style.outlineColor = color
-                try {
-                    (fc.treeElement.firstChild as HTMLElement)?.classList.remove('tree-selected')
-                } catch {}
-            } else {
+            // In additive mode (Shift), always add to selection (no toggle off)
+            if (!this.selectedSet.has(fc)) {
                 this.selectedSet.add(fc)
                 fc.custom.getElement().style.outlineColor = ProjectTree.outlineSelected
-                this.selectedFrame = fc
                 try {
                     (fc.treeElement.firstChild as HTMLElement)?.classList.add('tree-selected')
                 } catch {}
             }
+            this.selectedFrame = fc
         } else {
             this.selectedSet.add(fc)
             this.selectedFrame = fc

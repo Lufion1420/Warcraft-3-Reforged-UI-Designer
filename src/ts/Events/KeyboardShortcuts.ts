@@ -9,6 +9,8 @@ import Undo from '../Commands/Undo'
 import { FrameBuilder } from '../Editor/FrameLogic/FrameBuilder'
 import { BackgroundTexture, CustomBackground } from '../Editor/Menus/Backgrounds'
 import { ParameterEditor } from '../Editor/ParameterEditor'
+import ChangeFrameX from '../Commands/Implementation/ChangeFrameX'
+import ChangeFrameY from '../Commands/Implementation/ChangeFrameY'
 import { ProjectTree } from '../Editor/ProjectTree'
 import LoadDocument from '../Persistence/LoadDocument'
 import NewDocument from '../Persistence/NewDocument'
@@ -234,36 +236,64 @@ export class KeyboardShortcuts {
                 case 'ArrowLeft':
                     //left
                     if (ProjectTree.getSelected()) {
-                        par.inputElementCoordinateX.value = (+par.inputElementCoordinateX.value - 0.0005).toFixed(5)
-                        if (!event.shiftKey) par.inputElementCoordinateX.value = (+par.inputElementCoordinateX.value - 0.0095).toFixed(5)
-                        par.inputElementCoordinateX.dispatchEvent(new Event('change'))
+                        const sel = ProjectTree.getSelectedFrames()
+                        const multi = sel && sel.length > 1
+                        const step = event.shiftKey ? 0.0005 : 0.01
+                        if (multi) {
+                            for (const f of sel) new ChangeFrameX(f, f.custom.getLeftX() - step).action()
+                        } else {
+                            par.inputElementCoordinateX.value = (+par.inputElementCoordinateX.value - 0.0005).toFixed(5)
+                            if (!event.shiftKey) par.inputElementCoordinateX.value = (+par.inputElementCoordinateX.value - 0.0095).toFixed(5)
+                            par.inputElementCoordinateX.dispatchEvent(new Event('change'))
+                        }
                     }
                     break
 
                 case 'ArrowUp':
                     //up
                     if (ProjectTree.getSelected()) {
-                        par.inputElementCoordinateY.value = (+par.inputElementCoordinateY.value + 0.0005).toFixed(5)
-                        if (!event.shiftKey) par.inputElementCoordinateY.value = (+par.inputElementCoordinateY.value + 0.0095).toFixed(5)
-                        par.inputElementCoordinateY.dispatchEvent(new Event('change'))
+                        const sel = ProjectTree.getSelectedFrames()
+                        const multi = sel && sel.length > 1
+                        const step = event.shiftKey ? 0.0005 : 0.01
+                        if (multi) {
+                            for (const f of sel) new ChangeFrameY(f, f.custom.getBotY() + step).action()
+                        } else {
+                            par.inputElementCoordinateY.value = (+par.inputElementCoordinateY.value + 0.0005).toFixed(5)
+                            if (!event.shiftKey) par.inputElementCoordinateY.value = (+par.inputElementCoordinateY.value + 0.0095).toFixed(5)
+                            par.inputElementCoordinateY.dispatchEvent(new Event('change'))
+                        }
                     }
                     break
 
                 case 'ArrowRight':
                     //right
                     if (ProjectTree.getSelected()) {
-                        par.inputElementCoordinateX.value = (+par.inputElementCoordinateX.value + 0.0005).toFixed(5)
-                        if (!event.shiftKey) par.inputElementCoordinateX.value = (+par.inputElementCoordinateX.value + 0.0095).toFixed(5)
-                        par.inputElementCoordinateX.dispatchEvent(new Event('change'))
+                        const sel = ProjectTree.getSelectedFrames()
+                        const multi = sel && sel.length > 1
+                        const step = event.shiftKey ? 0.0005 : 0.01
+                        if (multi) {
+                            for (const f of sel) new ChangeFrameX(f, f.custom.getLeftX() + step).action()
+                        } else {
+                            par.inputElementCoordinateX.value = (+par.inputElementCoordinateX.value + 0.0005).toFixed(5)
+                            if (!event.shiftKey) par.inputElementCoordinateX.value = (+par.inputElementCoordinateX.value + 0.0095).toFixed(5)
+                            par.inputElementCoordinateX.dispatchEvent(new Event('change'))
+                        }
                     }
                     break
 
                 case 'ArrowDown':
                     //down
                     if (ProjectTree.getSelected()) {
-                        par.inputElementCoordinateY.value = (+par.inputElementCoordinateY.value - 0.0005).toFixed(5)
-                        if (!event.shiftKey) par.inputElementCoordinateY.value = (+par.inputElementCoordinateY.value - 0.0095).toFixed(5)
-                        par.inputElementCoordinateY.dispatchEvent(new Event('change'))
+                        const sel = ProjectTree.getSelectedFrames()
+                        const multi = sel && sel.length > 1
+                        const step = event.shiftKey ? 0.0005 : 0.01
+                        if (multi) {
+                            for (const f of sel) new ChangeFrameY(f, f.custom.getBotY() - step).action()
+                        } else {
+                            par.inputElementCoordinateY.value = (+par.inputElementCoordinateY.value - 0.0005).toFixed(5)
+                            if (!event.shiftKey) par.inputElementCoordinateY.value = (+par.inputElementCoordinateY.value - 0.0095).toFixed(5)
+                            par.inputElementCoordinateY.dispatchEvent(new Event('change'))
+                        }
                     }
                     break
 
