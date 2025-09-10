@@ -67,6 +67,75 @@ export class FrameComponent implements Saveable {
             ProjectTree.getInstance().select(this)
         }
 
+        // Enable drag and drop on tree items
+        try {
+            li.draggable = true
+            li.addEventListener('dragstart', (ev) => {
+                ProjectTree.dragSource = this
+                ev.dataTransfer?.setData('text/plain', this.getName())
+                if (ev.dataTransfer) ev.dataTransfer.effectAllowed = 'move'
+            })
+            li.addEventListener('dragover', (ev) => {
+                ev.preventDefault()
+                if (!ProjectTree.dragSource) return
+                const targetLi = ev.currentTarget as HTMLElement
+                // Clear previous hover state
+                if (ProjectTree.dragHover && ProjectTree.dragHover !== targetLi) {
+                    ProjectTree.dragHover.classList.remove('tree-drop-before', 'tree-drop-after', 'tree-drop-into')
+                }
+                const rect = targetLi.getBoundingClientRect()
+                const y = ev.clientY - rect.top
+                const top = rect.height * 0.33
+                const bottom = rect.height * 0.66
+                targetLi.classList.remove('tree-drop-before', 'tree-drop-after', 'tree-drop-into')
+                if (y < top) targetLi.classList.add('tree-drop-before')
+                else if (y > bottom) targetLi.classList.add('tree-drop-after')
+                else targetLi.classList.add('tree-drop-into')
+                ProjectTree.dragHover = targetLi
+            })
+            li.addEventListener('dragleave', (ev) => {
+                const targetLi = ev.currentTarget as HTMLElement
+                targetLi.classList.remove('tree-drop-before', 'tree-drop-after', 'tree-drop-into')
+                if (ProjectTree.dragHover === targetLi) ProjectTree.dragHover = null
+            })
+            li.addEventListener('drop', (ev) => {
+                ev.preventDefault()
+                const src = ProjectTree.dragSource
+                ProjectTree.dragSource = null
+                if (!src || src === this) return
+
+                const rect = (ev.currentTarget as HTMLElement).getBoundingClientRect()
+                const y = ev.clientY - rect.top
+                const top = rect.height * 0.33
+                const bottom = rect.height * 0.66
+
+                if (y < top) {
+                    // place src before this
+                    src.moveBeforeSibling(this)
+                } else if (y > bottom) {
+                    // place src after this
+                    src.moveAfterSibling(this)
+                } else {
+                    // make this as parent of src
+                    this.makeAsParentTo(src)
+                }
+                // clear hover classes
+                const targetLi = ev.currentTarget as HTMLElement
+                targetLi.classList.remove('tree-drop-before', 'tree-drop-after', 'tree-drop-into')
+                if (ProjectTree.dragHover === targetLi) ProjectTree.dragHover = null
+                ProjectTree.getInstance().select(this)
+            })
+            li.addEventListener('dragend', () => {
+                ProjectTree.dragSource = null
+                if (ProjectTree.dragHover) {
+                    ProjectTree.dragHover.classList.remove('tree-drop-before', 'tree-drop-after', 'tree-drop-into')
+                    ProjectTree.dragHover = null
+                }
+            })
+        } catch (e) {
+            console.log('Tree drag setup error', e)
+        }
+
         this.setupAllowedFields()
 
         if (!ProjectTree.ShowBorders) this.custom.getElement().style.outlineWidth = '0px'
@@ -158,6 +227,52 @@ export class FrameComponent implements Saveable {
                 if (li) li.style.color = this.treeColor
             }
         } catch {}
+    }
+
+    moveBeforeSibling(target: FrameComponent): boolean {
+        const targetParent = target.getParent()
+        if (!targetParent) return false
+
+        if (this.getParent() !== targetParent) {
+            new ChangeFrameParent(this, targetParent).pureAction()
+        }
+        const arr = targetParent.children
+        const idxTarget = arr.indexOf(target)
+        const idxSelf = arr.indexOf(this)
+        if (idxTarget === -1 || idxSelf === -1) return false
+        if (idxSelf < idxTarget) {
+            arr.splice(idxTarget, 0, this)
+            arr.splice(idxSelf, 1)
+        } else {
+            arr.splice(idxSelf, 1)
+            arr.splice(idxTarget, 0, this)
+        }
+        // DOM order in tree and layer
+        targetParent.treeElement.insertBefore(this.treeElement, target.treeElement)
+        targetParent.layerDiv.insertBefore(this.layerDiv, target.layerDiv)
+        return true
+    }
+
+    moveAfterSibling(target: FrameComponent): boolean {
+        const targetParent = target.getParent()
+        if (!targetParent) return false
+        if (this.getParent() !== targetParent) {
+            new ChangeFrameParent(this, targetParent).pureAction()
+        }
+        const arr = targetParent.children
+        const idxTarget = arr.indexOf(target)
+        const idxSelf = arr.indexOf(this)
+        if (idxTarget === -1 || idxSelf === -1) return false
+        // Insert after means at indexTarget+1 after removal
+        arr.splice(idxSelf, 1)
+        const newIndex = idxTarget + 1 <= arr.length ? idxTarget + 1 : arr.length
+        arr.splice(newIndex, 0, this)
+        // DOM order
+        const next = target.treeElement.nextSibling
+        targetParent.treeElement.insertBefore(this.treeElement, next)
+        const nextLayer = target.layerDiv.nextSibling
+        targetParent.layerDiv.insertBefore(this.layerDiv, nextLayer)
+        return true
     }
 
     private removeFrame(whatFrame: FrameComponent): boolean {

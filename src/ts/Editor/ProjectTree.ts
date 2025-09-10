@@ -18,6 +18,7 @@ export class ProjectTree implements IterableIterator<FrameComponent>, Saveable {
         if (!ProjectTree.instance) ProjectTree.instance = new ProjectTree()
         return ProjectTree.instance
     }
+    static dragSource: FrameComponent | null = null
     static readonly SAVE_KEY_ORIGIN_CHILDREN = 'frames'
     static readonly SAVE_KEY_LIBRARY_NAME = 'LibraryName'
     static readonly SAVE_KEY_HIDE_GAMEUI = 'GameUI'
@@ -59,6 +60,9 @@ export class ProjectTree implements IterableIterator<FrameComponent>, Saveable {
 
     //path of project that was loaded. used for "Save" functionality
     static fileSavePath: string | null = null
+
+    // Drag & Drop hover state for tree visuals
+    static dragHover: HTMLElement | null = null
 
     static refreshElements() {
         for (const el of ProjectTree.getInstance().getIterator()) {
