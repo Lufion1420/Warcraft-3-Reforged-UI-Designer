@@ -54,6 +54,8 @@ export class ParameterEditor {
     public readonly inputElementBackDiskTexture = document.getElementById('elementBackDiskTexture') as HTMLInputElement
     public readonly fileElementBackTextureBrowse = document.getElementById('buttonBackBrowseTexture') as HTMLInputElement
     public readonly inputElementBackWC3Texture = document.getElementById('elementBackWC3Texture') as HTMLInputElement
+    public readonly inputGeneralTexPrefix = document.getElementById('generalTexPrefix') as HTMLInputElement
+    public readonly inputGeneralTexExt = document.getElementById('generalTexExt') as HTMLInputElement
     public readonly inputElementText = document.getElementById('elementText') as HTMLInputElement
     public readonly inputElementTrigVar = document.getElementById('elementTrigVar') as HTMLInputElement
     public readonly inputElementTextBig = document.getElementById('elementTextBig') as HTMLInputElement
@@ -145,6 +147,10 @@ export class ParameterEditor {
         this.buttonZoomSelectorMode.onclick = () => ParameterEditor.ChangeSelectionMode('zoom')
         this.buttonDragSelectorMode.onclick = () => ParameterEditor.ChangeSelectionMode('drag')
         this.buttonElementArrayClone.onclick = ParameterEditor.ButtonArrayClone
+
+        // General options: texture prefix/ext override
+        this.inputGeneralTexPrefix.oninput = () => (ProjectTree.TexturePrefix = this.inputGeneralTexPrefix.value)
+        this.inputGeneralTexExt.oninput = () => (ProjectTree.TextureExtOverride = this.inputGeneralTexExt.value)
 
         const radios = document.querySelectorAll('input[type=radio][name="OriginMode"]')
         radios.forEach((radio) => ((radio as HTMLInputElement).onchange = () => ParameterEditor.OriginModeChanges((radio as HTMLInputElement).value)))

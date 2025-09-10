@@ -32,6 +32,8 @@ export class ProjectTree implements IterableIterator<FrameComponent>, Saveable {
     static readonly SAVE_KEY_APP_INTERFACE = 'AppInterface'
     static readonly SAVE_KEY_TABLE_ARRAYS = 'TableArrays'
     static readonly SAVE_KEY_CIRCLE_ARRAYS = 'CircularArrays'
+    static readonly SAVE_KEY_TEX_PREFIX = 'TexturePrefix'
+    static readonly SAVE_KEY_TEX_EXT = 'TextureExtOverride'
 
     static readonly outlineUnSelected_Tooltip = 'rgba(220, 242, 19, 0.8)' //yellow
     static readonly outlineUnSelected = 'rgba(0, 230, 64, 0.8)' //green
@@ -54,6 +56,9 @@ export class ProjectTree implements IterableIterator<FrameComponent>, Saveable {
 
     static ShowBorders = true
     static AppInterface = AppInterfaces.dark
+
+    static TexturePrefix: string = ''
+    static TextureExtOverride: string = ''
 
     static TableArrays: TableArray[] = []
     static CircleArrays: CircleArray[] = []
@@ -111,6 +116,8 @@ export class ProjectTree implements IterableIterator<FrameComponent>, Saveable {
         const par = ParameterEditor.getInstance()
         ProjectTree.LibraryName = par.inputLibraryName.value
         ProjectTree.HideGameUI = par.checkboxGameUI.checked
+        ProjectTree.TexturePrefix = par.inputGeneralTexPrefix.value
+        ProjectTree.TextureExtOverride = par.inputGeneralTexExt.value
         ProjectTree.HideHeroBar = par.checkboxHeroBar.checked
         ProjectTree.HideMiniMap = par.checkboxMiniMap.checked
         ProjectTree.HideResources = par.checkboxResources.checked
@@ -165,6 +172,8 @@ export class ProjectTree implements IterableIterator<FrameComponent>, Saveable {
         container.save(ProjectTree.SAVE_KEY_HIDE_CHAT, ProjectTree.HideChat)
         container.save(ProjectTree.SAVE_KEY_ORIGIN_MODE, ProjectTree.OriginMode)
         container.save(ProjectTree.SAVE_KEY_APP_INTERFACE, ProjectTree.AppInterface)
+        container.save(ProjectTree.SAVE_KEY_TEX_PREFIX, ProjectTree.TexturePrefix)
+        container.save(ProjectTree.SAVE_KEY_TEX_EXT, ProjectTree.TextureExtOverride)
         
         const tableArrays: SaveContainer[] = []
         for(const array of ProjectTree.TableArrays) {
@@ -294,6 +303,9 @@ export class ProjectTree implements IterableIterator<FrameComponent>, Saveable {
                 ProjectTree.HidePortrait = container.load(ProjectTree.SAVE_KEY_HIDE_PORTRAIT)
                 ProjectTree.HideChat = container.load(ProjectTree.SAVE_KEY_HIDE_CHAT)
                 ProjectTree.setOriginMode(container.load(ProjectTree.SAVE_KEY_ORIGIN_MODE))
+                // Optional: texture options
+                try { ProjectTree.TexturePrefix = container.load(ProjectTree.SAVE_KEY_TEX_PREFIX) } catch {}
+                try { ProjectTree.TextureExtOverride = container.load(ProjectTree.SAVE_KEY_TEX_EXT) } catch {}
             } catch (e) {
                 alert('Loading Error: General Options Missing.')
             }
@@ -336,6 +348,8 @@ export class ProjectTree implements IterableIterator<FrameComponent>, Saveable {
             const par = ParameterEditor.getInstance()
             par.inputLibraryName.value = ProjectTree.LibraryName
             par.checkboxGameUI.checked = ProjectTree.HideGameUI
+            par.inputGeneralTexPrefix.value = ProjectTree.TexturePrefix ?? ''
+            par.inputGeneralTexExt.value = ProjectTree.TextureExtOverride ?? ''
             par.checkboxHeroBar.checked = ProjectTree.HideHeroBar
             par.checkboxMiniMap.checked = ProjectTree.HideMiniMap
             par.checkboxResources.checked = ProjectTree.HideResources

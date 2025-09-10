@@ -741,6 +741,17 @@
                         </label>
                     </div>
 
+                    <div class="row gx-1">
+                        <div class="col-6 form-floating mb-3" data-bs-toggle="tooltip" data-bs-html="true" title="Optional prefix to prepend to the auto-filled 'Texture Path (WE)'. Example: 'war3mapImported\\'">
+                            <input type="text" name="generalTexPrefix" id="generalTexPrefix" class="form-control" placeholder="prefix" />
+                            <label class="text-black" for="generalTexPrefix">Texture (WE) Prefix</label>
+                        </div>
+                        <div class="col-6 form-floating mb-3" data-bs-toggle="tooltip" data-bs-html="true" title="Optional extension override for auto-filled 'Texture Path (WE)'. Enter without dot, e.g. 'tga' or 'blp'.">
+                            <input type="text" name="generalTexExt" id="generalTexExt" class="form-control" placeholder="ext (e.g. tga)" />
+                            <label class="text-black" for="generalTexExt">Override Ext</label>
+                        </div>
+                    </div>
+
                     <hr />
                     <label for=""><b>Default Game UI</b></label>
                     <div class="form-check">

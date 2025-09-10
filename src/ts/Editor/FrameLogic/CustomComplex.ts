@@ -166,7 +166,15 @@ export default class CustomComplex extends FrameBaseContent implements CustomCom
             }
 
             if (ParameterEditor.getInstance().checkboxPathFill.checked) {
-                this.setWc3Texture(file.name, which, true)
+                const prefix = ProjectTree.TexturePrefix ?? ''
+                const override = (ProjectTree.TextureExtOverride ?? '').trim()
+                let outName = file.name
+                if (override.length > 0) {
+                    const newExt = override.startsWith('.') ? override : '.' + override
+                    const idx = outName.lastIndexOf('.')
+                    outName = (idx >= 0 ? outName.substring(0, idx) : outName) + newExt
+                }
+                this.setWc3Texture(prefix + outName, which, true)
             }
         } else {
             const ext = extname(basename(Input))
@@ -189,7 +197,15 @@ export default class CustomComplex extends FrameBaseContent implements CustomCom
             })
 
             if (ParameterEditor.getInstance().checkboxPathFill.checked) {
-                this.setWc3Texture(basename(Input), which, true)
+                const prefix = ProjectTree.TexturePrefix ?? ''
+                const override = (ProjectTree.TextureExtOverride ?? '').trim()
+                let outName = basename(Input)
+                if (override.length > 0) {
+                    const newExt = override.startsWith('.') ? override : '.' + override
+                    const idx = outName.lastIndexOf('.')
+                    outName = (idx >= 0 ? outName.substring(0, idx) : outName) + newExt
+                }
+                this.setWc3Texture(prefix + outName, which, true)
             }
         }
     }
