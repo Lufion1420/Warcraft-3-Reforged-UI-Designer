@@ -253,6 +253,7 @@ export function TemplateReplace(lang: TLanguage, kind: number) {
 
                 switch (el.type) {
                     case FrameType.BUTTON:
+                    case FrameType.SIMPLE_BUTTON:
                         text = temp.declaresBUTTON
                         break
                     case FrameType.HOR_BAR_BACKGROUND:
@@ -292,6 +293,7 @@ export function TemplateReplace(lang: TLanguage, kind: number) {
                     el.type != FrameType.BROWSER_BUTTON &&
                     el.type != FrameType.SCRIPT_DIALOG_BUTTON &&
                     el.type != FrameType.BUTTON &&
+                    el.type != FrameType.SIMPLE_BUTTON &&
                     el.type != FrameType.INVIS_BUTTON &&
                     el.type != FrameType.CHECKBOX
                 )
@@ -329,7 +331,13 @@ export function TemplateReplace(lang: TLanguage, kind: number) {
 
                 if (el.getTooltip()) {
                     const t = parent?.type
-                    if (t == FrameType.BUTTON || t == FrameType.INVIS_BUTTON || t == FrameType.BROWSER_BUTTON || t == FrameType.SCRIPT_DIALOG_BUTTON) {
+                    if (
+                        t == FrameType.BUTTON ||
+                        t == FrameType.SIMPLE_BUTTON ||
+                        t == FrameType.INVIS_BUTTON ||
+                        t == FrameType.BROWSER_BUTTON ||
+                        t == FrameType.SCRIPT_DIALOG_BUTTON
+                    ) {
                         text += temp.TooltipOwnerButton
                     } else {
                         //for LUA, TS: add local variables
@@ -506,6 +514,10 @@ function JassGetTypeText(type: FrameType, functionality: boolean): string {
             if (functionality) return JASS.button + JASS.TriggerVariableFinalButton
             return JASS.button
 
+        case FrameType.SIMPLE_BUTTON:
+            if (functionality) return JASS.simpleButton + JASS.TriggerVariableFinalButton
+            return JASS.simpleButton
+
         case FrameType.SCRIPT_DIALOG_BUTTON:
             if (functionality) return JASS.ScriptDialogButton + JASS.TriggerVariableFinalButton
             return JASS.ScriptDialogButton
@@ -573,6 +585,10 @@ function LuaGetTypeText(type: FrameType, functionality: boolean): string {
             if (functionality) return LUA.button + LUA.TriggerVariableButton
             return LUA.button
 
+        case FrameType.SIMPLE_BUTTON:
+            if (functionality) return LUA.simpleButton + LUA.TriggerVariableButton
+            return LUA.simpleButton
+
         case FrameType.SCRIPT_DIALOG_BUTTON:
             if (functionality) return LUA.ScriptDialogButton + LUA.TriggerVariableButton
             return LUA.ScriptDialogButton
@@ -639,6 +655,10 @@ function TypescriptGetTypeText(type: FrameType, functionality: boolean): string 
         case FrameType.BUTTON:
             if (functionality) return Typescript.button + Typescript.ButtonTriggerSetup
             return Typescript.button
+
+        case FrameType.SIMPLE_BUTTON:
+            if (functionality) return Typescript.simpleButton + Typescript.ButtonTriggerSetup
+            return Typescript.simpleButton
 
         case FrameType.SCRIPT_DIALOG_BUTTON:
             if (functionality) return Typescript.ScriptDialogButton + Typescript.ButtonTriggerSetup

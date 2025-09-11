@@ -358,7 +358,7 @@ export default class CustomComplex extends FrameBaseContent implements CustomCom
         const ty = this.frameComponent.type
         const f = FrameType
 
-        if (ty >= f.BACKDROP && ty <= f.INVIS_BUTTON) {
+        if ((ty >= f.BACKDROP && ty <= f.INVIS_BUTTON) || ty == f.SIMPLE_BUTTON) {
             ImageSetup()
         }
         if (ty == f.SCRIPT_DIALOG_BUTTON || ty == f.BROWSER_BUTTON) {

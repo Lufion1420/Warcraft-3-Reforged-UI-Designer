@@ -38,6 +38,14 @@ const Button2MLT = FrameMLText.newFrameByType('BackdropFRvar', 'BackdropFRvar', 
     .setAllPoints(Button1MLT)
     .setTexture('PATHvar', 0, true)
 
+// Simple Button + Backdrop (created by type)
+const SimpleButton1MLT = FrameMLText.newFrameByType('FRvar', 'FRvar', 'OWNERvar', 0, 0, 'SIMPLEBUTTON', '')
+    .setAbsPoint('FRAMEPOINT_TOPLEFT', 'TOPLEFTXvar', 'TOPLEFTYvar')
+    .setAbsPoint('FRAMEPOINT_BOTTOMRIGHT', 'BOTRIGHTXvar', 'BOTRIGHTYvar')
+const SimpleButton2MLT = FrameMLText.newFrameByType('BackdropFRvar', 'BackdropFRvar', SimpleButton1MLT, 0, 0, 'BACKDROP', '')
+    .setAllPoints(SimpleButton1MLT)
+    .setTexture('PATHvar', 0, true)
+
 // Dialog Button
 const ScriptDialogButtonMLT = FrameMLText.newFrame('FRvar', 'ScriptDialogButton', 'OWNERvar', 0, 0)
     .setAbsPoint('FRAMEPOINT_TOPLEFT', 'TOPLEFTXvar', 'TOPLEFTYvar')
@@ -224,6 +232,7 @@ export class JASS implements I_Templates {
 
     static backdrop = BackdropMLT.jass()
     static button = Button1MLT.jass() + Button2MLT.jass()
+    static simpleButton = SimpleButton1MLT.jass() + SimpleButton2MLT.jass()
     static ScriptDialogButton = ScriptDialogButtonMLT.jass()
     static BrowserButton = BrowserButtonMLT.jass()
     static CheckListBox = CheckListBoxMLT.jass()
@@ -290,6 +299,7 @@ export class LUA implements I_Templates {
     static backdrop = BackdropMLT.lua()
 
     static button = Button1MLT.lua() + Button2MLT.lua()
+    static simpleButton = SimpleButton1MLT.lua() + SimpleButton2MLT.lua()
 
     static ScriptDialogButton = ScriptDialogButtonMLT.lua()
     static BrowserButton = BrowserButtonMLT.lua()
@@ -350,6 +360,7 @@ export class Typescript implements I_Templates {
 
     static backdrop = BackdropMLT.ts('  ')
     static button = Button1MLT.ts('  ') + Button2MLT.ts('  ')
+    static simpleButton = SimpleButton1MLT.ts('  ') + SimpleButton2MLT.ts('  ')
 
     static ScriptDialogButton = ScriptDialogButtonMLT.ts('  ')
     static BrowserButton = BrowserButtonMLT.ts('  ')

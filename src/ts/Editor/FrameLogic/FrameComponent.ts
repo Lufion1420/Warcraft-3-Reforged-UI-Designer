@@ -438,6 +438,13 @@ export class FrameComponent implements Saveable {
                 f.type = true
 
                 break
+            case ft.SIMPLE_BUTTON:
+                f.trigVar = true
+                f.tooltip = false
+                f.textures = true
+                f.type = true
+
+                break
             case ft.SCRIPT_DIALOG_BUTTON:
                 allowText()
                 f.trigVar = true

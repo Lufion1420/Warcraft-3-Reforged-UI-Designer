@@ -333,8 +333,9 @@ export class ParameterEditor {
             command.action()
 
             let typeText = ''
-            if (selected.type == 1) typeText = 'Backdrop'
-            if (selected.type == 2) typeText = 'Button'
+            if (selected.type == FrameType.BACKDROP) typeText = 'Backdrop'
+            if (selected.type == FrameType.BUTTON) typeText = 'Button'
+            if (selected.type == FrameType.SIMPLE_BUTTON) typeText = 'Simple Button'
             debugText('Type changed to ' + typeText)
 
             ParameterEditor.getInstance().updateFields(selected)
@@ -1112,8 +1113,8 @@ export class ParameterEditor {
 
                 this.checkboxElementTooltip.disabled = false
 
-                if (frame.type == FrameType.BACKDROP || frame.type == FrameType.BUTTON) {
-                    this.selectElementType.selectedIndex = frame.type - 1
+                if (frame.FieldsAllowed.type) {
+                    this.selectElementType.value = String(frame.type)
                 }
 
                 if (frame.getParent() == ProjectTree.getInstance().rootFrame) {
