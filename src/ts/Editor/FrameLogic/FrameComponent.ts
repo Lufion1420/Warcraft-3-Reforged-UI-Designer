@@ -350,6 +350,26 @@ export class FrameComponent implements Saveable {
         ParameterEditor.getInstance().updateFields(null)
     }
 
+    /**
+     * Removes this frame and its entire subtree from the project tree (no reparenting).
+     * Used for full resets (e.g., before loading a different project).
+     */
+    destroyDeep() {
+        // Make a copy because child.destroyDeep mutates this.children
+        const childrenCopy = [...this.children]
+        for (const child of childrenCopy) {
+            child.destroyDeep()
+        }
+
+        const parent = this.getParent()
+        if (parent) parent.removeFrame(this)
+
+        try { this.treeElement.remove() } catch {}
+        try { this.layerDiv.remove() } catch {}
+        try { if (this.custom != null) this.custom.delete() } catch {}
+        try { if (this.parentOption != null) this.parentOption.remove() } catch {}
+    }
+
     makeAsParentTo(newChild: FrameComponent) {
         if (newChild == this) return false
 

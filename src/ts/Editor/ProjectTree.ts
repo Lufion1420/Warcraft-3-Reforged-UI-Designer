@@ -312,14 +312,19 @@ export class ProjectTree implements IterableIterator<FrameComponent>, Saveable {
 
     load(container: SaveContainer): void {
         if (container.hasKey(ProjectTree.SAVE_KEY_ORIGIN_CHILDREN)) {
-            //Clear the entire project tree first.
-            for (const el of ProjectTree.getInstance().getIterator()) {
-                if (el.type == 0) {
-                    //Origin
-                    continue
+            // Clear the entire project tree first (hard reset, no reparenting)
+            try {
+                const root = this.rootFrame
+                while (root.getChildren().length > 0) {
+                    // Always destroy the first child deeply until none remain
+                    root.getChildren()[0].destroyDeep()
                 }
-                el.destroy()
+            } catch (e) {
+                console.error('Error while clearing current project before load:', e)
             }
+            // Clear arrays state
+            try { ProjectTree.TableArrays = [] } catch {}
+            try { ProjectTree.CircleArrays = [] } catch {}
 
             const frames = container.load(ProjectTree.SAVE_KEY_ORIGIN_CHILDREN)
 
