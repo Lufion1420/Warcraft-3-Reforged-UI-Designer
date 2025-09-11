@@ -400,3 +400,24 @@ li.tree-drop-after::after {
     bottom: -2px;
     border-bottom: 2px solid rgba(255, 127, 0, 0.9);
 }
+
+/* Spacing for custom Functionality inputs (click/enter/leave) */
+#FieldFunctionalityFuncs {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#FieldFunctionalityFuncs > div {
+    width: 100%;
+}
+
+/* Spacing for the Texture Prefix and Extension overwrite */
+#FieldGeneral > .gx-1 {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#FieldGeneral > .gx-1 > div {
+    width: 100%;
+}
+

@@ -23,6 +23,9 @@ export class FrameBuilder implements CustomComplexProps {
     isRelative = false
     linkToParent = false
     linkChildren = false
+    onClickFunc = ''
+    onMouseEnterFunc = ''
+    onMouseLeaveFunc = ''
     text = 'Text'
     scale = 1
     color = '#FFCC00'
@@ -88,6 +91,9 @@ export class FrameBuilder implements CustomComplexProps {
             this.isRelative = container.load(CustomComplex.SAVE_KEY_TRIGGER_IS_RELATIVE)
             this.linkToParent = container.load(CustomComplex.SAVE_KEY_LINK_TO_PARENT)
             try { this.linkChildren = container.load(CustomComplex.SAVE_KEY_LINK_CHILDREN) } catch {}
+            try { this.onClickFunc = container.load(CustomComplex.SAVE_KEY_ONCLICK_FUNC) } catch {}
+            try { this.onMouseEnterFunc = container.load(CustomComplex.SAVE_KEY_ONENTER_FUNC) } catch {}
+            try { this.onMouseLeaveFunc = container.load(CustomComplex.SAVE_KEY_ONLEAVE_FUNC) } catch {}
             this.textureBackDiskPath = container.load(CustomComplex.SAVE_KEY_TEXTURE_BACK_DISK_PATH)
             this.textureBackWc3Path = container.load(CustomComplex.SAVE_KEY_TEXTURE_BACK_WC3_PATH)
         } catch (e) {
@@ -114,6 +120,13 @@ export class FrameBuilder implements CustomComplexProps {
         } catch (e) {
             console.log('Loading Error: Tooltip Info')
         }
+
+        // Load custom functions
+        try {
+            frameComponent.custom.setOnClickFunc(this.onClickFunc)
+            frameComponent.custom.setOnMouseEnterFunc(this.onMouseEnterFunc)
+            frameComponent.custom.setOnMouseLeaveFunc(this.onMouseLeaveFunc)
+        } catch {}
 
         try {
             frameComponent.world_frame = container.load(FrameComponent.SAVE_KEY_WORLDFRAME)

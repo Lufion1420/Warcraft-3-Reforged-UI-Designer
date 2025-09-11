@@ -29,6 +29,9 @@ export default class CustomComplex extends FrameBaseContent implements CustomCom
     public static readonly SAVE_KEY_TRIGGER_IS_RELATIVE = 'isRelative'
     public static readonly SAVE_KEY_LINK_TO_PARENT = 'linkToParent'
     public static readonly SAVE_KEY_LINK_CHILDREN = 'linkChildren'
+    public static readonly SAVE_KEY_ONCLICK_FUNC = 'onClickFunc'
+    public static readonly SAVE_KEY_ONENTER_FUNC = 'onMouseEnterFunc'
+    public static readonly SAVE_KEY_ONLEAVE_FUNC = 'onMouseLeaveFunc'
 
     text = ''
     scale = 1
@@ -43,6 +46,9 @@ export default class CustomComplex extends FrameBaseContent implements CustomCom
     isRelative = false
     linkToParent = false
     linkChildren = false
+    onClickFunc = ''
+    onMouseEnterFunc = ''
+    onMouseLeaveFunc = ''
 
     private elemTextContainer?: HTMLDivElement
     private elemText?: HTMLParagraphElement
@@ -239,6 +245,30 @@ export default class CustomComplex extends FrameBaseContent implements CustomCom
         return this.trigVar
     }
 
+    public setOnClickFunc(name: string): void {
+        this.onClickFunc = name
+    }
+
+    public getOnClickFunc(): string {
+        return this.onClickFunc
+    }
+
+    public setOnMouseEnterFunc(name: string): void {
+        this.onMouseEnterFunc = name
+    }
+
+    public getOnMouseEnterFunc(): string {
+        return this.onMouseEnterFunc
+    }
+
+    public setOnMouseLeaveFunc(name: string): void {
+        this.onMouseLeaveFunc = name
+    }
+
+    public getOnMouseLeaveFunc(): string {
+        return this.onMouseLeaveFunc
+    }
+
     public setIsRelative(IsIt: boolean): void {
         this.isRelative = IsIt
     }
@@ -278,6 +308,9 @@ export default class CustomComplex extends FrameBaseContent implements CustomCom
         container.save(CustomComplex.SAVE_KEY_TRIGGER_IS_RELATIVE, this.isRelative)
         container.save(CustomComplex.SAVE_KEY_LINK_TO_PARENT, this.linkToParent)
         container.save(CustomComplex.SAVE_KEY_LINK_CHILDREN, this.linkChildren)
+        container.save(CustomComplex.SAVE_KEY_ONCLICK_FUNC, this.onClickFunc)
+        container.save(CustomComplex.SAVE_KEY_ONENTER_FUNC, this.onMouseEnterFunc)
+        container.save(CustomComplex.SAVE_KEY_ONLEAVE_FUNC, this.onMouseLeaveFunc)
         // container.save(CustomComplex.SAVE_KEY_, this.);
     }
 

@@ -61,6 +61,9 @@ export class ParameterEditor {
     public readonly inputElementTextBig = document.getElementById('elementTextBig') as HTMLInputElement
     public readonly inputElementTextScale = document.getElementById('elementTextScale') as HTMLInputElement
     public readonly inputElementTextColor = document.getElementById('elementTextColor') as HTMLInputElement
+    public readonly inputElementOnClickFunc = document.getElementById('elementOnClickFunc') as HTMLInputElement
+    public readonly inputElementOnMouseEnterFunc = document.getElementById('elementOnMouseEnterFunc') as HTMLInputElement
+    public readonly inputElementOnMouseLeaveFunc = document.getElementById('elementOnMouseLeaveFunc') as HTMLInputElement
     public readonly inputElementArrayName = document.getElementById('elementArrayName') as HTMLInputElement
     public readonly inputElementArrayRows = document.getElementById('elementArrayRows') as HTMLInputElement
     public readonly inputElementArrayCols = document.getElementById('elementArrayCols') as HTMLInputElement
@@ -134,6 +137,9 @@ export class ParameterEditor {
         this.inputElementTextScale.onchange = ParameterEditor.InputTextScale
         this.inputElementTextColor.onchange = ParameterEditor.InputTextColor
         this.inputElementTrigVar.oninput = ParameterEditor.InputTrigVar
+        this.inputElementOnClickFunc.oninput = ParameterEditor.InputOnClickFunc
+        this.inputElementOnMouseEnterFunc.oninput = ParameterEditor.InputOnMouseEnterFunc
+        this.inputElementOnMouseLeaveFunc.oninput = ParameterEditor.InputOnMouseLeaveFunc
         this.inputElementArrayName.onchange = ParameterEditor.InputArrayName
         this.inputElementArrayXGap.onchange = ParameterEditor.InputArrayXGap
         this.inputElementArrayYGap.onchange = ParameterEditor.InputArrayYGap
@@ -423,6 +429,30 @@ export class ParameterEditor {
             }
         } catch (e) {
             console.log('LinkToParent toggle error: ' + e)
+        }
+    }
+
+    static InputOnClickFunc(ev: Event): void {
+        const input = ev.target as HTMLInputElement
+        const selected = ProjectTree.getSelected()
+        if (selected) {
+            selected.custom.setOnClickFunc(input.value)
+        }
+    }
+
+    static InputOnMouseEnterFunc(ev: Event): void {
+        const input = ev.target as HTMLInputElement
+        const selected = ProjectTree.getSelected()
+        if (selected) {
+            selected.custom.setOnMouseEnterFunc(input.value)
+        }
+    }
+
+    static InputOnMouseLeaveFunc(ev: Event): void {
+        const input = ev.target as HTMLInputElement
+        const selected = ProjectTree.getSelected()
+        if (selected) {
+            selected.custom.setOnMouseLeaveFunc(input.value)
         }
     }
 
@@ -1086,6 +1116,13 @@ export class ParameterEditor {
                 this.fieldArrayConfigOutermost.style.display = 'none'
                 this.fieldArrayTable.style.display = 'none'
                 this.fieldArrayCircle.style.display = 'none'
+                // Hide custom function inputs by default
+                const _el1 = document.getElementById('elementOnClickFunc') as HTMLInputElement
+                const _el2 = document.getElementById('elementOnMouseEnterFunc') as HTMLInputElement
+                const _el3 = document.getElementById('elementOnMouseLeaveFunc') as HTMLInputElement
+                if (_el1) _el1.parentElement!.style.display = 'none'
+                if (_el2) _el2.parentElement!.style.display = 'none'
+                if (_el3) _el3.parentElement!.style.display = 'none'
 
                 if (frame.FieldsAllowed.parent) this.fieldParent.style.display = 'initial'
                 if (frame.FieldsAllowed.type) this.fieldType.style.display = 'initial'
@@ -1095,6 +1132,15 @@ export class ParameterEditor {
                 if (frame.FieldsAllowed.trigVar) {
                     this.fieldFunctionalityVar.style.display = 'initial'
                     this.fieldFunctionalityOutermost.style.display = 'initial'
+                }
+                // Show function name inputs when triggers are allowed
+                if (frame.FieldsAllowed.trigVar) {
+                    const el1 = document.getElementById('elementOnClickFunc') as HTMLInputElement
+                    const el2 = document.getElementById('elementOnMouseEnterFunc') as HTMLInputElement
+                    const el3 = document.getElementById('elementOnMouseLeaveFunc') as HTMLInputElement
+                    if (el1) el1.parentElement!.style.display = 'initial'
+                    if (el2) el2.parentElement!.style.display = 'initial'
+                    if (el3) el3.parentElement!.style.display = 'initial'
                 }
                 if (frame.FieldsAllowed.text) this.fieldFunctionalityText.style.display = 'initial'
                 if (frame.FieldsAllowed.textBig) this.fieldFunctionalityTextBig.style.display = 'initial'
@@ -1167,6 +1213,11 @@ export class ParameterEditor {
                         this.fieldArrayCircle.style.display = 'initial'
                     }
                 }
+
+                // Populate function fields
+                this.inputElementOnClickFunc.value = frame.custom.getOnClickFunc ? frame.custom.getOnClickFunc() : ''
+                this.inputElementOnMouseEnterFunc.value = frame.custom.getOnMouseEnterFunc ? frame.custom.getOnMouseEnterFunc() : ''
+                this.inputElementOnMouseLeaveFunc.value = frame.custom.getOnMouseLeaveFunc ? frame.custom.getOnMouseLeaveFunc() : ''
 
             } else {
                 // this.disableFields(true)

@@ -242,7 +242,7 @@
                             <select name="elementType" id="elementType">
                                 <option value="1">Backdrop</option>
                                 <option value="2">Button</option>
-                                <option value="20">Simple Button</option>
+                                <option value="20">SimpleButton</option>
                             </select>
                         </div>
 
@@ -547,6 +547,21 @@
                                 <div class="form-floating mb-3 mt-2">
                                     <input type="text" name="elementTrigVar" id="elementTrigVar" class="form-control" placeholder="name" />
                                     <label class="text-black" for="elementTrigVar">Triggered Variable</label>
+                                </div>
+                            </div>
+
+                            <div id="FieldFunctionalityFuncs">
+                                <div class="form-floating mb-3 mt-2" data-bs-toggle="tooltip" title="Function called on click">
+                                    <input type="text" name="elementOnClickFunc" id="elementOnClickFunc" class="form-control" placeholder="FunctionName" />
+                                    <label class="text-black" for="elementOnClickFunc">On Click Function</label>
+                                </div>
+                                <div class="form-floating mb-3 mt-2" data-bs-toggle="tooltip" title="Function called on mouse enter">
+                                    <input type="text" name="elementOnMouseEnterFunc" id="elementOnMouseEnterFunc" class="form-control" placeholder="FunctionName" />
+                                    <label class="text-black" for="elementOnMouseEnterFunc">On MouseEnter Function</label>
+                                </div>
+                                <div class="form-floating mb-3 mt-2" data-bs-toggle="tooltip" title="Function called on mouse leave">
+                                    <input type="text" name="elementOnMouseLeaveFunc" id="elementOnMouseLeaveFunc" class="form-control" placeholder="FunctionName" />
+                                    <label class="text-black" for="elementOnMouseLeaveFunc">On MouseLeave Function</label>
                                 </div>
                             </div>
                         </div>

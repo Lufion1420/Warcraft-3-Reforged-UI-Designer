@@ -441,7 +441,8 @@ export class FrameComponent implements Saveable {
             case ft.SIMPLE_BUTTON:
                 f.trigVar = true
                 f.tooltip = false
-                f.textures = true
+                f.textures = false
+                f.backTextures = false
                 f.type = true
 
                 break

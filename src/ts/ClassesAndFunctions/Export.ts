@@ -289,25 +289,8 @@ export function TemplateReplace(lang: TLanguage, kind: number) {
                 }
             } else if (kind == 1 && lang != 'ts') {
                 text = ''
-                if (
-                    el.type != FrameType.BROWSER_BUTTON &&
-                    el.type != FrameType.SCRIPT_DIALOG_BUTTON &&
-                    el.type != FrameType.BUTTON &&
-                    el.type != FrameType.SIMPLE_BUTTON &&
-                    el.type != FrameType.INVIS_BUTTON &&
-                    el.type != FrameType.CHECKBOX
-                )
-                    continue
-
-                if (el.type != FrameType.CHECKBOX) {
-                    text = temp.TriggerButtonDisableStart
-                    if (el.custom.getTrigVar() == '') {
-                        text += temp.TriggerButtonDisableEnd
-                    } else {
-                        text += temp.TriggerVariableInit
-                        text += temp.TriggerButtonDisableEnd
-                    }
-                } else if (temp == JASS) {
+                // Only generate checkbox helper function; skip default button functions.
+                if (el.type == FrameType.CHECKBOX && temp == JASS) {
                     text = JASS.TriggerCheckboxStart
                     if (el.custom.getTrigVar() == '') {
                         text += JASS.TriggerCheckboxEnd
@@ -315,7 +298,7 @@ export function TemplateReplace(lang: TLanguage, kind: number) {
                         text += JASS.TriggerCheckboxTrig
                         text += JASS.TriggerCheckboxEnd
                     }
-                }
+                } else continue
             } else if (kind == 2) {
                 switch (lang) {
                     case 'jass':
@@ -327,6 +310,71 @@ export function TemplateReplace(lang: TLanguage, kind: number) {
                     case 'ts':
                         text = TypescriptGetTypeText(el.type, true)
                         break //always true. maybe give option for users to make it false
+                }
+
+                // Conditional triggers for button-like frames based on user-provided function names
+                const isButtonLike =
+                    el.type == FrameType.BUTTON ||
+                    el.type == FrameType.SIMPLE_BUTTON ||
+                    el.type == FrameType.INVIS_BUTTON ||
+                    el.type == FrameType.BROWSER_BUTTON ||
+                    el.type == FrameType.SCRIPT_DIALOG_BUTTON
+
+                if (isButtonLike) {
+                    const clickFunc = (el.custom as CustomComplex).getOnClickFunc ? (el.custom as CustomComplex).getOnClickFunc() : ''
+                    const enterFunc = (el.custom as CustomComplex).getOnMouseEnterFunc ? (el.custom as CustomComplex).getOnMouseEnterFunc() : ''
+                    const leaveFunc = (el.custom as CustomComplex).getOnMouseLeaveFunc ? (el.custom as CustomComplex).getOnMouseLeaveFunc() : ''
+
+                    const anyFunc = (clickFunc && clickFunc.length > 0) || (enterFunc && enterFunc.length > 0) || (leaveFunc && leaveFunc.length > 0)
+                    if (anyFunc) {
+                        switch (lang) {
+                            case 'jass':
+                                text += 'set TriggerFRvar = CreateTrigger()\n'
+                                if (clickFunc && clickFunc.length > 0) {
+                                    text += 'call BlzTriggerRegisterFrameEvent(TriggerFRvar, FRvar, FRAMEEVENT_CONTROL_CLICK)\n'
+                                    text += `call TriggerAddAction(TriggerFRvar, function ${clickFunc})\n`
+                                }
+                                if (enterFunc && enterFunc.length > 0) {
+                                    text += 'call BlzTriggerRegisterFrameEvent(TriggerFRvar, FRvar, FRAMEEVENT_MOUSE_ENTER)\n'
+                                    text += `call TriggerAddAction(TriggerFRvar, function ${enterFunc})\n`
+                                }
+                                if (leaveFunc && leaveFunc.length > 0) {
+                                    text += 'call BlzTriggerRegisterFrameEvent(TriggerFRvar, FRvar, FRAMEEVENT_MOUSE_LEAVE)\n'
+                                    text += `call TriggerAddAction(TriggerFRvar, function ${leaveFunc})\n`
+                                }
+                                break
+                            case 'lua':
+                                text += 'TriggerFRvar = CreateTrigger()\n'
+                                if (clickFunc && clickFunc.length > 0) {
+                                    text += 'BlzTriggerRegisterFrameEvent(TriggerFRvar, FRvar, FRAMEEVENT_CONTROL_CLICK)\n'
+                                    text += `TriggerAddAction(TriggerFRvar, ${clickFunc})\n`
+                                }
+                                if (enterFunc && enterFunc.length > 0) {
+                                    text += 'BlzTriggerRegisterFrameEvent(TriggerFRvar, FRvar, FRAMEEVENT_MOUSE_ENTER)\n'
+                                    text += `TriggerAddAction(TriggerFRvar, ${enterFunc})\n`
+                                }
+                                if (leaveFunc && leaveFunc.length > 0) {
+                                    text += 'BlzTriggerRegisterFrameEvent(TriggerFRvar, FRvar, FRAMEEVENT_MOUSE_LEAVE)\n'
+                                    text += `TriggerAddAction(TriggerFRvar, ${leaveFunc})\n`
+                                }
+                                break
+                            case 'ts':
+                                text += 't = new Trigger() \n'
+                                if (clickFunc && clickFunc.length > 0) {
+                                    text += 't.triggerRegisterFrameEvent(this.FRvar, FRAMEEVENT_CONTROL_CLICK) \n'
+                                    text += `t.addAction(() => { ${clickFunc}() })\n`
+                                }
+                                if (enterFunc && enterFunc.length > 0) {
+                                    text += 't.triggerRegisterFrameEvent(this.FRvar, FRAMEEVENT_MOUSE_ENTER) \n'
+                                    text += `t.addAction(() => { ${enterFunc}() })\n`
+                                }
+                                if (leaveFunc && leaveFunc.length > 0) {
+                                    text += 't.triggerRegisterFrameEvent(this.FRvar, FRAMEEVENT_MOUSE_LEAVE) \n'
+                                    text += `t.addAction(() => { ${leaveFunc}() })\n`
+                                }
+                                break
+                        }
+                    }
                 }
 
                 if (el.getTooltip()) {
@@ -511,19 +559,15 @@ function JassGetTypeText(type: FrameType, functionality: boolean): string {
             return JASS.backdrop
 
         case FrameType.BUTTON:
-            if (functionality) return JASS.button + JASS.TriggerVariableFinalButton
             return JASS.button
 
         case FrameType.SIMPLE_BUTTON:
-            if (functionality) return JASS.simpleButton + JASS.TriggerVariableFinalButton
             return JASS.simpleButton
 
         case FrameType.SCRIPT_DIALOG_BUTTON:
-            if (functionality) return JASS.ScriptDialogButton + JASS.TriggerVariableFinalButton
             return JASS.ScriptDialogButton
 
         case FrameType.BROWSER_BUTTON:
-            if (functionality) return JASS.BrowserButton + JASS.TriggerVariableFinalButton
             return JASS.BrowserButton
 
         case FrameType.CHECKLIST_BOX:
@@ -549,7 +593,6 @@ function JassGetTypeText(type: FrameType, functionality: boolean): string {
             return JASS.QuestCheckBox
 
         case FrameType.INVIS_BUTTON:
-            if (functionality) return JASS.InvisButton + JASS.TriggerVariableFinalButton
             return JASS.InvisButton
 
         case FrameType.TEXT_FRAME:
@@ -582,19 +625,15 @@ function LuaGetTypeText(type: FrameType, functionality: boolean): string {
             return LUA.backdrop
 
         case FrameType.BUTTON:
-            if (functionality) return LUA.button + LUA.TriggerVariableButton
             return LUA.button
 
         case FrameType.SIMPLE_BUTTON:
-            if (functionality) return LUA.simpleButton + LUA.TriggerVariableButton
             return LUA.simpleButton
 
         case FrameType.SCRIPT_DIALOG_BUTTON:
-            if (functionality) return LUA.ScriptDialogButton + LUA.TriggerVariableButton
             return LUA.ScriptDialogButton
 
         case FrameType.BROWSER_BUTTON:
-            if (functionality) return LUA.BrowserButton + LUA.TriggerVariableButton
             return LUA.BrowserButton
 
         case FrameType.CHECKLIST_BOX:
@@ -620,7 +659,6 @@ function LuaGetTypeText(type: FrameType, functionality: boolean): string {
             return LUA.QuestCheckBox
 
         case FrameType.INVIS_BUTTON:
-            if (functionality) return LUA.InvisButton + LUA.TriggerVariableButton
             return LUA.InvisButton
 
         case FrameType.TEXT_FRAME:
@@ -653,19 +691,15 @@ function TypescriptGetTypeText(type: FrameType, functionality: boolean): string 
             return Typescript.backdrop
 
         case FrameType.BUTTON:
-            if (functionality) return Typescript.button + Typescript.ButtonTriggerSetup
             return Typescript.button
 
         case FrameType.SIMPLE_BUTTON:
-            if (functionality) return Typescript.simpleButton + Typescript.ButtonTriggerSetup
             return Typescript.simpleButton
 
         case FrameType.SCRIPT_DIALOG_BUTTON:
-            if (functionality) return Typescript.ScriptDialogButton + Typescript.ButtonTriggerSetup
             return Typescript.ScriptDialogButton
 
         case FrameType.BROWSER_BUTTON:
-            if (functionality) return Typescript.BrowserButton + Typescript.ButtonTriggerSetup
             return Typescript.BrowserButton
 
         case FrameType.CHECKLIST_BOX:
@@ -691,7 +725,6 @@ function TypescriptGetTypeText(type: FrameType, functionality: boolean): string 
             return Typescript.QuestCheckBox
 
         case FrameType.INVIS_BUTTON:
-            if (functionality) return Typescript.InvisButton + Typescript.ButtonTriggerSetup
             return Typescript.InvisButton
 
         case FrameType.TEXT_FRAME:
