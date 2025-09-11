@@ -8,6 +8,7 @@ import CustomComplex from '../Editor/FrameLogic/CustomComplex'
 import { ProjectTree } from '../Editor/ProjectTree'
 import { ParameterEditor } from '../Editor/ParameterEditor'
 import { Editor } from '../Editor/Editor'
+import MoveFramesBatchPos from '../Commands/Implementation/MoveFramesBatchPos'
 
 export function MouseFunctions(div: CustomComplex): void {
     const workspaceImage = Editor.getInstance().workspaceImage
@@ -26,6 +27,20 @@ export function MouseFunctions(div: CustomComplex): void {
         const startingHeight = div.getHeight()
 
         projectTree.select(div, e.shiftKey)
+
+        // Capture initial positions for multi-select batch undo
+        const selectionAtStart = projectTree.getSelectedFrames ? projectTree.getSelectedFrames() : []
+        const multiStartPositions = new Map<string, { x: number; y: number; w: number; h: number }>()
+        if (Array.isArray(selectionAtStart) && selectionAtStart.length > 1) {
+            for (const sel of selectionAtStart) {
+                multiStartPositions.set(sel.getName(), {
+                    x: sel.custom.getLeftX(),
+                    y: sel.custom.getBotY(),
+                    w: sel.custom.getWidth(),
+                    h: sel.custom.getHeight(),
+                })
+            }
+        }
 
         let posX1 = e.clientX
         let posY1 = e.clientY
@@ -393,28 +408,48 @@ export function MouseFunctions(div: CustomComplex): void {
                     return
                 }
 
-                const command = new MoveFrame(frame, div.getLeftX(), div.getBotY(), div.getWidth(), div.getHeight(), {
-                    oldX: startingX,
-                    oldY: startingY,
-                    oldWidth: startingWidth,
-                    oldHeight: startingHeight,
-                })
-                command.action(true)
-            } else {
-                for (const sel of selection) {
-                    const oldX = sel.custom.getLeftX()
-                    const oldY = sel.custom.getBotY()
-                    const oldW = sel.custom.getWidth()
-                    const oldH = sel.custom.getHeight()
-
-                    const cmd = new MoveFrame(sel, sel.custom.getLeftX(), sel.custom.getBotY(), sel.custom.getWidth(), sel.custom.getHeight(), {
-                        oldX,
-                        oldY,
-                        oldWidth: oldW,
-                        oldHeight: oldH,
+                // If linked children move is enabled, capture a batch so undo restores children too
+                if (frame.custom.getLinkChildren()) {
+                    const dx = div.getLeftX() - startingX
+                    const dy = div.getBotY() - startingY
+                    const items: { name: string; oldX: number; oldY: number; newX: number; newY: number }[] = []
+                    // Parent
+                    items.push({ name: frame.getName(), oldX: startingX, oldY: startingY, newX: div.getLeftX(), newY: div.getBotY() })
+                    // Descendants
+                    const addDesc = (parent: any) => {
+                        for (const child of parent.getChildren()) {
+                            const cx = child.custom.getLeftX()
+                            const cy = child.custom.getBotY()
+                            items.push({ name: child.getName(), oldX: cx - dx, oldY: cy - dy, newX: cx, newY: cy })
+                            addDesc(child)
+                        }
+                    }
+                    addDesc(frame)
+                    new (require('../Commands/Implementation/MoveFramesBatchPos').default)(items).action()
+                } else {
+                    const command = new MoveFrame(frame, div.getLeftX(), div.getBotY(), div.getWidth(), div.getHeight(), {
+                        oldX: startingX,
+                        oldY: startingY,
+                        oldWidth: startingWidth,
+                        oldHeight: startingHeight,
                     })
-                    cmd.action(true)
+                    command.action(true)
                 }
+            } else {
+                // Group multiselect move into one undo entry using batch positions
+                const items: { name: string; oldX: number; oldY: number; newX: number; newY: number }[] = []
+                for (const sel of selection) {
+                    const start = multiStartPositions.get(sel.getName())
+                    if (!start) continue
+                    items.push({
+                        name: sel.getName(),
+                        oldX: start.x,
+                        oldY: start.y,
+                        newX: sel.custom.getLeftX(),
+                        newY: sel.custom.getBotY(),
+                    })
+                }
+                if (items.length > 0) new MoveFramesBatchPos(items).action()
             }
         }
     }

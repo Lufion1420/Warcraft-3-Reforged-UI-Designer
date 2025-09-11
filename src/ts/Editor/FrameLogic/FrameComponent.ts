@@ -11,6 +11,7 @@ import { ParameterEditor } from '../ParameterEditor'
 import { FrameMap } from './ComponentMap'
 import TableArray from './Arrays/TableArray'
 import BaseArray from './Arrays/BaseArray'
+import ChangeFrameOrder from '../../Commands/Implementation/ChangeFrameOrder'
 
 export class FrameComponent implements Saveable {
     static readonly SAVE_KEY_NAME = 'name'
@@ -125,14 +126,11 @@ export class FrameComponent implements Saveable {
                 const bottom = rect.height * 0.66
 
                 if (y < top) {
-                    // place src before this
-                    src.moveBeforeSibling(this)
+                    new ChangeFrameOrder(src, this, 'before').action()
                 } else if (y > bottom) {
-                    // place src after this
-                    src.moveAfterSibling(this)
+                    new ChangeFrameOrder(src, this, 'after').action()
                 } else {
-                    // make this as parent of src
-                    this.makeAsParentTo(src)
+                    new ChangeFrameParent(src, this).action()
                 }
                 // clear hover classes
                 const targetLi = ev.currentTarget as HTMLElement
@@ -368,6 +366,39 @@ export class FrameComponent implements Saveable {
         try { this.layerDiv.remove() } catch {}
         try { if (this.custom != null) this.custom.delete() } catch {}
         try { if (this.parentOption != null) this.parentOption.remove() } catch {}
+    }
+
+    /** Move this frame under a given parent at a specific index (undo-friendly helper) */
+    moveToParentAtIndex(newParent: FrameComponent, index: number): boolean {
+        if (newParent === this) return false
+        // Ensure correct parent
+        newParent.makeAsParentTo(this)
+
+        const arr = newParent.getChildren()
+        const idxSelf = arr.indexOf(this)
+        if (idxSelf === -1) return false
+
+        // Remove current position
+        arr.splice(idxSelf, 1)
+
+        // Clamp index
+        if (index < 0) index = 0
+        if (index > arr.length) index = arr.length
+
+        // Insert at index in model
+        arr.splice(index, 0, this)
+
+        // DOM order: find sibling at index and insert before it
+        const siblingAtIndex = newParent.treeElement.children[index + 1] // +1 because first child is label LI
+        if (siblingAtIndex) newParent.treeElement.insertBefore(this.treeElement, siblingAtIndex)
+        else newParent.treeElement.appendChild(this.treeElement)
+
+        const layerSibling = newParent.layerDiv.children[index]
+        if (layerSibling) newParent.layerDiv.insertBefore(this.layerDiv, layerSibling)
+        else newParent.layerDiv.appendChild(this.layerDiv)
+
+        try { ProjectTree.applyContainerColors() } catch {}
+        return true
     }
 
     makeAsParentTo(newChild: FrameComponent) {

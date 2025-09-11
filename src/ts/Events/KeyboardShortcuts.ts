@@ -11,6 +11,8 @@ import { BackgroundTexture, CustomBackground } from '../Editor/Menus/Backgrounds
 import { ParameterEditor } from '../Editor/ParameterEditor'
 import ChangeFrameX from '../Commands/Implementation/ChangeFrameX'
 import ChangeFrameY from '../Commands/Implementation/ChangeFrameY'
+import MoveFramesBatchX from '../Commands/Implementation/MoveFramesBatchX'
+import MoveFramesBatchY from '../Commands/Implementation/MoveFramesBatchY'
 import { ProjectTree } from '../Editor/ProjectTree'
 import LoadDocument from '../Persistence/LoadDocument'
 import NewDocument from '../Persistence/NewDocument'
@@ -240,7 +242,7 @@ export class KeyboardShortcuts {
                         const multi = sel && sel.length > 1
                         const step = event.shiftKey ? 0.0005 : 0.01
                         if (multi) {
-                            for (const f of sel) new ChangeFrameX(f, f.custom.getLeftX() - step).action()
+                            new MoveFramesBatchX(sel, -step).action()
                         } else {
                             par.inputElementCoordinateX.value = (+par.inputElementCoordinateX.value - 0.0005).toFixed(5)
                             if (!event.shiftKey) par.inputElementCoordinateX.value = (+par.inputElementCoordinateX.value - 0.0095).toFixed(5)
@@ -256,7 +258,7 @@ export class KeyboardShortcuts {
                         const multi = sel && sel.length > 1
                         const step = event.shiftKey ? 0.0005 : 0.01
                         if (multi) {
-                            for (const f of sel) new ChangeFrameY(f, f.custom.getBotY() + step).action()
+                            new MoveFramesBatchY(sel, +step).action()
                         } else {
                             par.inputElementCoordinateY.value = (+par.inputElementCoordinateY.value + 0.0005).toFixed(5)
                             if (!event.shiftKey) par.inputElementCoordinateY.value = (+par.inputElementCoordinateY.value + 0.0095).toFixed(5)
@@ -272,7 +274,7 @@ export class KeyboardShortcuts {
                         const multi = sel && sel.length > 1
                         const step = event.shiftKey ? 0.0005 : 0.01
                         if (multi) {
-                            for (const f of sel) new ChangeFrameX(f, f.custom.getLeftX() + step).action()
+                            new MoveFramesBatchX(sel, +step).action()
                         } else {
                             par.inputElementCoordinateX.value = (+par.inputElementCoordinateX.value + 0.0005).toFixed(5)
                             if (!event.shiftKey) par.inputElementCoordinateX.value = (+par.inputElementCoordinateX.value + 0.0095).toFixed(5)
@@ -288,7 +290,7 @@ export class KeyboardShortcuts {
                         const multi = sel && sel.length > 1
                         const step = event.shiftKey ? 0.0005 : 0.01
                         if (multi) {
-                            for (const f of sel) new ChangeFrameY(f, f.custom.getBotY() - step).action()
+                            new MoveFramesBatchY(sel, -step).action()
                         } else {
                             par.inputElementCoordinateY.value = (+par.inputElementCoordinateY.value - 0.0005).toFixed(5)
                             if (!event.shiftKey) par.inputElementCoordinateY.value = (+par.inputElementCoordinateY.value - 0.0095).toFixed(5)
