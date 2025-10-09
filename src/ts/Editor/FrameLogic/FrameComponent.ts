@@ -18,6 +18,7 @@ export class FrameComponent implements Saveable {
     static readonly SAVE_KEY_CHILDREN = 'children'
     static readonly SAVE_KEY_TYPE = 'type'
     static readonly SAVE_KEY_TOOLTIP = 'tooltip'
+    static readonly SAVE_KEY_HIDDEN = 'hidden'
     static readonly SAVE_KEY_ARRAY = 'array'
     static readonly SAVE_KEY_WORLDFRAME = 'world_frame'
 
@@ -25,6 +26,7 @@ export class FrameComponent implements Saveable {
     private children: FrameComponent[]
     type: FrameType
     private tooltip = false
+    private hidden = false
     public array?: BaseArray
 
     world_frame = false
@@ -152,6 +154,8 @@ export class FrameComponent implements Saveable {
         this.setupAllowedFields()
 
         if (!ProjectTree.ShowBorders) this.custom.getElement().style.outlineWidth = '0px'
+
+        if (frameBuildOptions.hidden) this.setHidden(true)
     }
 
     setTooltip(on: boolean): FrameComponent {
@@ -166,8 +170,21 @@ export class FrameComponent implements Saveable {
         return this
     }
 
+    setHidden(on: boolean): FrameComponent {
+        this.hidden = on
+        const element = this.custom.getElement()
+        element.style.visibility = on ? 'hidden' : 'visible'
+        element.style.pointerEvents = on ? 'none' : ''
+
+        return this
+    }
+
     getTooltip(): boolean {
         return this.tooltip
+    }
+
+    getHidden(): boolean {
+        return this.hidden
     }
 
     getName(): string {
@@ -196,6 +213,7 @@ export class FrameComponent implements Saveable {
         container.save(FrameComponent.SAVE_KEY_NAME, this.name)
         container.save(FrameComponent.SAVE_KEY_TYPE, this.type)
         container.save(FrameComponent.SAVE_KEY_TOOLTIP, this.tooltip)
+        container.save(FrameComponent.SAVE_KEY_HIDDEN, this.hidden)
         container.save(FrameComponent.SAVE_KEY_WORLDFRAME, this.world_frame)
         this.custom.save(container)
 

@@ -3,14 +3,25 @@ import { FrameComponent } from '../../Editor/FrameLogic/FrameComponent'
 import { ProjectTree } from '../../Editor/ProjectTree'
 import SimpleCommand from '../SimpleCommand'
 
+const HIDDEN_LOCK_MESSAGE = 'Hidden elements cannot be moved or resized.'
+
 export default class MoveFramesBatchY extends SimpleCommand {
     private frames: string[]
     private delta: number
     private oldY: Map<string, number> = new Map()
+    private hadHidden = false
 
     public constructor(frames: FrameComponent[], delta: number) {
         super()
-        this.frames = frames.map((f) => f.getName())
+        const movable: string[] = []
+        for (const frame of frames) {
+            if (frame.getHidden()) {
+                this.hadHidden = true
+                continue
+            }
+            movable.push(frame.getName())
+        }
+        this.frames = movable
         this.delta = delta
     }
 
@@ -23,6 +34,10 @@ export default class MoveFramesBatchY extends SimpleCommand {
 
     public pureAction(): void {
         const tree = ProjectTree.getInstance()
+        if (this.frames.length === 0) {
+            if (this.hadHidden) debugText(HIDDEN_LOCK_MESSAGE)
+            return
+        }
         // Capture old positions only once
         if (this.oldY.size === 0) {
             for (const name of this.frames) {
@@ -60,4 +75,3 @@ export default class MoveFramesBatchY extends SimpleCommand {
         debugText('Redid batch move Y')
     }
 }
-

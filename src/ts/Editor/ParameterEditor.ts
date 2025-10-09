@@ -9,6 +9,7 @@ import ChangeFrameHeight from '../Commands/Implementation/ChangeFrameHeight'
 import ChangeFrameType from '../Commands/Implementation/ChangeFrameType'
 import ChangeFrameParent from '../Commands/Implementation/ChangeFrameParent'
 import ChangeFrameTooltip from '../Commands/Implementation/ChangeFrameTooltip'
+import ChangeFrameHidden from '../Commands/Implementation/ChangeFrameHidden'
 import ChangeFrameX from '../Commands/Implementation/ChangeFrameX'
 import ChangeFrameY from '../Commands/Implementation/ChangeFrameY'
 import { ProjectTree } from './ProjectTree'
@@ -28,6 +29,8 @@ import CloneElementToArrayArray from '../Commands/Implementation/Arrays/CloneEle
 import ChangeFrameDiskTexture from '../Commands/Implementation/ChangeFrameDiskTexture'
 import ChangeFrameTextColor from '../Commands/Implementation/ChangeFrameTextColor'
 
+const HIDDEN_LOCK_MESSAGE = 'Hidden elements cannot be moved or resized.'
+
 export class ParameterEditor {
     private static instance: ParameterEditor
     /**gives the instance */
@@ -41,6 +44,7 @@ export class ParameterEditor {
     public readonly selectElementType = document.getElementById('elementType') as HTMLSelectElement
     public readonly selectElementParent = document.getElementById('elementParent') as HTMLSelectElement
     public readonly checkboxElementTooltip = document.getElementById('elementTooltip') as HTMLInputElement
+    public readonly checkboxElementHidden = document.getElementById('elementHidden') as HTMLInputElement
     public readonly checkboxElementBorders = document.getElementById('CheckboxElementBorders') as HTMLInputElement
     public readonly checkboxElementRelative = document.getElementById('relativeCheckbox') as HTMLInputElement
     public readonly checkboxElementLinkToParent = document.getElementById('linkToParentCheckbox') as HTMLInputElement
@@ -121,6 +125,7 @@ export class ParameterEditor {
         this.selectElementType.onchange = ParameterEditor.ChangeType
         this.selectElementParent.onchange = ParameterEditor.ChangeParent
         this.checkboxElementTooltip.onchange = ParameterEditor.ChangeTooltip
+        this.checkboxElementHidden.onchange = ParameterEditor.ChangeHidden
         this.checkboxElementBorders.onchange = ParameterEditor.HideBorders
         this.checkboxElementRelative.onchange = ParameterEditor.InputIsRelative
         this.checkboxElementLinkToParent.onchange = ParameterEditor.InputLinkToParent
@@ -178,6 +183,11 @@ export class ParameterEditor {
         const inputElement = ev.target as HTMLInputElement
         const selected = ProjectTree.getSelected()
         if (selected) {
+            if (selected.getHidden()) {
+                debugText(HIDDEN_LOCK_MESSAGE)
+                inputElement.value = selected.custom.getWidth().toFixed(5)
+                return
+            }
             const selectedCustom = selected.custom
             const workspace = Editor.getInstance().workspaceImage
             const horizontalMargin = EditorController.getInnerMargin()
@@ -214,6 +224,11 @@ export class ParameterEditor {
             const inputElement = ev.target as HTMLInputElement
             const selected = ProjectTree.getSelected()
             if (selected) {
+                if (selected.getHidden()) {
+                    debugText(HIDDEN_LOCK_MESSAGE)
+                    inputElement.value = selected.custom.getHeight().toFixed(5)
+                    return
+                }
                 const selectedCustom = selected.custom
                 const workspace = Editor.getInstance().workspaceImage
 
@@ -381,6 +396,18 @@ export class ParameterEditor {
         }
     }
 
+    static ChangeHidden(ev: Event): void {
+        const val = (ev.target as HTMLInputElement).checked
+        const selected = ProjectTree.getSelected()
+        if (selected) {
+            const command = new ChangeFrameHidden(selected, val)
+            command.action()
+            ParameterEditor.getInstance().updateFields(selected)
+
+            debugText(val ? 'Element hidden in workspace.' : 'Element visible in workspace.')
+        }
+    }
+
     static HideBorders(ev: Event): void {
         try {
             const val = (ev.target as HTMLInputElement).checked
@@ -457,11 +484,17 @@ export class ParameterEditor {
     }
 
     static InputCoordinateX(ev: Event): void {
-        const loc = (ev.target as HTMLInputElement).value
+        const inputElement = ev.target as HTMLInputElement
+        const loc = inputElement.value
         const editor = Editor.getInstance()
         const rect = editor.workspaceImage.getBoundingClientRect()
         const selected = ProjectTree.getSelected()
         if (selected) {
+            if (selected.getHidden()) {
+                debugText(HIDDEN_LOCK_MESSAGE)
+                inputElement.value = selected.custom.getLeftX().toFixed(5)
+                return
+            }
             const image = selected.custom.getElement()
 
             const horizontalMargin = EditorController.getInnerMargin()
@@ -486,11 +519,17 @@ export class ParameterEditor {
 
     static InputCoordinateY(ev: Event): void {
         try {
-            const loc = (ev.target as HTMLInputElement).value
+            const inputElement = ev.target as HTMLInputElement
+            const loc = inputElement.value
             const editor = Editor.getInstance()
             const rect = editor.workspaceImage.getBoundingClientRect()
             const selected = ProjectTree.getSelected()
             if (selected) {
+                if (selected.getHidden()) {
+                    debugText(HIDDEN_LOCK_MESSAGE)
+                    inputElement.value = selected.custom.getBotY().toFixed(5)
+                    return
+                }
                 const image = selected.custom.getElement()
 
                 if (+loc > 0.6 || +loc < 0) {
@@ -719,6 +758,7 @@ export class ParameterEditor {
         this.selectElementType.value = ''
         this.selectElementParent.value = ''
         this.checkboxElementTooltip.checked = false
+        this.checkboxElementHidden.checked = false
         this.checkboxElementRelative.checked = false
         this.checkboxElementLinkToParent.checked = false
         this.inputElementCoordinateX.value = ''
@@ -739,6 +779,7 @@ export class ParameterEditor {
         this.selectElementType.disabled = disable
         this.selectElementParent.disabled = disable
         this.checkboxElementTooltip.disabled = disable
+        this.checkboxElementHidden.disabled = disable
         this.checkboxElementRelative.disabled = disable
         this.checkboxElementLinkToParent.disabled = disable
         this.inputElementCoordinateX.disabled = disable
@@ -752,8 +793,9 @@ export class ParameterEditor {
 
     public updateFields(frame: FrameComponent | null): void {
         try {
+            const multiSelect = ProjectTree.getInstance().hasMultiSelection()
             // Disable panel while multi-select is active
-            if (ProjectTree.getInstance().hasMultiSelection()) {
+            if (multiSelect) {
                 this.disableFields(true)
             } else {
                 this.disableFields(false)
@@ -1093,6 +1135,7 @@ export class ParameterEditor {
                 this.inputElementCoordinateX.value = frame.custom.getLeftX().toFixed(5)
                 this.inputElementCoordinateY.value = frame.custom.getBotY().toFixed(5)
                 this.checkboxElementTooltip.checked = frame.getTooltip()
+                this.checkboxElementHidden.checked = frame.getHidden()
                 this.checkboxElementLinkToParent.checked = frame.custom.getLinkChildren()
                 const hasChildren = frame.getChildren().length > 0
                 this.checkboxElementLinkToParent.disabled = !hasChildren
@@ -1158,6 +1201,12 @@ export class ParameterEditor {
                 }
 
                 this.checkboxElementTooltip.disabled = false
+                const lockTransforms = frame.getHidden()
+                const disableTransforms = lockTransforms || multiSelect
+                this.inputElementWidth.disabled = disableTransforms
+                this.inputElementHeight.disabled = disableTransforms
+                this.inputElementCoordinateX.disabled = disableTransforms
+                this.inputElementCoordinateY.disabled = disableTransforms
 
                 if (frame.FieldsAllowed.type) {
                     this.selectElementType.value = String(frame.type)

@@ -32,6 +32,7 @@ export class FrameBuilder implements CustomComplexProps {
     textHorAlign: 'left' | 'center' | 'right' = 'left'
     textVerAlign: 'center' | 'start' | 'flex-end' = 'start'
     autoId = false
+    hidden = false
 
     constructor(autoassignId: boolean) {
         this.autoId = autoassignId
@@ -83,6 +84,11 @@ export class FrameBuilder implements CustomComplexProps {
         this.y = container.load(FrameBaseContent.SAVE_KEY_BOTY)
         this.height = container.load(FrameBaseContent.SAVE_KEY_HEIGHT)
         this.width = container.load(FrameBaseContent.SAVE_KEY_WIDTH)
+        try {
+            this.hidden = container.load(FrameComponent.SAVE_KEY_HIDDEN)
+        } catch {
+            this.hidden = false
+        }
 
         try {
             this.textureDiskPath = container.load(CustomComplex.SAVE_KEY_TEXTURE_DISK_PATH)
@@ -167,6 +173,7 @@ export class FrameBuilder implements CustomComplexProps {
         frameBuilder.isRelative = frame.custom.getIsRelative()
         frameBuilder.linkToParent = frame.custom.getLinkToParent()
         frameBuilder.linkChildren = frame.custom.getLinkChildren()
+        frameBuilder.hidden = frame.getHidden()
         frameBuilder.textureDiskPath = frame.custom.getDiskTexture('normal')
         frameBuilder.textureWc3Path = frame.custom.getWc3Texture('normal')
         frameBuilder.textureBackDiskPath = frame.custom.getDiskTexture('back')

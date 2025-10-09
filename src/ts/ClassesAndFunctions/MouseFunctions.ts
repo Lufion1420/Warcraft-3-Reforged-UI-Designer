@@ -10,6 +10,8 @@ import { ParameterEditor } from '../Editor/ParameterEditor'
 import { Editor } from '../Editor/Editor'
 import MoveFramesBatchPos from '../Commands/Implementation/MoveFramesBatchPos'
 
+const HIDDEN_LOCK_MESSAGE = 'Hidden elements cannot be moved or resized.'
+
 export function MouseFunctions(div: CustomComplex): void {
     const workspaceImage = Editor.getInstance().workspaceImage
 
@@ -20,6 +22,10 @@ export function MouseFunctions(div: CustomComplex): void {
         const actualMargin = EditorController.getMargin()
         const projectTree = ProjectTree.getInstance()
         const frame = div.getFrameComponent()
+        if (frame.getHidden()) {
+            debugText(HIDDEN_LOCK_MESSAGE)
+            return
+        }
 
         const startingX = div.getLeftX()
         const startingY = div.getBotY()
@@ -30,9 +36,14 @@ export function MouseFunctions(div: CustomComplex): void {
 
         // Capture initial positions for multi-select batch undo
         const selectionAtStart = projectTree.getSelectedFrames ? projectTree.getSelectedFrames() : []
+        const movableSelectionAtStart = Array.isArray(selectionAtStart) ? selectionAtStart.filter((sel) => !sel.getHidden()) : []
+        if (movableSelectionAtStart.length === 0) {
+            debugText(HIDDEN_LOCK_MESSAGE)
+            return
+        }
         const multiStartPositions = new Map<string, { x: number; y: number; w: number; h: number }>()
-        if (Array.isArray(selectionAtStart) && selectionAtStart.length > 1) {
-            for (const sel of selectionAtStart) {
+        if (movableSelectionAtStart.length > 1) {
+            for (const sel of movableSelectionAtStart) {
                 multiStartPositions.set(sel.getName(), {
                     x: sel.custom.getLeftX(),
                     y: sel.custom.getBotY(),
@@ -100,7 +111,8 @@ export function MouseFunctions(div: CustomComplex): void {
 
                 // Multi-select: move all selected frames by same delta (ignore hierarchy linking)
                 const selection = ProjectTree.getInstance().getSelectedFrames ? ProjectTree.getInstance().getSelectedFrames() : []
-                const multi = Array.isArray(selection) && selection.length > 1
+                const movableSelection = Array.isArray(selection) ? selection.filter((sel) => !sel.getHidden()) : []
+                const multi = movableSelection.length > 1
                 if ((movedX || movedY) && multi) {
                     const dxPx = movedX ? -posX2 : 0
                     const dyPx = movedY ? -posY2 : 0
@@ -110,7 +122,7 @@ export function MouseFunctions(div: CustomComplex): void {
                     const dxCoord = (dxPx / innerWidth) * 0.8
                     const dyCoord = (-dyPx / rect.height) * 0.6
 
-                    for (const sel of selection) {
+                    for (const sel of movableSelection) {
                         if (sel === frame) continue
                         const el = sel.custom.getElement()
                         if (movedX) el.style.left = `${el.offsetLeft + dxPx}px`
@@ -396,7 +408,8 @@ export function MouseFunctions(div: CustomComplex): void {
             document.body.style.cursor = 'default'
 
             const selection = ProjectTree.getInstance().getSelectedFrames ? ProjectTree.getInstance().getSelectedFrames() : []
-            const multi = Array.isArray(selection) && selection.length > 1
+            const movableSelection = Array.isArray(selection) ? selection.filter((sel) => !sel.getHidden()) : []
+            const multi = movableSelection.length > 1
 
             if (!multi) {
                 if (
@@ -438,7 +451,7 @@ export function MouseFunctions(div: CustomComplex): void {
             } else {
                 // Group multiselect move into one undo entry using batch positions
                 const items: { name: string; oldX: number; oldY: number; newX: number; newY: number }[] = []
-                for (const sel of selection) {
+                for (const sel of movableSelection) {
                     const start = multiStartPositions.get(sel.getName())
                     if (!start) continue
                     items.push({

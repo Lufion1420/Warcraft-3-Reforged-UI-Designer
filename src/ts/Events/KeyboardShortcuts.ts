@@ -20,6 +20,8 @@ import SaveASDocument from '../Persistence/SaveASDocument'
 import SaveDocument from '../Persistence/SaveDocument'
 import { CanvasMovement } from './CanvasMovement'
 
+const HIDDEN_LOCK_MESSAGE = 'Hidden elements cannot be moved or resized.'
+
 export class KeyboardShortcuts {
     private static instance: KeyboardShortcuts
 
@@ -237,12 +239,22 @@ export class KeyboardShortcuts {
 
                 case 'ArrowLeft':
                     //left
-                    if (ProjectTree.getSelected()) {
+                    {
+                        const selected = ProjectTree.getSelected()
+                        if (!selected) break
+                        if (selected.getHidden()) {
+                            debugText(HIDDEN_LOCK_MESSAGE)
+                            break
+                        }
                         const sel = ProjectTree.getSelectedFrames()
-                        const multi = sel && sel.length > 1
+                        const movable = sel ? sel.filter((frame) => !frame.getHidden()) : []
+                        if (movable.length === 0) {
+                            debugText(HIDDEN_LOCK_MESSAGE)
+                            break
+                        }
                         const step = event.shiftKey ? 0.0005 : 0.01
-                        if (multi) {
-                            new MoveFramesBatchX(sel, -step).action()
+                        if (movable.length > 1) {
+                            new MoveFramesBatchX(movable, -step).action()
                         } else {
                             par.inputElementCoordinateX.value = (+par.inputElementCoordinateX.value - 0.0005).toFixed(5)
                             if (!event.shiftKey) par.inputElementCoordinateX.value = (+par.inputElementCoordinateX.value - 0.0095).toFixed(5)
@@ -253,12 +265,22 @@ export class KeyboardShortcuts {
 
                 case 'ArrowUp':
                     //up
-                    if (ProjectTree.getSelected()) {
+                    {
+                        const selected = ProjectTree.getSelected()
+                        if (!selected) break
+                        if (selected.getHidden()) {
+                            debugText(HIDDEN_LOCK_MESSAGE)
+                            break
+                        }
                         const sel = ProjectTree.getSelectedFrames()
-                        const multi = sel && sel.length > 1
+                        const movable = sel ? sel.filter((frame) => !frame.getHidden()) : []
+                        if (movable.length === 0) {
+                            debugText(HIDDEN_LOCK_MESSAGE)
+                            break
+                        }
                         const step = event.shiftKey ? 0.0005 : 0.01
-                        if (multi) {
-                            new MoveFramesBatchY(sel, +step).action()
+                        if (movable.length > 1) {
+                            new MoveFramesBatchY(movable, +step).action()
                         } else {
                             par.inputElementCoordinateY.value = (+par.inputElementCoordinateY.value + 0.0005).toFixed(5)
                             if (!event.shiftKey) par.inputElementCoordinateY.value = (+par.inputElementCoordinateY.value + 0.0095).toFixed(5)
@@ -269,12 +291,22 @@ export class KeyboardShortcuts {
 
                 case 'ArrowRight':
                     //right
-                    if (ProjectTree.getSelected()) {
+                    {
+                        const selected = ProjectTree.getSelected()
+                        if (!selected) break
+                        if (selected.getHidden()) {
+                            debugText(HIDDEN_LOCK_MESSAGE)
+                            break
+                        }
                         const sel = ProjectTree.getSelectedFrames()
-                        const multi = sel && sel.length > 1
+                        const movable = sel ? sel.filter((frame) => !frame.getHidden()) : []
+                        if (movable.length === 0) {
+                            debugText(HIDDEN_LOCK_MESSAGE)
+                            break
+                        }
                         const step = event.shiftKey ? 0.0005 : 0.01
-                        if (multi) {
-                            new MoveFramesBatchX(sel, +step).action()
+                        if (movable.length > 1) {
+                            new MoveFramesBatchX(movable, +step).action()
                         } else {
                             par.inputElementCoordinateX.value = (+par.inputElementCoordinateX.value + 0.0005).toFixed(5)
                             if (!event.shiftKey) par.inputElementCoordinateX.value = (+par.inputElementCoordinateX.value + 0.0095).toFixed(5)
@@ -285,12 +317,22 @@ export class KeyboardShortcuts {
 
                 case 'ArrowDown':
                     //down
-                    if (ProjectTree.getSelected()) {
+                    {
+                        const selected = ProjectTree.getSelected()
+                        if (!selected) break
+                        if (selected.getHidden()) {
+                            debugText(HIDDEN_LOCK_MESSAGE)
+                            break
+                        }
                         const sel = ProjectTree.getSelectedFrames()
-                        const multi = sel && sel.length > 1
+                        const movable = sel ? sel.filter((frame) => !frame.getHidden()) : []
+                        if (movable.length === 0) {
+                            debugText(HIDDEN_LOCK_MESSAGE)
+                            break
+                        }
                         const step = event.shiftKey ? 0.0005 : 0.01
-                        if (multi) {
-                            new MoveFramesBatchY(sel, -step).action()
+                        if (movable.length > 1) {
+                            new MoveFramesBatchY(movable, -step).action()
                         } else {
                             par.inputElementCoordinateY.value = (+par.inputElementCoordinateY.value - 0.0005).toFixed(5)
                             if (!event.shiftKey) par.inputElementCoordinateY.value = (+par.inputElementCoordinateY.value - 0.0095).toFixed(5)
