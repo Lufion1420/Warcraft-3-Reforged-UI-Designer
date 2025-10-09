@@ -52,6 +52,10 @@ export class ParameterEditor {
     public readonly inputElementHeight = document.getElementById('elementHeight') as HTMLInputElement
     public readonly inputElementCoordinateX = document.getElementById('elementCoordinateX') as HTMLInputElement
     public readonly inputElementCoordinateY = document.getElementById('elementCoordinateY') as HTMLInputElement
+    public readonly outputTopLeftX = document.getElementById('elementTopLeftX') as HTMLInputElement
+    public readonly outputTopLeftY = document.getElementById('elementTopLeftY') as HTMLInputElement
+    public readonly outputBottomRightX = document.getElementById('elementBottomRightX') as HTMLInputElement
+    public readonly outputBottomRightY = document.getElementById('elementBottomRightY') as HTMLInputElement
     public readonly inputElementDiskTexture = document.getElementById('elementDiskTexture') as HTMLInputElement
     public readonly fileElementTextureBrowse = document.getElementById('buttonBrowseTexture') as HTMLInputElement
     public readonly inputElementWC3Texture = document.getElementById('elementWC3Texture') as HTMLInputElement
@@ -216,6 +220,7 @@ export class ParameterEditor {
                 command = new ChangeFrameWidth(selected, +inputElement.value)
             }
             command.action()
+            ParameterEditor.getInstance().refreshCoordinateOutput()
         }
     }
 
@@ -252,6 +257,7 @@ export class ParameterEditor {
                     command = new ChangeFrameHeight(selected, +inputElement.value)
                 }
                 command.action()
+                ParameterEditor.getInstance().refreshCoordinateOutput()
             }
         } catch (e) {
             alert(e)
@@ -514,6 +520,7 @@ export class ParameterEditor {
 
             const command = new ChangeFrameX(selected, +loc)
             command.action()
+            ParameterEditor.getInstance().refreshCoordinateOutput()
         }
     }
 
@@ -543,6 +550,7 @@ export class ParameterEditor {
 
                 const command = new ChangeFrameY(selected, +loc)
                 command.action()
+                ParameterEditor.getInstance().refreshCoordinateOutput()
             }
         } catch (e) {
             alert(e)
@@ -770,6 +778,7 @@ export class ParameterEditor {
         this.inputElementTextScale.value = ''
         this.inputElementTextColor.value = '#FFFFFF'
         this.inputElementTrigVar.value = ''
+        this.setCoordinateOutputs('', '', '', '')
     }
 
     public disableFields(disable: boolean): void {
@@ -789,6 +798,10 @@ export class ParameterEditor {
         this.inputElementWC3Texture.disabled = disable
         this.inputElementText.disabled = disable
         this.inputElementTrigVar.disabled = disable
+        this.outputTopLeftX.disabled = disable
+        this.outputTopLeftY.disabled = disable
+        this.outputBottomRightX.disabled = disable
+        this.outputBottomRightY.disabled = disable
     }
 
     public updateFields(frame: FrameComponent | null): void {
@@ -1139,6 +1152,7 @@ export class ParameterEditor {
                 this.checkboxElementLinkToParent.checked = frame.custom.getLinkChildren()
                 const hasChildren = frame.getChildren().length > 0
                 this.checkboxElementLinkToParent.disabled = !hasChildren
+                this.updateCoordinateOutput(frame, multiSelect)
 
                 this.fieldElement.style.display = 'initial'
                 this.fieldGeneral.style.display = 'none'
@@ -1272,12 +1286,75 @@ export class ParameterEditor {
                 // this.disableFields(true)
                 this.emptyFields()
 
+                this.updateCoordinateOutput(null, multiSelect)
+
                 this.fieldElement.style.display = 'none'
                 this.fieldGeneral.style.display = 'initial'
             }
         } catch (e) {
             alert(e)
         }
+    }
+
+    public refreshCoordinateOutput(): void {
+        this.updateCoordinateOutput(ProjectTree.getSelected(), ProjectTree.getInstance().hasMultiSelection())
+    }
+
+    private updateCoordinateOutput(frame: FrameComponent | null, multiSelect = false): void {
+        if (multiSelect) {
+            this.setCoordinateOutputs('', '', '', '')
+            return
+        }
+
+        if (!frame || frame === ProjectTree.getInstance().rootFrame) {
+            this.setCoordinateOutputs('', '', '', '')
+            return
+        }
+
+        const leftX = frame.custom.getLeftX()
+        const bottomY = frame.custom.getBotY()
+        const width = frame.custom.getWidth()
+        const height = frame.custom.getHeight()
+
+        let topLeftX = leftX
+        let topLeftY = bottomY + height
+        let bottomRightX = leftX + width
+        let bottomRightY = bottomY
+
+        const parent = frame.getParent()
+        const root = ProjectTree.getInstance().rootFrame
+        const isRelative = frame.custom.getIsRelative() && parent && parent !== root
+
+        if (isRelative && parent) {
+            const parentCustom = parent.custom
+            const parentLeft = parentCustom.getLeftX()
+            const parentBottom = parentCustom.getBotY()
+            const parentRight = parentLeft + parentCustom.getWidth()
+            const parentTop = parentBottom + parentCustom.getHeight()
+
+            topLeftX = topLeftX - parentLeft
+            topLeftY = topLeftY - parentTop
+            bottomRightX = bottomRightX - parentRight
+            bottomRightY = bottomRightY - parentBottom
+        }
+
+        this.setCoordinateOutputs(
+            this.formatNumber(topLeftX),
+            this.formatNumber(topLeftY),
+            this.formatNumber(bottomRightX),
+            this.formatNumber(bottomRightY)
+        )
+    }
+
+    private formatNumber(value: number): string {
+        return Number(value).toPrecision(6)
+    }
+
+    private setCoordinateOutputs(tlx: string, tly: string, brx: string, bry: string): void {
+        this.outputTopLeftX.value = tlx
+        this.outputTopLeftY.value = tly
+        this.outputBottomRightX.value = brx
+        this.outputBottomRightY.value = bry
     }
 
     private readonly list = ['Red', 'Blue', 'Teal', 'Purple', 'Yellow', 'Orange', 'Green', 'Pink', 'Gray', 'LightBlue', 'DArkGreen', 'Brown']

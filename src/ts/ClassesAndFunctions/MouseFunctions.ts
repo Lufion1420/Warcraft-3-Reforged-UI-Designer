@@ -577,4 +577,5 @@ function inputElementsUpdate(div: CustomComplex, updateOnly?: { x?: boolean; y?:
         )}`
         div.setBotY(+parameterEditor.inputElementCoordinateY.value, true)
     }
+    parameterEditor.refreshCoordinateOutput()
 }
