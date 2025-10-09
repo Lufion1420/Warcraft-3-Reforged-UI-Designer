@@ -15,7 +15,7 @@ export default class MoveFramesBatchY extends SimpleCommand {
         super()
         const movable: string[] = []
         for (const frame of frames) {
-            if (frame.getHidden()) {
+            if (frame.getHidden() || frame.getHiddenCascade()) {
                 this.hadHidden = true
                 continue
             }

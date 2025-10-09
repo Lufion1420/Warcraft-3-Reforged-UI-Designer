@@ -19,6 +19,7 @@ export class FrameComponent implements Saveable {
     static readonly SAVE_KEY_TYPE = 'type'
     static readonly SAVE_KEY_TOOLTIP = 'tooltip'
     static readonly SAVE_KEY_HIDDEN = 'hidden'
+    static readonly SAVE_KEY_HIDDEN_CASCADE = 'hidden_cascade'
     static readonly SAVE_KEY_ARRAY = 'array'
     static readonly SAVE_KEY_WORLDFRAME = 'world_frame'
 
@@ -27,6 +28,7 @@ export class FrameComponent implements Saveable {
     type: FrameType
     private tooltip = false
     private hidden = false
+    private hiddenCascade = false
     public array?: BaseArray
 
     world_frame = false
@@ -156,6 +158,7 @@ export class FrameComponent implements Saveable {
         if (!ProjectTree.ShowBorders) this.custom.getElement().style.outlineWidth = '0px'
 
         if (frameBuildOptions.hidden) this.setHidden(true)
+        if (frameBuildOptions.hiddenCascade) this.setHiddenCascade(true)
     }
 
     setTooltip(on: boolean): FrameComponent {
@@ -172,9 +175,15 @@ export class FrameComponent implements Saveable {
 
     setHidden(on: boolean): FrameComponent {
         this.hidden = on
-        const element = this.custom.getElement()
-        element.style.visibility = on ? 'hidden' : 'visible'
-        element.style.pointerEvents = on ? 'none' : ''
+        this.applyVisibility()
+
+        return this
+    }
+
+    setHiddenCascade(on: boolean): FrameComponent {
+        if (this.hiddenCascade === on) return this
+        this.hiddenCascade = on
+        this.applyVisibilityRecursive()
 
         return this
     }
@@ -185,6 +194,31 @@ export class FrameComponent implements Saveable {
 
     getHidden(): boolean {
         return this.hidden
+    }
+
+    getHiddenCascade(): boolean {
+        return this.hiddenCascade
+    }
+
+    private applyVisibility(): void {
+        const element = this.custom.getElement()
+        const shouldHide = this.hidden || this.hiddenCascade || this.hasCascadeAncestor()
+        element.style.visibility = shouldHide ? 'hidden' : 'visible'
+        element.style.pointerEvents = shouldHide ? 'none' : ''
+    }
+
+    private applyVisibilityRecursive(): void {
+        this.applyVisibility()
+        for (const child of this.children) {
+            child.applyVisibilityRecursive()
+        }
+    }
+
+    private hasCascadeAncestor(): boolean {
+        const parent = this.getParent()
+        if (!parent) return false
+        if (parent.hiddenCascade) return true
+        return parent.hasCascadeAncestor()
     }
 
     getName(): string {
@@ -214,6 +248,7 @@ export class FrameComponent implements Saveable {
         container.save(FrameComponent.SAVE_KEY_TYPE, this.type)
         container.save(FrameComponent.SAVE_KEY_TOOLTIP, this.tooltip)
         container.save(FrameComponent.SAVE_KEY_HIDDEN, this.hidden)
+        container.save(FrameComponent.SAVE_KEY_HIDDEN_CASCADE, this.hiddenCascade)
         container.save(FrameComponent.SAVE_KEY_WORLDFRAME, this.world_frame)
         this.custom.save(container)
 
@@ -258,6 +293,8 @@ export class FrameComponent implements Saveable {
         try {
             ProjectTree.applyContainerColors()
         } catch {}
+
+        frame.applyVisibilityRecursive()
 
         // Mark this node as having children to enable folding affordance
         try {
@@ -335,6 +372,7 @@ export class FrameComponent implements Saveable {
             }
         } catch {}
 
+        whatFrame.applyVisibilityRecursive()
         return true
     }
 

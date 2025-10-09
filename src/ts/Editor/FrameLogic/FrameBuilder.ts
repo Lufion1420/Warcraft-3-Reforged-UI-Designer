@@ -33,6 +33,7 @@ export class FrameBuilder implements CustomComplexProps {
     textVerAlign: 'center' | 'start' | 'flex-end' = 'start'
     autoId = false
     hidden = false
+    hiddenCascade = false
 
     constructor(autoassignId: boolean) {
         this.autoId = autoassignId
@@ -88,6 +89,11 @@ export class FrameBuilder implements CustomComplexProps {
             this.hidden = container.load(FrameComponent.SAVE_KEY_HIDDEN)
         } catch {
             this.hidden = false
+        }
+        try {
+            this.hiddenCascade = container.load(FrameComponent.SAVE_KEY_HIDDEN_CASCADE)
+        } catch {
+            this.hiddenCascade = false
         }
 
         try {
@@ -174,6 +180,7 @@ export class FrameBuilder implements CustomComplexProps {
         frameBuilder.linkToParent = frame.custom.getLinkToParent()
         frameBuilder.linkChildren = frame.custom.getLinkChildren()
         frameBuilder.hidden = frame.getHidden()
+        frameBuilder.hiddenCascade = frame.getHiddenCascade()
         frameBuilder.textureDiskPath = frame.custom.getDiskTexture('normal')
         frameBuilder.textureWc3Path = frame.custom.getWc3Texture('normal')
         frameBuilder.textureBackDiskPath = frame.custom.getDiskTexture('back')

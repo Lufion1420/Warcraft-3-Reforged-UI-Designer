@@ -22,7 +22,7 @@ export function MouseFunctions(div: CustomComplex): void {
         const actualMargin = EditorController.getMargin()
         const projectTree = ProjectTree.getInstance()
         const frame = div.getFrameComponent()
-        if (frame.getHidden()) {
+        if (frame.getHidden() || frame.getHiddenCascade()) {
             debugText(HIDDEN_LOCK_MESSAGE)
             return
         }
@@ -36,7 +36,7 @@ export function MouseFunctions(div: CustomComplex): void {
 
         // Capture initial positions for multi-select batch undo
         const selectionAtStart = projectTree.getSelectedFrames ? projectTree.getSelectedFrames() : []
-        const movableSelectionAtStart = Array.isArray(selectionAtStart) ? selectionAtStart.filter((sel) => !sel.getHidden()) : []
+        const movableSelectionAtStart = Array.isArray(selectionAtStart) ? selectionAtStart.filter((sel) => !(sel.getHidden() || sel.getHiddenCascade())) : []
         if (movableSelectionAtStart.length === 0) {
             debugText(HIDDEN_LOCK_MESSAGE)
             return
@@ -111,7 +111,7 @@ export function MouseFunctions(div: CustomComplex): void {
 
                 // Multi-select: move all selected frames by same delta (ignore hierarchy linking)
                 const selection = ProjectTree.getInstance().getSelectedFrames ? ProjectTree.getInstance().getSelectedFrames() : []
-                const movableSelection = Array.isArray(selection) ? selection.filter((sel) => !sel.getHidden()) : []
+                const movableSelection = Array.isArray(selection) ? selection.filter((sel) => !(sel.getHidden() || sel.getHiddenCascade())) : []
                 const multi = movableSelection.length > 1
                 if ((movedX || movedY) && multi) {
                     const dxPx = movedX ? -posX2 : 0
@@ -408,7 +408,7 @@ export function MouseFunctions(div: CustomComplex): void {
             document.body.style.cursor = 'default'
 
             const selection = ProjectTree.getInstance().getSelectedFrames ? ProjectTree.getInstance().getSelectedFrames() : []
-            const movableSelection = Array.isArray(selection) ? selection.filter((sel) => !sel.getHidden()) : []
+            const movableSelection = Array.isArray(selection) ? selection.filter((sel) => !(sel.getHidden() || sel.getHiddenCascade())) : []
             const multi = movableSelection.length > 1
 
             if (!multi) {

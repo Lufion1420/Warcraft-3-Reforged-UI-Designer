@@ -28,6 +28,7 @@ import RenameArray from '../Commands/Implementation/Arrays/RenameArray'
 import CloneElementToArrayArray from '../Commands/Implementation/Arrays/CloneElementToArray'
 import ChangeFrameDiskTexture from '../Commands/Implementation/ChangeFrameDiskTexture'
 import ChangeFrameTextColor from '../Commands/Implementation/ChangeFrameTextColor'
+import ChangeFrameHiddenCascade from '../Commands/Implementation/ChangeFrameHiddenCascade'
 
 const HIDDEN_LOCK_MESSAGE = 'Hidden elements cannot be moved or resized.'
 
@@ -45,6 +46,7 @@ export class ParameterEditor {
     public readonly selectElementParent = document.getElementById('elementParent') as HTMLSelectElement
     public readonly checkboxElementTooltip = document.getElementById('elementTooltip') as HTMLInputElement
     public readonly checkboxElementHidden = document.getElementById('elementHidden') as HTMLInputElement
+    public readonly checkboxElementHiddenCascade = document.getElementById('elementHiddenCascade') as HTMLInputElement
     public readonly checkboxElementBorders = document.getElementById('CheckboxElementBorders') as HTMLInputElement
     public readonly checkboxElementRelative = document.getElementById('relativeCheckbox') as HTMLInputElement
     public readonly checkboxElementLinkToParent = document.getElementById('linkToParentCheckbox') as HTMLInputElement
@@ -130,6 +132,7 @@ export class ParameterEditor {
         this.selectElementParent.onchange = ParameterEditor.ChangeParent
         this.checkboxElementTooltip.onchange = ParameterEditor.ChangeTooltip
         this.checkboxElementHidden.onchange = ParameterEditor.ChangeHidden
+        this.checkboxElementHiddenCascade.onchange = ParameterEditor.ChangeHiddenCascade
         this.checkboxElementBorders.onchange = ParameterEditor.HideBorders
         this.checkboxElementRelative.onchange = ParameterEditor.InputIsRelative
         this.checkboxElementLinkToParent.onchange = ParameterEditor.InputLinkToParent
@@ -411,6 +414,18 @@ export class ParameterEditor {
             ParameterEditor.getInstance().updateFields(selected)
 
             debugText(val ? 'Element hidden in workspace.' : 'Element visible in workspace.')
+        }
+    }
+
+    static ChangeHiddenCascade(ev: Event): void {
+        const val = (ev.target as HTMLInputElement).checked
+        const selected = ProjectTree.getSelected()
+        if (selected) {
+            const command = new ChangeFrameHiddenCascade(selected, val)
+            command.action()
+            ParameterEditor.getInstance().updateFields(selected)
+
+            debugText(val ? 'Element and children hidden in workspace.' : 'Cascade hiding disabled.')
         }
     }
 
@@ -767,6 +782,7 @@ export class ParameterEditor {
         this.selectElementParent.value = ''
         this.checkboxElementTooltip.checked = false
         this.checkboxElementHidden.checked = false
+        this.checkboxElementHiddenCascade.checked = false
         this.checkboxElementRelative.checked = false
         this.checkboxElementLinkToParent.checked = false
         this.inputElementCoordinateX.value = ''
@@ -789,6 +805,7 @@ export class ParameterEditor {
         this.selectElementParent.disabled = disable
         this.checkboxElementTooltip.disabled = disable
         this.checkboxElementHidden.disabled = disable
+        this.checkboxElementHiddenCascade.disabled = disable
         this.checkboxElementRelative.disabled = disable
         this.checkboxElementLinkToParent.disabled = disable
         this.inputElementCoordinateX.disabled = disable
@@ -1149,6 +1166,7 @@ export class ParameterEditor {
                 this.inputElementCoordinateY.value = frame.custom.getBotY().toFixed(5)
                 this.checkboxElementTooltip.checked = frame.getTooltip()
                 this.checkboxElementHidden.checked = frame.getHidden()
+                this.checkboxElementHiddenCascade.checked = frame.getHiddenCascade()
                 this.checkboxElementLinkToParent.checked = frame.custom.getLinkChildren()
                 const hasChildren = frame.getChildren().length > 0
                 this.checkboxElementLinkToParent.disabled = !hasChildren
@@ -1215,7 +1233,7 @@ export class ParameterEditor {
                 }
 
                 this.checkboxElementTooltip.disabled = false
-                const lockTransforms = frame.getHidden()
+                const lockTransforms = frame.getHidden() || frame.getHiddenCascade()
                 const disableTransforms = lockTransforms || multiSelect
                 this.inputElementWidth.disabled = disableTransforms
                 this.inputElementHeight.disabled = disableTransforms

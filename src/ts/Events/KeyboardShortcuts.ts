@@ -242,12 +242,12 @@ export class KeyboardShortcuts {
                     {
                         const selected = ProjectTree.getSelected()
                         if (!selected) break
-                        if (selected.getHidden()) {
+                        if (selected.getHidden() || selected.getHiddenCascade()) {
                             debugText(HIDDEN_LOCK_MESSAGE)
                             break
                         }
                         const sel = ProjectTree.getSelectedFrames()
-                        const movable = sel ? sel.filter((frame) => !frame.getHidden()) : []
+                        const movable = sel ? sel.filter((frame) => !(frame.getHidden() || frame.getHiddenCascade())) : []
                         if (movable.length === 0) {
                             debugText(HIDDEN_LOCK_MESSAGE)
                             break
@@ -268,12 +268,12 @@ export class KeyboardShortcuts {
                     {
                         const selected = ProjectTree.getSelected()
                         if (!selected) break
-                        if (selected.getHidden()) {
+                        if (selected.getHidden() || selected.getHiddenCascade()) {
                             debugText(HIDDEN_LOCK_MESSAGE)
                             break
                         }
                         const sel = ProjectTree.getSelectedFrames()
-                        const movable = sel ? sel.filter((frame) => !frame.getHidden()) : []
+                        const movable = sel ? sel.filter((frame) => !(frame.getHidden() || frame.getHiddenCascade())) : []
                         if (movable.length === 0) {
                             debugText(HIDDEN_LOCK_MESSAGE)
                             break
@@ -294,12 +294,12 @@ export class KeyboardShortcuts {
                     {
                         const selected = ProjectTree.getSelected()
                         if (!selected) break
-                        if (selected.getHidden()) {
+                        if (selected.getHidden() || selected.getHiddenCascade()) {
                             debugText(HIDDEN_LOCK_MESSAGE)
                             break
                         }
                         const sel = ProjectTree.getSelectedFrames()
-                        const movable = sel ? sel.filter((frame) => !frame.getHidden()) : []
+                        const movable = sel ? sel.filter((frame) => !(frame.getHidden() || frame.getHiddenCascade())) : []
                         if (movable.length === 0) {
                             debugText(HIDDEN_LOCK_MESSAGE)
                             break
@@ -320,12 +320,12 @@ export class KeyboardShortcuts {
                     {
                         const selected = ProjectTree.getSelected()
                         if (!selected) break
-                        if (selected.getHidden()) {
+                        if (selected.getHidden() || selected.getHiddenCascade()) {
                             debugText(HIDDEN_LOCK_MESSAGE)
                             break
                         }
                         const sel = ProjectTree.getSelectedFrames()
-                        const movable = sel ? sel.filter((frame) => !frame.getHidden()) : []
+                        const movable = sel ? sel.filter((frame) => !(frame.getHidden() || frame.getHiddenCascade())) : []
                         if (movable.length === 0) {
                             debugText(HIDDEN_LOCK_MESSAGE)
                             break
