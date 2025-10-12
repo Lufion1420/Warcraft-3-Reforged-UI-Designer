@@ -58,6 +58,8 @@ export class ParameterEditor {
     public readonly outputTopLeftY = document.getElementById('elementTopLeftY') as HTMLInputElement
     public readonly outputBottomRightX = document.getElementById('elementBottomRightX') as HTMLInputElement
     public readonly outputBottomRightY = document.getElementById('elementBottomRightY') as HTMLInputElement
+    public readonly outputCoordinateCombined = document.getElementById('elementCoordinateCombined') as HTMLInputElement
+    public readonly buttonCoordinateCopy = document.getElementById('elementCoordinateCopy') as HTMLButtonElement
     public readonly inputElementDiskTexture = document.getElementById('elementDiskTexture') as HTMLInputElement
     public readonly fileElementTextureBrowse = document.getElementById('buttonBrowseTexture') as HTMLInputElement
     public readonly inputElementWC3Texture = document.getElementById('elementWC3Texture') as HTMLInputElement
@@ -165,6 +167,7 @@ export class ParameterEditor {
         this.buttonZoomSelectorMode.onclick = () => ParameterEditor.ChangeSelectionMode('zoom')
         this.buttonDragSelectorMode.onclick = () => ParameterEditor.ChangeSelectionMode('drag')
         this.buttonElementArrayClone.onclick = ParameterEditor.ButtonArrayClone
+        this.buttonCoordinateCopy.onclick = ParameterEditor.CopyCoordinateOutput
 
         // General options: texture prefix/ext override
         this.inputGeneralTexPrefix.oninput = () => (ProjectTree.TexturePrefix = this.inputGeneralTexPrefix.value)
@@ -426,6 +429,26 @@ export class ParameterEditor {
             ParameterEditor.getInstance().updateFields(selected)
 
             debugText(val ? 'Element and children hidden in workspace.' : 'Cascade hiding disabled.')
+        }
+    }
+
+    static CopyCoordinateOutput(): void {
+        const instance = ParameterEditor.getInstance()
+        const value = instance.outputCoordinateCombined.value
+        if (!value) {
+            debugText('No coordinates to copy.')
+            return
+        }
+        if (navigator?.clipboard?.writeText) {
+            navigator.clipboard
+                .writeText(value)
+                .then(() => debugText('Coordinates copied to clipboard.'))
+                .catch((err) => {
+                    console.error('Failed to copy coordinates', err)
+                    debugText('Failed to copy coordinates.')
+                })
+        } else {
+            debugText('Clipboard API unavailable.')
         }
     }
 
@@ -819,6 +842,8 @@ export class ParameterEditor {
         this.outputTopLeftY.disabled = disable
         this.outputBottomRightX.disabled = disable
         this.outputBottomRightY.disabled = disable
+        this.outputCoordinateCombined.disabled = disable
+        this.buttonCoordinateCopy.disabled = disable
     }
 
     public updateFields(frame: FrameComponent | null): void {
@@ -1373,6 +1398,9 @@ export class ParameterEditor {
         this.outputTopLeftY.value = tly
         this.outputBottomRightX.value = brx
         this.outputBottomRightY.value = bry
+        const hasValues = tlx !== '' && tly !== '' && brx !== '' && bry !== ''
+        this.outputCoordinateCombined.value = hasValues ? `${tlx},${tly},${brx},${bry}` : ''
+        this.buttonCoordinateCopy.disabled = !hasValues
     }
 
     private readonly list = ['Red', 'Blue', 'Teal', 'Purple', 'Yellow', 'Orange', 'Green', 'Pink', 'Gray', 'LightBlue', 'DArkGreen', 'Brown']
