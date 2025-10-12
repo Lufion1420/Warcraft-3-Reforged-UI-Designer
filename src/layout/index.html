@@ -418,6 +418,122 @@
                             </label>
                         </div>
                     </div>
+                    <div class="p-1 mt-1">
+                        <div class="border border-3 border-primary">
+                            <button
+                                class="accordion-button collapsed"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#CollapseElementPositionAlter"
+                            >
+                                <span
+                                    data-bs-toggle="tooltip"
+                                    title="Preview alternate coordinates for the selected element without affecting the real frame."
+                                    ><b>Coordinates - Alter</b></span
+                                >
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="CollapseElementPositionAlter" class="collapse">
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="elementAlterEnabled" />
+                            <label class="form-check-label" for="elementAlterEnabled"> Enable preview frame </label>
+                        </div>
+                        <div class="row gx-1 justify-content-evenly">
+                            <div
+                                class="col-6 form-floating mb-1"
+                                data-bs-toggle="tooltip"
+                                title="Set the preview X to position a fake frame without moving the real element."
+                            >
+                                <input
+                                    type="number"
+                                    min="0"
+                                    max="0.8"
+                                    step="0.01"
+                                    name="elementAlterCoordinateX"
+                                    id="elementAlterCoordinateX"
+                                    class="form-control"
+                                    placeholder="name"
+                                />
+                                <label class="text-black" for="elementAlterCoordinateX">X</label>
+                            </div>
+                            <div
+                                class="col form-floating mb-2"
+                                data-bs-toggle="tooltip"
+                                title="Set the preview Y to position a fake frame without moving the real element."
+                            >
+                                <input
+                                    type="number"
+                                    min="0"
+                                    max="0.6"
+                                    step="0.01"
+                                    name="elementAlterCoordinateY"
+                                    id="elementAlterCoordinateY"
+                                    class="form-control"
+                                    placeholder="name"
+                                />
+                                <label class="text-black" for="elementAlterCoordinateY">Y</label>
+                            </div>
+                        </div>
+
+                        <div class="form-floating mb-1">
+                            <input
+                                type="number"
+                                min="0"
+                                max="0.8"
+                                step="0.01"
+                                name="elementAlterWidth"
+                                id="elementAlterWidth"
+                                class="form-control"
+                                placeholder="name"
+                            />
+                            <label class="text-black" for="elementAlterWidth">Width</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input
+                                type="number"
+                                min="0"
+                                max="0.6"
+                                step="0.01"
+                                name="elementAlterHeight"
+                                id="elementAlterHeight"
+                                class="form-control"
+                                placeholder="name"
+                            />
+                            <label class="text-black" for="elementAlterHeight">Height</label>
+                        </div>
+
+                        <label class="form-label text-white mb-0">Lua Frame Points (Preview)</label>
+                        <div class="row gx-1">
+                            <div class="col-6 form-floating mb-1">
+                                <input type="text" class="form-control" id="elementAlterTopLeftX" placeholder="TopLeft X" readonly />
+                                <label class="text-black" for="elementAlterTopLeftX">TopLeft X</label>
+                            </div>
+                            <div class="col-6 form-floating mb-1">
+                                <input type="text" class="form-control" id="elementAlterTopLeftY" placeholder="TopLeft Y" readonly />
+                                <label class="text-black" for="elementAlterTopLeftY">TopLeft Y</label>
+                            </div>
+                        </div>
+                        <div class="row gx-1 mb-1">
+                            <div class="col-6 form-floating">
+                                <input type="text" class="form-control" id="elementAlterBottomRightX" placeholder="BottomRight X" readonly />
+                                <label class="text-black" for="elementAlterBottomRightX">BottomRight X</label>
+                            </div>
+                            <div class="col-6 form-floating">
+                                <input type="text" class="form-control" id="elementAlterBottomRightY" placeholder="BottomRight Y" readonly />
+                                <label class="text-black" for="elementAlterBottomRightY">BottomRight Y</label>
+                            </div>
+                        </div>
+                        <div class="input-group mb-2">
+                            <input type="text" class="form-control font-monospace" id="elementAlterCoordinateCombined" readonly />
+                            <button class="btn btn-outline-light" id="elementAlterCoordinateCopy" type="button" data-bs-toggle="tooltip" title="Copy preview coordinates">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+
                     <hr />
                     <div id="PropertiesOutermostLevel">
                         <div class="p-1">
@@ -569,121 +685,6 @@
                                         <option value="flex-end">Bottom</option>
                                     </select>
                         </div>
-                    </div>
-                </div>
-                <div class="p-1">
-                    <div class="border border-3 border-primary">
-                        <button
-                            class="accordion-button collapsed"
-                            type="button"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#CollapseElementPositionAlter"
-                        >
-                            <span
-                                data-bs-toggle="tooltip"
-                                title="Preview alternate coordinates for the selected element without affecting the real frame."
-                                ><b>Coordinates - Alter</b></span
-                            >
-                        </button>
-                    </div>
-                </div>
-
-                <div id="CollapseElementPositionAlter" class="collapse">
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="checkbox" id="elementAlterEnabled" />
-                        <label class="form-check-label" for="elementAlterEnabled"> Enable preview frame </label>
-                    </div>
-                    <div class="row gx-1 justify-content-evenly">
-                        <div
-                            class="col-6 form-floating mb-1"
-                            data-bs-toggle="tooltip"
-                            title="Set the preview X to position a fake frame without moving the real element."
-                        >
-                            <input
-                                type="number"
-                                min="0"
-                                max="0.8"
-                                step="0.01"
-                                name="elementAlterCoordinateX"
-                                id="elementAlterCoordinateX"
-                                class="form-control"
-                                placeholder="name"
-                            />
-                            <label class="text-black" for="elementAlterCoordinateX">X</label>
-                        </div>
-                        <div
-                            class="col form-floating mb-2"
-                            data-bs-toggle="tooltip"
-                            title="Set the preview Y to position a fake frame without moving the real element."
-                        >
-                            <input
-                                type="number"
-                                min="0"
-                                max="0.6"
-                                step="0.01"
-                                name="elementAlterCoordinateY"
-                                id="elementAlterCoordinateY"
-                                class="form-control"
-                                placeholder="name"
-                            />
-                            <label class="text-black" for="elementAlterCoordinateY">Y</label>
-                        </div>
-                    </div>
-
-                    <div class="form-floating mb-1">
-                        <input
-                            type="number"
-                            min="0"
-                            max="0.8"
-                            step="0.01"
-                            name="elementAlterWidth"
-                            id="elementAlterWidth"
-                            class="form-control"
-                            placeholder="name"
-                        />
-                        <label class="text-black" for="elementAlterWidth">Width</label>
-                    </div>
-
-                    <div class="form-floating mb-3">
-                        <input
-                            type="number"
-                            min="0"
-                            max="0.6"
-                            step="0.01"
-                            name="elementAlterHeight"
-                            id="elementAlterHeight"
-                            class="form-control"
-                            placeholder="name"
-                        />
-                        <label class="text-black" for="elementAlterHeight">Height</label>
-                    </div>
-
-                    <label class="form-label text-white mb-0">Lua Frame Points (Preview)</label>
-                    <div class="row gx-1">
-                        <div class="col-6 form-floating mb-1">
-                            <input type="text" class="form-control" id="elementAlterTopLeftX" placeholder="TopLeft X" readonly />
-                            <label class="text-black" for="elementAlterTopLeftX">TopLeft X</label>
-                        </div>
-                        <div class="col-6 form-floating mb-1">
-                            <input type="text" class="form-control" id="elementAlterTopLeftY" placeholder="TopLeft Y" readonly />
-                            <label class="text-black" for="elementAlterTopLeftY">TopLeft Y</label>
-                        </div>
-                    </div>
-                    <div class="row gx-1 mb-1">
-                        <div class="col-6 form-floating">
-                            <input type="text" class="form-control" id="elementAlterBottomRightX" placeholder="BottomRight X" readonly />
-                            <label class="text-black" for="elementAlterBottomRightX">BottomRight X</label>
-                        </div>
-                        <div class="col-6 form-floating">
-                            <input type="text" class="form-control" id="elementAlterBottomRightY" placeholder="BottomRight Y" readonly />
-                            <label class="text-black" for="elementAlterBottomRightY">BottomRight Y</label>
-                        </div>
-                    </div>
-                    <div class="input-group mb-2">
-                        <input type="text" class="form-control font-monospace" id="elementAlterCoordinateCombined" readonly />
-                        <button class="btn btn-outline-light" id="elementAlterCoordinateCopy" type="button" data-bs-toggle="tooltip" title="Copy preview coordinates">
-                            <i class="fas fa-copy"></i>
-                        </button>
                     </div>
                 </div>
                 <hr />
