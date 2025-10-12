@@ -1,6 +1,6 @@
 import { debugText } from '../ClassesAndFunctions/MiniFunctions'
 import { EditorController } from './EditorController'
-import { FrameComponent } from './FrameLogic/FrameComponent'
+import { FrameComponent, FrameAlterPreviewData } from './FrameLogic/FrameComponent'
 import { FrameType } from './FrameLogic/FrameType'
 import ChangeElementName from '../Commands/Implementation/ChangeFrameName'
 import ChangeFrameWidth from '../Commands/Implementation/ChangeFrameWidth'
@@ -29,6 +29,7 @@ import CloneElementToArrayArray from '../Commands/Implementation/Arrays/CloneEle
 import ChangeFrameDiskTexture from '../Commands/Implementation/ChangeFrameDiskTexture'
 import ChangeFrameTextColor from '../Commands/Implementation/ChangeFrameTextColor'
 import ChangeFrameHiddenCascade from '../Commands/Implementation/ChangeFrameHiddenCascade'
+import ChangeAlterPreview from '../Commands/Implementation/ChangeAlterPreview'
 
 const HIDDEN_LOCK_MESSAGE = 'Hidden elements cannot be moved or resized.'
 
@@ -480,11 +481,16 @@ export class ParameterEditor {
             return
         }
 
-        const state = instance.getAlterState(frame)
-        state.enabled = checkbox.checked
+        const currentPreview = frame.getAlterPreview()
+        let newPreview: FrameAlterPreviewData
+        if (checkbox.checked) {
+            newPreview = instance.normalizePreview(frame, { ...currentPreview, enabled: true })
+        } else {
+            const actual = instance.getFrameCoordinateValues(frame)
+            newPreview = instance.normalizePreview(frame, { enabled: false, ...actual })
+        }
 
-        instance.syncAlterValuesFromFrame(frame, state)
-        instance.refreshAlterUI(frame, state)
+        instance.commitPreview(frame, newPreview, currentPreview, checkbox.checked ? 'Preview frame enabled.' : 'Preview frame disabled.')
     }
 
     static CopyAlterCoordinateOutput(): void {
@@ -916,7 +922,7 @@ export class ParameterEditor {
         this.outputBottomRightY.disabled = disable
         this.outputCoordinateCombined.disabled = disable
         this.buttonCoordinateCopy.disabled = disable
-        this.setAlterFieldsDisabled(disable)
+        this.setAlterSectionDisabled(disable)
     }
 
     public updateFields(frame: FrameComponent | null): void {
@@ -1486,17 +1492,6 @@ export class ParameterEditor {
         this.buttonCoordinateCopy.disabled = !hasValues
     }
 
-    private updateAlterInteractivity(state: AlterPreviewState): void {
-        const editsBlocked = !state.enabled || this.checkboxAlterEnabled.disabled
-        this.inputAlterCoordinateX.disabled = editsBlocked
-        this.inputAlterCoordinateY.disabled = editsBlocked
-        this.inputAlterWidth.disabled = editsBlocked
-        this.inputAlterHeight.disabled = editsBlocked
-
-        const hasValues = this.outputAlterCoordinateCombined.value !== ''
-        this.buttonAlterCoordinateCopy.disabled = !hasValues || this.checkboxAlterEnabled.disabled
-    }
-
     private handleAlterNumericInput(ev: Event, key: AlterValueKey): void {
         if (this.updatingAlterFields) return
         const input = ev.target as HTMLInputElement
@@ -1509,96 +1504,81 @@ export class ParameterEditor {
             this.updatingAlterFields = false
             return
         }
-
-        const state = this.getAlterState(selected)
-        if (!state.enabled) {
-            const fallback = this.getFrameCoordinateValues(selected)[key]
+        const preview = selected.getAlterPreview()
+        if (!preview.enabled) {
             this.updatingAlterFields = true
-            input.value = fallback.toFixed(5)
+            input.value = preview[key].toFixed(5)
             this.updatingAlterFields = false
             return
         }
 
         let value = Number(input.value)
-        if (!Number.isFinite(value)) {
-            this.updatingAlterFields = true
-            input.value = state.values[key].toFixed(5)
-            this.updatingAlterFields = false
-            return
-        }
+        if (!Number.isFinite(value)) value = preview[key]
+        if ((key === 'width' || key === 'height') && ParameterEditor.CheckInputValue(value)) value = 0.01
 
-        if ((key === 'width' || key === 'height') && ParameterEditor.CheckInputValue(value)) {
-            value = 0.01
-        }
-
-        this.applyAlterValue(selected, { [key]: value } as Partial<AlterValues>)
-    }
-
-    private applyAlterValue(frame: FrameComponent, updates: Partial<AlterValues>): void {
-        const state = this.getAlterState(frame)
-        if (!state.enabled) return
-        const merged: AlterValues = { ...state.values, ...updates }
-        state.values = this.clampAlterValues(frame, merged)
-        this.refreshAlterUI(frame, state)
+        const newData: FrameAlterPreviewData = this.normalizePreview(selected, { ...preview, [key]: value })
+        this.commitPreview(selected, newData, preview)
     }
 
     private updateAlterPanel(frame: FrameComponent | null, multiSelect: boolean): void {
         if (multiSelect || !frame || frame === ProjectTree.getInstance().rootFrame) {
             this.checkboxAlterEnabled.checked = false
-            this.checkboxAlterEnabled.disabled = true
-            this.setAlterFieldsDisabled(true)
+            this.setAlterSectionDisabled(true)
             this.clearAlterInputs()
             this.hideActiveAlterOverlay()
             return
         }
 
-        if (this.alterActiveFrame && this.alterActiveFrame !== frame) {
-            const previous = this.alterStates.get(this.alterActiveFrame)
-            if (previous) this.hideAlterOverlay(this.alterActiveFrame, previous)
+        this.setAlterSectionDisabled(false)
+
+        let preview = frame.getAlterPreview()
+        if (!preview.enabled) {
+            const actual = this.getFrameCoordinateValues(frame)
+            const synced: FrameAlterPreviewData = { enabled: false, ...actual }
+            if (!this.previewEquals(preview, synced)) {
+                frame.setAlterPreview(synced)
+                preview = synced
+            }
         }
 
-        this.setAlterFieldsDisabled(false)
-        const state = this.getAlterState(frame)
-        this.checkboxAlterEnabled.disabled = false
-        if (!state.enabled) {
-            this.syncAlterValuesFromFrame(frame, state)
-        }
-        this.refreshAlterUI(frame, state)
-    }
+        this.checkboxAlterEnabled.checked = preview.enabled
+        this.setAlterInputEnabled(preview.enabled)
 
-    private refreshAlterUI(frame: FrameComponent, state: AlterPreviewState): void {
-        this.checkboxAlterEnabled.checked = state.enabled
-        if (!state.enabled) this.syncAlterValuesFromFrame(frame, state)
         this.updatingAlterFields = true
-        this.inputAlterCoordinateX.value = state.values.x.toFixed(5)
-        this.inputAlterCoordinateY.value = state.values.y.toFixed(5)
-        this.inputAlterWidth.value = state.values.width.toFixed(5)
-        this.inputAlterHeight.value = state.values.height.toFixed(5)
+        this.inputAlterCoordinateX.value = preview.x.toFixed(5)
+        this.inputAlterCoordinateY.value = preview.y.toFixed(5)
+        this.inputAlterWidth.value = preview.width.toFixed(5)
+        this.inputAlterHeight.value = preview.height.toFixed(5)
         this.updatingAlterFields = false
 
-        this.updateAlterOutputs(frame, state.values)
-        this.updateAlterInteractivity(state)
+        this.updateAlterOutputs(frame, preview)
 
-        if (state.enabled) {
-            this.showAlterOverlay(frame, state)
-        } else {
-            this.hideAlterOverlay(frame, state)
-        }
+        if (preview.enabled) this.showAlterOverlay(frame, preview)
+        else this.hideAlterOverlay(frame)
     }
 
-    private updateAlterOutputs(frame: FrameComponent | null, values: AlterValues | null): void {
-        if (!frame || !values) {
+    public applyPreviewState(frame: FrameComponent | null, skipSelectionCheck = false): void {
+        if (!frame) return
+        const selected = ProjectTree.getSelected()
+        if (!skipSelectionCheck && frame !== selected) return
+        this.updateAlterPanel(ProjectTree.getSelected(), ProjectTree.getInstance().hasMultiSelection())
+    }
+
+    private updateAlterOutputs(frame: FrameComponent | null, preview: FrameAlterPreviewData | null): void {
+        if (!frame || !preview) {
             this.setAlterCoordinateOutputs('', '', '', '')
             return
         }
 
-        const outputs = this.computeCoordinateNumbers(frame, values)
+        const outputs = this.computeCoordinateNumbers(frame, preview)
         this.setAlterCoordinateOutputs(
             this.formatNumber(outputs.topLeftX),
             this.formatNumber(outputs.topLeftY),
             this.formatNumber(outputs.bottomRightX),
             this.formatNumber(outputs.bottomRightY)
         )
+        const hasValues = preview.enabled
+        this.buttonAlterCoordinateCopy.disabled = !hasValues
     }
 
     private clearAlterInputs(): void {
@@ -1609,6 +1589,7 @@ export class ParameterEditor {
         this.inputAlterHeight.value = ''
         this.updatingAlterFields = false
         this.setAlterCoordinateOutputs('', '', '', '')
+        this.buttonAlterCoordinateCopy.disabled = true
     }
 
     private setAlterCoordinateOutputs(tlx: string, tly: string, brx: string, bry: string): void {
@@ -1618,93 +1599,109 @@ export class ParameterEditor {
         this.outputAlterBottomRightY.value = bry
         const hasValues = tlx !== '' && tly !== '' && brx !== '' && bry !== ''
         this.outputAlterCoordinateCombined.value = hasValues ? `${tlx},${tly},${brx},${bry}` : ''
-        this.buttonAlterCoordinateCopy.disabled = !hasValues
     }
 
-    private setAlterFieldsDisabled(disabled: boolean): void {
-        this.inputAlterCoordinateX.disabled = disabled
-        this.inputAlterCoordinateY.disabled = disabled
-        this.inputAlterWidth.disabled = disabled
-        this.inputAlterHeight.disabled = disabled
+    private setAlterSectionDisabled(disabled: boolean): void {
+        this.checkboxAlterEnabled.disabled = disabled
+        this.setAlterInputEnabled(disabled ? false : this.checkboxAlterEnabled.checked)
         this.outputAlterTopLeftX.disabled = disabled
         this.outputAlterTopLeftY.disabled = disabled
         this.outputAlterBottomRightX.disabled = disabled
         this.outputAlterBottomRightY.disabled = disabled
         this.outputAlterCoordinateCombined.disabled = disabled
-        this.buttonAlterCoordinateCopy.disabled = disabled || !this.outputAlterCoordinateCombined.value
-        this.checkboxAlterEnabled.disabled = disabled
-        if (disabled) this.checkboxAlterEnabled.checked = false
+        this.buttonAlterCoordinateCopy.disabled = disabled || this.buttonAlterCoordinateCopy.disabled
     }
 
-    private getAlterState(frame: FrameComponent): AlterPreviewState {
-        let state = this.alterStates.get(frame)
-        if (!state) {
-            state = {
-                enabled: false,
-                values: this.getFrameCoordinateValues(frame),
-            }
-            this.alterStates.set(frame, state)
-        }
-        return state
+    private setAlterInputEnabled(enabled: boolean): void {
+        this.inputAlterCoordinateX.disabled = !enabled
+        this.inputAlterCoordinateY.disabled = !enabled
+        this.inputAlterWidth.disabled = !enabled
+        this.inputAlterHeight.disabled = !enabled
     }
 
-    private syncAlterValuesFromFrame(frame: FrameComponent, state: AlterPreviewState): void {
-        state.values = this.getFrameCoordinateValues(frame)
-    }
-
-    private clampAlterValues(frame: FrameComponent, values: AlterValues): AlterValues {
+    private normalizePreview(frame: FrameComponent, data: FrameAlterPreviewData): FrameAlterPreviewData {
+        const trimmed = { ...data }
         const marginLimits = EditorController.getMarginLimits()
         const widthLimit = marginLimits.max - marginLimits.min
-        const width = this.clamp(values.width, 0, widthLimit)
-        const maxX = Math.max(marginLimits.min, marginLimits.max - width)
-        const x = this.clamp(values.x, marginLimits.min, maxX)
-        const height = this.clamp(values.height, 0, 0.6)
-        const maxY = Math.max(0, 0.6 - height)
-        const y = this.clamp(values.y, 0, maxY)
+        trimmed.width = this.clampValue(trimmed.width, 0.001, widthLimit)
+        const maxX = Math.max(marginLimits.min, marginLimits.max - trimmed.width)
+        trimmed.x = this.clampValue(trimmed.x, marginLimits.min, maxX)
+        trimmed.height = this.clampValue(trimmed.height, 0.001, 0.6)
+        const maxY = Math.max(0, 0.6 - trimmed.height)
+        trimmed.y = this.clampValue(trimmed.y, 0, maxY)
 
-        return {
-            x: Number(x.toFixed(5)),
-            y: Number(y.toFixed(5)),
-            width: Number(width.toFixed(5)),
-            height: Number(height.toFixed(5)),
-        }
+        trimmed.x = Number(trimmed.x.toFixed(5))
+        trimmed.y = Number(trimmed.y.toFixed(5))
+        trimmed.width = Number(trimmed.width.toFixed(5))
+        trimmed.height = Number(trimmed.height.toFixed(5))
+        return trimmed
     }
 
-    private clamp(value: number, min: number, max: number): number {
+    private clampValue(value: number, min: number, max: number): number {
         if (min > max) return min
         if (value < min) return min
         if (value > max) return max
         return value
     }
 
-    private showAlterOverlay(frame: FrameComponent, state: AlterPreviewState): void {
+    private commitPreview(frame: FrameComponent, newData: FrameAlterPreviewData, oldData?: FrameAlterPreviewData, message?: string): void {
+        const previous = oldData ?? frame.getAlterPreview()
+        const normalized = this.normalizePreview(frame, newData)
+        if (this.previewEquals(previous, normalized)) {
+            frame.setAlterPreview(normalized)
+            this.applyPreviewState(frame, true)
+            return
+        }
+        const command = new ChangeAlterPreview(frame, normalized, previous, message, 'Preview change undone.')
+        command.action()
+    }
+
+    public offsetPreview(frame: FrameComponent, deltaX: number, deltaY: number, message?: string): void {
+        const preview = frame.getAlterPreview()
+        if (!preview.enabled) return
+        const updated = this.normalizePreview(frame, {
+            ...preview,
+            x: preview.x + deltaX,
+            y: preview.y + deltaY,
+        })
+        this.commitPreview(frame, updated, preview, message)
+    }
+
+    private previewEquals(a: FrameAlterPreviewData, b: FrameAlterPreviewData): boolean {
+        return (
+            a.enabled === b.enabled &&
+            Math.abs(a.x - b.x) < 0.000001 &&
+            Math.abs(a.y - b.y) < 0.000001 &&
+            Math.abs(a.width - b.width) < 0.000001 &&
+            Math.abs(a.height - b.height) < 0.000001
+        )
+    }
+
+    private showAlterOverlay(frame: FrameComponent, preview: FrameAlterPreviewData): void {
         if (this.alterActiveFrame && this.alterActiveFrame !== frame) {
-            const previous = this.alterStates.get(this.alterActiveFrame)
-            if (previous) this.hideAlterOverlay(this.alterActiveFrame, previous)
+            this.hideActiveAlterOverlay()
         }
 
-        let overlay = state.overlay
-        if (overlay && !frame.layerDiv.contains(overlay)) {
-            overlay.remove()
-            overlay = undefined
-        }
-
-        if (!overlay) {
-            overlay = this.createAlterOverlay(frame, state)
-            state.overlay = overlay
+        const runtime = this.getAlterRuntime(frame)
+        let overlay = runtime.overlay
+        if (!overlay || !frame.layerDiv.contains(overlay)) {
+            overlay?.remove()
+            overlay = this.createAlterOverlay(frame)
+            runtime.overlay = overlay
         }
 
         overlay.style.display = ''
-        this.positionAlterOverlay(frame, overlay, state.values)
+        this.positionAlterOverlay(frame, overlay, preview)
         this.alterActiveFrame = frame
     }
 
-    private hideAlterOverlay(frame: FrameComponent, state?: AlterPreviewState): void {
-        const target = state ?? this.alterStates.get(frame)
-        if (target?.overlay) {
-            target.overlay.remove()
-            target.overlay = undefined
+    private hideAlterOverlay(frame: FrameComponent): void {
+        const runtime = this.alterRuntime.get(frame)
+        if (runtime?.overlay) {
+            runtime.overlay.remove()
+            runtime.overlay = undefined
         }
+        runtime && (runtime.dragContext = undefined)
         if (this.alterActiveFrame === frame) {
             this.alterActiveFrame = null
         }
@@ -1712,97 +1709,279 @@ export class ParameterEditor {
 
     private hideActiveAlterOverlay(): void {
         if (!this.alterActiveFrame) return
-        const state = this.alterStates.get(this.alterActiveFrame)
-        if (state) this.hideAlterOverlay(this.alterActiveFrame, state)
+        this.hideAlterOverlay(this.alterActiveFrame)
     }
 
-    private createAlterOverlay(frame: FrameComponent, state: AlterPreviewState): HTMLDivElement {
+    private createAlterOverlay(frame: FrameComponent): HTMLDivElement {
         const overlay = frame.custom.getElement().cloneNode(true) as HTMLDivElement
         overlay.style.opacity = '0.55'
         overlay.style.pointerEvents = 'auto'
-        overlay.style.cursor = 'move'
         overlay.style.outline = '2px dashed #FFD54F'
         overlay.style.outlineOffset = '0px'
         overlay.dataset.alterPreview = 'true'
         frame.layerDiv.appendChild(overlay)
-        this.attachAlterOverlayEvents(frame, state, overlay)
+        this.attachAlterOverlayEvents(frame, overlay)
         return overlay
     }
 
-    private attachAlterOverlayEvents(frame: FrameComponent, state: AlterPreviewState, overlay: HTMLDivElement): void {
-        overlay.addEventListener('mousedown', (ev) => this.onAlterOverlayMouseDown(ev, frame, state))
+    private attachAlterOverlayEvents(frame: FrameComponent, overlay: HTMLDivElement): void {
+        overlay.addEventListener('mousedown', (ev) => this.onAlterOverlayMouseDown(ev, frame))
+        overlay.addEventListener('mousemove', (ev) => this.onAlterOverlayHover(ev, frame))
+        overlay.addEventListener('mouseleave', () => {
+            if (!this.alterRuntime.get(frame)?.dragContext) {
+                document.body.style.cursor = 'default'
+                overlay.style.cursor = 'default'
+            }
+        })
     }
 
-    private onAlterOverlayMouseDown(ev: MouseEvent, frame: FrameComponent, state: AlterPreviewState): void {
+    private onAlterOverlayHover(ev: MouseEvent, frame: FrameComponent): void {
+        const runtime = this.getAlterRuntime(frame)
+        if (runtime.dragContext) return
+        const mode = this.resolveDragMode(ev, frame, runtime)
+        overlayCursorFromMode(mode, runtime.overlay)
+        function overlayCursorFromMode(drag: AlterDragMode, element?: HTMLDivElement) {
+            let cursor = 'move'
+            switch (drag) {
+                case 'resize-left':
+                case 'resize-right':
+                    cursor = 'ew-resize'
+                    break
+                case 'resize-top':
+                case 'resize-bottom':
+                    cursor = 'ns-resize'
+                    break
+                case 'resize-top-left':
+                case 'resize-bottom-right':
+                    cursor = 'nwse-resize'
+                    break
+                case 'resize-top-right':
+                case 'resize-bottom-left':
+                    cursor = 'nesw-resize'
+                    break
+            }
+            document.body.style.cursor = cursor
+            if (element) element.style.cursor = cursor
+        }
+    }
+
+    private onAlterOverlayMouseDown(ev: MouseEvent, frame: FrameComponent): void {
         if (ev.button !== 0) return
+        const preview = frame.getAlterPreview()
+        if (!preview.enabled) return
+
         ev.preventDefault()
         ev.stopPropagation()
 
-        const projectTree = ProjectTree.getInstance()
-        projectTree.select(frame)
+        ProjectTree.getInstance().select(frame)
 
+        const runtime = this.getAlterRuntime(frame)
+        const mode = this.resolveDragMode(ev, frame, runtime)
+
+        runtime.dragContext = {
+            startPreview: { ...preview },
+            mode,
+            startClientX: ev.clientX,
+            startClientY: ev.clientY,
+        }
+
+        document.body.style.cursor = this.cursorForMode(mode)
+
+        const onMove = (moveEv: MouseEvent) => this.handleOverlayDrag(moveEv, frame)
+        const onUp = (upEv: MouseEvent) => this.endOverlayDrag(upEv, frame, onMove, onUp)
+
+        window.addEventListener('mousemove', onMove)
+        window.addEventListener('mouseup', onUp, { once: true })
+    }
+
+    private cursorForMode(mode: AlterDragMode): string {
+        switch (mode) {
+            case 'resize-left':
+            case 'resize-right':
+                return 'ew-resize'
+            case 'resize-top':
+            case 'resize-bottom':
+                return 'ns-resize'
+            case 'resize-top-left':
+            case 'resize-bottom-right':
+                return 'nwse-resize'
+            case 'resize-top-right':
+            case 'resize-bottom-left':
+                return 'nesw-resize'
+            default:
+                return 'move'
+        }
+    }
+
+    private handleOverlayDrag(ev: MouseEvent, frame: FrameComponent): void {
+        const runtime = this.getAlterRuntime(frame)
+        const context = runtime.dragContext
+        if (!context) return
+
+        const previewStart = context.startPreview
         const workspaceImage = Editor.getInstance().workspaceImage
         const rect = workspaceImage.getBoundingClientRect()
         const horizontalMargin = EditorController.getInnerMargin()
-        const marginLimits = EditorController.getMarginLimits()
-        const start = { ...state.values }
-        const startX = ev.clientX
-        const startY = ev.clientY
         const workspaceWidth = Math.max(1, workspaceImage.width - 2 * horizontalMargin)
         const rectWidth = Math.max(1, rect.width - 2 * horizontalMargin)
         const horizontalScale = workspaceWidth > 0 ? workspaceWidth : rectWidth
         const verticalScale = Math.max(1, rect.height)
 
-        this.showAlterOverlay(frame, state)
-        document.body.style.cursor = 'grabbing'
+        const deltaX = ev.clientX - context.startClientX
+        const deltaY = ev.clientY - context.startClientY
 
-        const onMove = (moveEv: MouseEvent) => {
-            const deltaX = moveEv.clientX - startX
-            const deltaY = moveEv.clientY - startY
+        const deltaNormX = (deltaX * 0.8) / horizontalScale
+        const deltaNormY = (deltaY * 0.6) / verticalScale
 
-            const maxX = Math.max(marginLimits.min, marginLimits.max - start.width)
-            const maxY = Math.max(0, 0.6 - start.height)
+        let updated: FrameAlterPreviewData = { ...previewStart }
 
-            const newX = start.x + (deltaX * 0.8) / horizontalScale
-            const newY = start.y - (deltaY * 0.6) / verticalScale
+        const marginLimits = EditorController.getMarginLimits()
 
-            state.values.x = Number(this.clamp(newX, marginLimits.min, maxX).toFixed(5))
-            state.values.y = Number(this.clamp(newY, 0, maxY).toFixed(5))
-            this.refreshAlterUI(frame, state)
+        const applyMove = () => {
+            const maxX = Math.max(marginLimits.min, marginLimits.max - previewStart.width)
+            const maxY = Math.max(0, 0.6 - previewStart.height)
+            updated.x = this.clampValue(previewStart.x + deltaNormX, marginLimits.min, maxX)
+            updated.y = this.clampValue(previewStart.y - deltaNormY, 0, maxY)
         }
 
-        const onUp = () => {
-            window.removeEventListener('mousemove', onMove)
-            window.removeEventListener('mouseup', onUp)
-            document.body.style.cursor = 'default'
-            this.refreshAlterUI(frame, state)
+        const applyHorizontalResize = (direction: 'left' | 'right') => {
+            if (direction === 'right') {
+                const widthLimit = marginLimits.max - previewStart.x
+                const width = this.clampValue(previewStart.width + deltaNormX, 0.001, widthLimit)
+                updated.width = width
+                updated.x = this.clampValue(previewStart.x, marginLimits.min, marginLimits.max - width)
+            } else {
+                const newX = this.clampValue(previewStart.x + deltaNormX, marginLimits.min, previewStart.x + previewStart.width - 0.001)
+                const newWidth = previewStart.width - (newX - previewStart.x)
+                updated.x = newX
+                updated.width = this.clampValue(newWidth, 0.001, marginLimits.max - marginLimits.min)
+            }
         }
 
-        window.addEventListener('mousemove', onMove)
-        window.addEventListener('mouseup', onUp)
+        const applyVerticalResize = (direction: 'top' | 'bottom') => {
+            if (direction === 'top') {
+                const newHeight = this.clampValue(previewStart.height - deltaNormY, 0.001, 0.6 - previewStart.y)
+                updated.height = newHeight
+            } else {
+                const newY = this.clampValue(previewStart.y - deltaNormY, 0, previewStart.y + previewStart.height - 0.001)
+                const newHeight = previewStart.height + (previewStart.y - newY)
+                updated.y = newY
+                updated.height = this.clampValue(newHeight, 0.001, 0.6)
+            }
+        }
+
+        switch (context.mode) {
+            case 'move':
+                applyMove()
+                break
+            case 'resize-left':
+                applyHorizontalResize('left')
+                break
+            case 'resize-right':
+                applyHorizontalResize('right')
+                break
+            case 'resize-top':
+                applyVerticalResize('top')
+                break
+            case 'resize-bottom':
+                applyVerticalResize('bottom')
+                break
+            case 'resize-top-left':
+                applyHorizontalResize('left')
+                applyVerticalResize('top')
+                break
+            case 'resize-top-right':
+                applyHorizontalResize('right')
+                applyVerticalResize('top')
+                break
+            case 'resize-bottom-left':
+                applyHorizontalResize('left')
+                applyVerticalResize('bottom')
+                break
+            case 'resize-bottom-right':
+                applyHorizontalResize('right')
+                applyVerticalResize('bottom')
+                break
+        }
+
+        updated = this.normalizePreview(frame, { ...updated, enabled: true })
+        frame.setAlterPreview(updated)
+        if (frame === ProjectTree.getSelected()) {
+            this.updatingAlterFields = true
+            this.inputAlterCoordinateX.value = updated.x.toFixed(5)
+            this.inputAlterCoordinateY.value = updated.y.toFixed(5)
+            this.inputAlterWidth.value = updated.width.toFixed(5)
+            this.inputAlterHeight.value = updated.height.toFixed(5)
+            this.updatingAlterFields = false
+            this.updateAlterOutputs(frame, updated)
+            this.showAlterOverlay(frame, updated)
+        }
     }
 
-    private positionAlterOverlay(frame: FrameComponent, overlay: HTMLDivElement, values: AlterValues): void {
+    private endOverlayDrag(ev: MouseEvent, frame: FrameComponent, moveHandler: (e: MouseEvent) => void, upHandler: (e: MouseEvent) => void): void {
+        window.removeEventListener('mousemove', moveHandler)
+        document.body.style.cursor = 'default'
+        const runtime = this.getAlterRuntime(frame)
+        const context = runtime.dragContext
+        runtime.dragContext = undefined
+        if (!context) return
+
+        const finalPreview = frame.getAlterPreview()
+        this.commitPreview(frame, finalPreview, context.startPreview)
+    }
+
+    private resolveDragMode(ev: MouseEvent, frame: FrameComponent, runtime?: AlterPreviewRuntime): AlterDragMode {
+        const overlay = runtime?.overlay ?? this.getAlterRuntime(frame).overlay
+        if (!overlay) return 'move'
+        const rect = overlay.getBoundingClientRect()
+        const edge = 8
+        const offsetX = ev.clientX - rect.left
+        const offsetY = ev.clientY - rect.top
+
+        const atLeft = offsetX <= edge
+        const atRight = offsetX >= rect.width - edge
+        const atTop = offsetY <= edge
+        const atBottom = offsetY >= rect.height - edge
+
+        if ((atLeft && atTop) || (atRight && atBottom)) return atLeft && atTop ? 'resize-top-left' : 'resize-bottom-right'
+        if ((atRight && atTop) || (atLeft && atBottom)) return atRight && atTop ? 'resize-top-right' : 'resize-bottom-left'
+        if (atLeft) return 'resize-left'
+        if (atRight) return 'resize-right'
+        if (atTop) return 'resize-top'
+        if (atBottom) return 'resize-bottom'
+        return 'move'
+    }
+
+    private positionAlterOverlay(frame: FrameComponent, overlay: HTMLDivElement, preview: FrameAlterPreviewData): void {
         const editor = Editor.getInstance()
         const workspaceImage = editor.workspaceImage
         const rect = workspaceImage.getBoundingClientRect()
         const horizontalMargin = EditorController.getInnerMargin()
         const workspaceWidth = Math.max(1, workspaceImage.width - 2 * horizontalMargin)
-        const widthPx = (values.width / 0.8) * workspaceWidth
+        const widthPx = (preview.width / 0.8) * workspaceWidth
         overlay.style.width = `${widthPx}px`
 
-        const heightPx = (values.height / 0.6) * Math.max(1, rect.height)
+        const heightPx = (preview.height / 0.6) * Math.max(1, rect.height)
         overlay.style.height = `${heightPx}px`
 
-        const leftPx = (values.x * (rect.width - 2 * horizontalMargin)) / 0.8 + rect.left + horizontalMargin
-        const topPx = rect.bottom - (values.y * rect.height) / 0.6 - heightPx - 120
+        const leftPx = (preview.x * (rect.width - 2 * horizontalMargin)) / 0.8 + rect.left + horizontalMargin
+        const topPx = rect.bottom - (preview.y * rect.height) / 0.6 - heightPx - 120
 
         overlay.style.left = `${leftPx}px`
         overlay.style.top = `${topPx}px`
     }
 
+    private getAlterRuntime(frame: FrameComponent): AlterPreviewRuntime {
+        let runtime = this.alterRuntime.get(frame)
+        if (!runtime) {
+            runtime = {}
+            this.alterRuntime.set(frame, runtime)
+        }
+        return runtime
+    }
+
     private readonly list = ['Red', 'Blue', 'Teal', 'Purple', 'Yellow', 'Orange', 'Green', 'Pink', 'Gray', 'LightBlue', 'DArkGreen', 'Brown']
-    private readonly alterStates = new WeakMap<FrameComponent, AlterPreviewState>()
+    private readonly alterRuntime = new WeakMap<FrameComponent, AlterPreviewRuntime>()
     private alterActiveFrame: FrameComponent | null = null
     private updatingAlterFields = false
 
@@ -1828,13 +2007,6 @@ export class ParameterEditor {
 
 type AlterValueKey = 'x' | 'y' | 'width' | 'height'
 
-interface AlterValues {
-    x: number
-    y: number
-    width: number
-    height: number
-}
-
 interface CoordinateNumbers {
     topLeftX: number
     topLeftY: number
@@ -1842,8 +2014,25 @@ interface CoordinateNumbers {
     bottomRightY: number
 }
 
-interface AlterPreviewState {
-    enabled: boolean
-    values: AlterValues
+type AlterValues = Pick<FrameAlterPreviewData, 'x' | 'y' | 'width' | 'height'>
+
+type AlterDragMode =
+    | 'move'
+    | 'resize-left'
+    | 'resize-right'
+    | 'resize-top'
+    | 'resize-bottom'
+    | 'resize-top-left'
+    | 'resize-top-right'
+    | 'resize-bottom-left'
+    | 'resize-bottom-right'
+
+interface AlterPreviewRuntime {
     overlay?: HTMLDivElement
+    dragContext?: {
+        startPreview: FrameAlterPreviewData
+        mode: AlterDragMode
+        startClientX: number
+        startClientY: number
+    }
 }

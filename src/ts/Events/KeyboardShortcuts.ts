@@ -242,6 +242,16 @@ export class KeyboardShortcuts {
                     {
                         const selected = ProjectTree.getSelected()
                         if (!selected) break
+                        if (ProjectTree.getInstance().hasMultiSelection()) {
+                            // fall through to existing behaviour
+                        } else {
+                            const preview = selected.getAlterPreview()
+                            if (preview.enabled) {
+                                const step = event.shiftKey ? 0.0005 : 0.01
+                                par.offsetPreview(selected, -step, 0, 'Preview moved left.')
+                                break
+                            }
+                        }
                         if (selected.getHidden() || selected.getHiddenCascade()) {
                             debugText(HIDDEN_LOCK_MESSAGE)
                             break
@@ -268,6 +278,16 @@ export class KeyboardShortcuts {
                     {
                         const selected = ProjectTree.getSelected()
                         if (!selected) break
+                        if (ProjectTree.getInstance().hasMultiSelection()) {
+                            // continue with existing behaviour
+                        } else {
+                            const preview = selected.getAlterPreview()
+                            if (preview.enabled) {
+                                const step = event.shiftKey ? 0.0005 : 0.01
+                                par.offsetPreview(selected, 0, step, 'Preview moved up.')
+                                break
+                            }
+                        }
                         if (selected.getHidden() || selected.getHiddenCascade()) {
                             debugText(HIDDEN_LOCK_MESSAGE)
                             break
@@ -294,6 +314,16 @@ export class KeyboardShortcuts {
                     {
                         const selected = ProjectTree.getSelected()
                         if (!selected) break
+                        if (ProjectTree.getInstance().hasMultiSelection()) {
+                            // continue with existing behaviour
+                        } else {
+                            const preview = selected.getAlterPreview()
+                            if (preview.enabled) {
+                                const step = event.shiftKey ? 0.0005 : 0.01
+                                par.offsetPreview(selected, step, 0, 'Preview moved right.')
+                                break
+                            }
+                        }
                         if (selected.getHidden() || selected.getHiddenCascade()) {
                             debugText(HIDDEN_LOCK_MESSAGE)
                             break
@@ -320,6 +350,16 @@ export class KeyboardShortcuts {
                     {
                         const selected = ProjectTree.getSelected()
                         if (!selected) break
+                        if (ProjectTree.getInstance().hasMultiSelection()) {
+                            // continue with existing behaviour
+                        } else {
+                            const preview = selected.getAlterPreview()
+                            if (preview.enabled) {
+                                const step = event.shiftKey ? 0.0005 : 0.01
+                                par.offsetPreview(selected, 0, -step, 'Preview moved down.')
+                                break
+                            }
+                        }
                         if (selected.getHidden() || selected.getHiddenCascade()) {
                             debugText(HIDDEN_LOCK_MESSAGE)
                             break

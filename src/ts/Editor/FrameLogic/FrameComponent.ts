@@ -22,6 +22,7 @@ export class FrameComponent implements Saveable {
     static readonly SAVE_KEY_HIDDEN_CASCADE = 'hidden_cascade'
     static readonly SAVE_KEY_ARRAY = 'array'
     static readonly SAVE_KEY_WORLDFRAME = 'world_frame'
+    static readonly SAVE_KEY_ALTER_PREVIEW = 'preview'
 
     private name: string
     private children: FrameComponent[]
@@ -30,6 +31,7 @@ export class FrameComponent implements Saveable {
     private hidden = false
     private hiddenCascade = false
     public array?: BaseArray
+    private alterPreview?: FrameAlterPreviewData
 
     world_frame = false
 
@@ -243,6 +245,42 @@ export class FrameComponent implements Saveable {
         if (this.parentOption) this.parentOption.text = newName
     }
 
+    hasAlterPreview(): boolean {
+        return !!this.alterPreview
+    }
+
+    getAlterPreview(): FrameAlterPreviewData {
+        if (!this.alterPreview) this.alterPreview = this.createDefaultAlterPreview()
+        return { ...this.alterPreview }
+    }
+
+    setAlterPreview(preview: FrameAlterPreviewData): void {
+        this.alterPreview = { ...preview }
+    }
+
+    updateAlterPreview(preview: Partial<FrameAlterPreviewData>): FrameAlterPreviewData {
+        const current = this.getAlterPreview()
+        const updated: FrameAlterPreviewData = { ...current, ...preview }
+        this.setAlterPreview(updated)
+        return { ...updated }
+    }
+
+    syncAlterPreviewWithFrame(): FrameAlterPreviewData {
+        const synced = this.createDefaultAlterPreview()
+        this.setAlterPreview(synced)
+        return synced
+    }
+
+    private createDefaultAlterPreview(): FrameAlterPreviewData {
+        return {
+            enabled: false,
+            x: this.custom.getLeftX(),
+            y: this.custom.getBotY(),
+            width: this.custom.getWidth(),
+            height: this.custom.getHeight(),
+        }
+    }
+
     save(container: SaveContainer): void {
         container.save(FrameComponent.SAVE_KEY_NAME, this.name)
         container.save(FrameComponent.SAVE_KEY_TYPE, this.type)
@@ -250,6 +288,8 @@ export class FrameComponent implements Saveable {
         container.save(FrameComponent.SAVE_KEY_HIDDEN, this.hidden)
         container.save(FrameComponent.SAVE_KEY_HIDDEN_CASCADE, this.hiddenCascade)
         container.save(FrameComponent.SAVE_KEY_WORLDFRAME, this.world_frame)
+        const preview = this.getAlterPreview()
+        container.save(FrameComponent.SAVE_KEY_ALTER_PREVIEW, preview)
         this.custom.save(container)
 
         const childrenSaveArray: SaveContainer[] = []
@@ -624,6 +664,14 @@ export class FrameComponent implements Saveable {
                 break
         }
     }
+}
+
+export interface FrameAlterPreviewData {
+    enabled: boolean
+    x: number
+    y: number
+    width: number
+    height: number
 }
 
 interface ElementFieldsAllowed {

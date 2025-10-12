@@ -1,6 +1,6 @@
 import { FrameType } from './FrameType'
 import SaveContainer from '../../Persistence/SaveContainer'
-import { FrameComponent } from './FrameComponent'
+import { FrameComponent, FrameAlterPreviewData } from './FrameComponent'
 import CustomComplex, { CustomComplexProps } from './CustomComplex'
 import FrameBaseContent from './FrameBaseContent'
 import { ProjectTree } from '../ProjectTree'
@@ -125,6 +125,24 @@ export class FrameBuilder implements CustomComplexProps {
         }
 
         const frameComponent = projectTree.appendToSelected(this)
+
+        if (container.hasKey(FrameComponent.SAVE_KEY_ALTER_PREVIEW)) {
+            try {
+                const previewData = container.load(FrameComponent.SAVE_KEY_ALTER_PREVIEW) as FrameAlterPreviewData
+                frameComponent.setAlterPreview({
+                    enabled: !!previewData.enabled,
+                    x: typeof previewData.x === 'number' ? previewData.x : frameComponent.custom.getLeftX(),
+                    y: typeof previewData.y === 'number' ? previewData.y : frameComponent.custom.getBotY(),
+                    width: typeof previewData.width === 'number' ? previewData.width : frameComponent.custom.getWidth(),
+                    height: typeof previewData.height === 'number' ? previewData.height : frameComponent.custom.getHeight(),
+                })
+            } catch (e) {
+                console.log('Loading Error: Preview data missing.', e)
+                frameComponent.syncAlterPreviewWithFrame()
+            }
+        } else {
+            frameComponent.syncAlterPreviewWithFrame()
+        }
 
         try {
             frameComponent.setTooltip(container.load(FrameComponent.SAVE_KEY_TOOLTIP))
