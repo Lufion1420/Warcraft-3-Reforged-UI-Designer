@@ -60,6 +60,17 @@ export class ParameterEditor {
     public readonly outputBottomRightY = document.getElementById('elementBottomRightY') as HTMLInputElement
     public readonly outputCoordinateCombined = document.getElementById('elementCoordinateCombined') as HTMLInputElement
     public readonly buttonCoordinateCopy = document.getElementById('elementCoordinateCopy') as HTMLButtonElement
+    public readonly checkboxAlterEnabled = document.getElementById('elementAlterEnabled') as HTMLInputElement
+    public readonly inputAlterCoordinateX = document.getElementById('elementAlterCoordinateX') as HTMLInputElement
+    public readonly inputAlterCoordinateY = document.getElementById('elementAlterCoordinateY') as HTMLInputElement
+    public readonly inputAlterWidth = document.getElementById('elementAlterWidth') as HTMLInputElement
+    public readonly inputAlterHeight = document.getElementById('elementAlterHeight') as HTMLInputElement
+    public readonly outputAlterTopLeftX = document.getElementById('elementAlterTopLeftX') as HTMLInputElement
+    public readonly outputAlterTopLeftY = document.getElementById('elementAlterTopLeftY') as HTMLInputElement
+    public readonly outputAlterBottomRightX = document.getElementById('elementAlterBottomRightX') as HTMLInputElement
+    public readonly outputAlterBottomRightY = document.getElementById('elementAlterBottomRightY') as HTMLInputElement
+    public readonly outputAlterCoordinateCombined = document.getElementById('elementAlterCoordinateCombined') as HTMLInputElement
+    public readonly buttonAlterCoordinateCopy = document.getElementById('elementAlterCoordinateCopy') as HTMLButtonElement
     public readonly inputElementDiskTexture = document.getElementById('elementDiskTexture') as HTMLInputElement
     public readonly fileElementTextureBrowse = document.getElementById('buttonBrowseTexture') as HTMLInputElement
     public readonly inputElementWC3Texture = document.getElementById('elementWC3Texture') as HTMLInputElement
@@ -168,6 +179,12 @@ export class ParameterEditor {
         this.buttonDragSelectorMode.onclick = () => ParameterEditor.ChangeSelectionMode('drag')
         this.buttonElementArrayClone.onclick = ParameterEditor.ButtonArrayClone
         this.buttonCoordinateCopy.onclick = ParameterEditor.CopyCoordinateOutput
+        this.checkboxAlterEnabled.onchange = ParameterEditor.ToggleAlterEnabled
+        this.inputAlterCoordinateX.onchange = ParameterEditor.InputAlterCoordinateX
+        this.inputAlterCoordinateY.onchange = ParameterEditor.InputAlterCoordinateY
+        this.inputAlterWidth.onchange = ParameterEditor.InputAlterWidth
+        this.inputAlterHeight.onchange = ParameterEditor.InputAlterHeight
+        this.buttonAlterCoordinateCopy.onclick = ParameterEditor.CopyAlterCoordinateOutput
 
         // General options: texture prefix/ext override
         this.inputGeneralTexPrefix.oninput = () => (ProjectTree.TexturePrefix = this.inputGeneralTexPrefix.value)
@@ -452,6 +469,44 @@ export class ParameterEditor {
         }
     }
 
+    static ToggleAlterEnabled(ev: Event): void {
+        const checkbox = ev.target as HTMLInputElement
+        const instance = ParameterEditor.getInstance()
+        const frame = ProjectTree.getSelected()
+        const root = ProjectTree.getInstance().rootFrame
+
+        if (!frame || frame === root) {
+            checkbox.checked = false
+            return
+        }
+
+        const state = instance.getAlterState(frame)
+        state.enabled = checkbox.checked
+
+        instance.syncAlterValuesFromFrame(frame, state)
+        instance.refreshAlterUI(frame, state)
+    }
+
+    static CopyAlterCoordinateOutput(): void {
+        const instance = ParameterEditor.getInstance()
+        const value = instance.outputAlterCoordinateCombined.value
+        if (!value) {
+            debugText('No preview coordinates to copy.')
+            return
+        }
+        if (navigator?.clipboard?.writeText) {
+            navigator.clipboard
+                .writeText(value)
+                .then(() => debugText('Preview coordinates copied to clipboard.'))
+                .catch((err) => {
+                    console.error('Failed to copy preview coordinates', err)
+                    debugText('Failed to copy preview coordinates.')
+                })
+        } else {
+            debugText('Clipboard API unavailable.')
+        }
+    }
+
     static HideBorders(ev: Event): void {
         try {
             const val = (ev.target as HTMLInputElement).checked
@@ -593,6 +648,22 @@ export class ParameterEditor {
         } catch (e) {
             alert(e)
         }
+    }
+
+    static InputAlterCoordinateX(ev: Event): void {
+        ParameterEditor.getInstance().handleAlterNumericInput(ev, 'x')
+    }
+
+    static InputAlterCoordinateY(ev: Event): void {
+        ParameterEditor.getInstance().handleAlterNumericInput(ev, 'y')
+    }
+
+    static InputAlterWidth(ev: Event): void {
+        ParameterEditor.getInstance().handleAlterNumericInput(ev, 'width')
+    }
+
+    static InputAlterHeight(ev: Event): void {
+        ParameterEditor.getInstance().handleAlterNumericInput(ev, 'height')
     }
 
     static TextInputDiskTexture(ev: Event, which: 'normal' | 'back'): void {
@@ -818,6 +889,7 @@ export class ParameterEditor {
         this.inputElementTextColor.value = '#FFFFFF'
         this.inputElementTrigVar.value = ''
         this.setCoordinateOutputs('', '', '', '')
+        this.clearAlterInputs()
     }
 
     public disableFields(disable: boolean): void {
@@ -844,6 +916,7 @@ export class ParameterEditor {
         this.outputBottomRightY.disabled = disable
         this.outputCoordinateCombined.disabled = disable
         this.buttonCoordinateCopy.disabled = disable
+        this.setAlterFieldsDisabled(disable)
     }
 
     public updateFields(frame: FrameComponent | null): void {
@@ -1196,6 +1269,7 @@ export class ParameterEditor {
                 const hasChildren = frame.getChildren().length > 0
                 this.checkboxElementLinkToParent.disabled = !hasChildren
                 this.updateCoordinateOutput(frame, multiSelect)
+                this.updateAlterPanel(frame, multiSelect)
 
                 this.fieldElement.style.display = 'initial'
                 this.fieldGeneral.style.display = 'none'
@@ -1334,6 +1408,9 @@ export class ParameterEditor {
                 this.fieldElement.style.display = 'none'
                 this.fieldGeneral.style.display = 'initial'
             }
+            if (!frame || frame === ProjectTree.getInstance().rootFrame) {
+                this.updateAlterPanel(null, multiSelect)
+            }
         } catch (e) {
             alert(e)
         }
@@ -1344,25 +1421,36 @@ export class ParameterEditor {
     }
 
     private updateCoordinateOutput(frame: FrameComponent | null, multiSelect = false): void {
-        if (multiSelect) {
+        if (multiSelect || !frame || frame === ProjectTree.getInstance().rootFrame) {
             this.setCoordinateOutputs('', '', '', '')
             return
         }
 
-        if (!frame || frame === ProjectTree.getInstance().rootFrame) {
-            this.setCoordinateOutputs('', '', '', '')
-            return
+        const values = this.getFrameCoordinateValues(frame)
+        const outputs = this.computeCoordinateNumbers(frame, values)
+
+        this.setCoordinateOutputs(
+            this.formatNumber(outputs.topLeftX),
+            this.formatNumber(outputs.topLeftY),
+            this.formatNumber(outputs.bottomRightX),
+            this.formatNumber(outputs.bottomRightY)
+        )
+    }
+
+    private getFrameCoordinateValues(frame: FrameComponent): AlterValues {
+        return {
+            x: frame.custom.getLeftX(),
+            y: frame.custom.getBotY(),
+            width: frame.custom.getWidth(),
+            height: frame.custom.getHeight(),
         }
+    }
 
-        const leftX = frame.custom.getLeftX()
-        const bottomY = frame.custom.getBotY()
-        const width = frame.custom.getWidth()
-        const height = frame.custom.getHeight()
-
-        let topLeftX = leftX
-        let topLeftY = bottomY + height
-        let bottomRightX = leftX + width
-        let bottomRightY = bottomY
+    private computeCoordinateNumbers(frame: FrameComponent, values: AlterValues): CoordinateNumbers {
+        let topLeftX = values.x
+        let topLeftY = values.y + values.height
+        let bottomRightX = values.x + values.width
+        let bottomRightY = values.y
 
         const parent = frame.getParent()
         const root = ProjectTree.getInstance().rootFrame
@@ -1375,18 +1463,13 @@ export class ParameterEditor {
             const parentRight = parentLeft + parentCustom.getWidth()
             const parentTop = parentBottom + parentCustom.getHeight()
 
-            topLeftX = topLeftX - parentLeft
-            topLeftY = topLeftY - parentTop
-            bottomRightX = bottomRightX - parentRight
-            bottomRightY = bottomRightY - parentBottom
+            topLeftX -= parentLeft
+            topLeftY -= parentTop
+            bottomRightX -= parentRight
+            bottomRightY -= parentBottom
         }
 
-        this.setCoordinateOutputs(
-            this.formatNumber(topLeftX),
-            this.formatNumber(topLeftY),
-            this.formatNumber(bottomRightX),
-            this.formatNumber(bottomRightY)
-        )
+        return { topLeftX, topLeftY, bottomRightX, bottomRightY }
     }
 
     private formatNumber(value: number): string {
@@ -1403,7 +1486,325 @@ export class ParameterEditor {
         this.buttonCoordinateCopy.disabled = !hasValues
     }
 
+    private updateAlterInteractivity(state: AlterPreviewState): void {
+        const editsBlocked = !state.enabled || this.checkboxAlterEnabled.disabled
+        this.inputAlterCoordinateX.disabled = editsBlocked
+        this.inputAlterCoordinateY.disabled = editsBlocked
+        this.inputAlterWidth.disabled = editsBlocked
+        this.inputAlterHeight.disabled = editsBlocked
+
+        const hasValues = this.outputAlterCoordinateCombined.value !== ''
+        this.buttonAlterCoordinateCopy.disabled = !hasValues || this.checkboxAlterEnabled.disabled
+    }
+
+    private handleAlterNumericInput(ev: Event, key: AlterValueKey): void {
+        if (this.updatingAlterFields) return
+        const input = ev.target as HTMLInputElement
+        const selected = ProjectTree.getSelected()
+        const root = ProjectTree.getInstance().rootFrame
+
+        if (!selected || selected === root) {
+            this.updatingAlterFields = true
+            input.value = ''
+            this.updatingAlterFields = false
+            return
+        }
+
+        const state = this.getAlterState(selected)
+        if (!state.enabled) {
+            const fallback = this.getFrameCoordinateValues(selected)[key]
+            this.updatingAlterFields = true
+            input.value = fallback.toFixed(5)
+            this.updatingAlterFields = false
+            return
+        }
+
+        let value = Number(input.value)
+        if (!Number.isFinite(value)) {
+            this.updatingAlterFields = true
+            input.value = state.values[key].toFixed(5)
+            this.updatingAlterFields = false
+            return
+        }
+
+        if ((key === 'width' || key === 'height') && ParameterEditor.CheckInputValue(value)) {
+            value = 0.01
+        }
+
+        this.applyAlterValue(selected, { [key]: value } as Partial<AlterValues>)
+    }
+
+    private applyAlterValue(frame: FrameComponent, updates: Partial<AlterValues>): void {
+        const state = this.getAlterState(frame)
+        if (!state.enabled) return
+        const merged: AlterValues = { ...state.values, ...updates }
+        state.values = this.clampAlterValues(frame, merged)
+        this.refreshAlterUI(frame, state)
+    }
+
+    private updateAlterPanel(frame: FrameComponent | null, multiSelect: boolean): void {
+        if (multiSelect || !frame || frame === ProjectTree.getInstance().rootFrame) {
+            this.checkboxAlterEnabled.checked = false
+            this.checkboxAlterEnabled.disabled = true
+            this.setAlterFieldsDisabled(true)
+            this.clearAlterInputs()
+            this.hideActiveAlterOverlay()
+            return
+        }
+
+        if (this.alterActiveFrame && this.alterActiveFrame !== frame) {
+            const previous = this.alterStates.get(this.alterActiveFrame)
+            if (previous) this.hideAlterOverlay(this.alterActiveFrame, previous)
+        }
+
+        this.setAlterFieldsDisabled(false)
+        const state = this.getAlterState(frame)
+        this.checkboxAlterEnabled.disabled = false
+        if (!state.enabled) {
+            this.syncAlterValuesFromFrame(frame, state)
+        }
+        this.refreshAlterUI(frame, state)
+    }
+
+    private refreshAlterUI(frame: FrameComponent, state: AlterPreviewState): void {
+        this.checkboxAlterEnabled.checked = state.enabled
+        if (!state.enabled) this.syncAlterValuesFromFrame(frame, state)
+        this.updatingAlterFields = true
+        this.inputAlterCoordinateX.value = state.values.x.toFixed(5)
+        this.inputAlterCoordinateY.value = state.values.y.toFixed(5)
+        this.inputAlterWidth.value = state.values.width.toFixed(5)
+        this.inputAlterHeight.value = state.values.height.toFixed(5)
+        this.updatingAlterFields = false
+
+        this.updateAlterOutputs(frame, state.values)
+        this.updateAlterInteractivity(state)
+
+        if (state.enabled) {
+            this.showAlterOverlay(frame, state)
+        } else {
+            this.hideAlterOverlay(frame, state)
+        }
+    }
+
+    private updateAlterOutputs(frame: FrameComponent | null, values: AlterValues | null): void {
+        if (!frame || !values) {
+            this.setAlterCoordinateOutputs('', '', '', '')
+            return
+        }
+
+        const outputs = this.computeCoordinateNumbers(frame, values)
+        this.setAlterCoordinateOutputs(
+            this.formatNumber(outputs.topLeftX),
+            this.formatNumber(outputs.topLeftY),
+            this.formatNumber(outputs.bottomRightX),
+            this.formatNumber(outputs.bottomRightY)
+        )
+    }
+
+    private clearAlterInputs(): void {
+        this.updatingAlterFields = true
+        this.inputAlterCoordinateX.value = ''
+        this.inputAlterCoordinateY.value = ''
+        this.inputAlterWidth.value = ''
+        this.inputAlterHeight.value = ''
+        this.updatingAlterFields = false
+        this.setAlterCoordinateOutputs('', '', '', '')
+    }
+
+    private setAlterCoordinateOutputs(tlx: string, tly: string, brx: string, bry: string): void {
+        this.outputAlterTopLeftX.value = tlx
+        this.outputAlterTopLeftY.value = tly
+        this.outputAlterBottomRightX.value = brx
+        this.outputAlterBottomRightY.value = bry
+        const hasValues = tlx !== '' && tly !== '' && brx !== '' && bry !== ''
+        this.outputAlterCoordinateCombined.value = hasValues ? `${tlx},${tly},${brx},${bry}` : ''
+        this.buttonAlterCoordinateCopy.disabled = !hasValues
+    }
+
+    private setAlterFieldsDisabled(disabled: boolean): void {
+        this.inputAlterCoordinateX.disabled = disabled
+        this.inputAlterCoordinateY.disabled = disabled
+        this.inputAlterWidth.disabled = disabled
+        this.inputAlterHeight.disabled = disabled
+        this.outputAlterTopLeftX.disabled = disabled
+        this.outputAlterTopLeftY.disabled = disabled
+        this.outputAlterBottomRightX.disabled = disabled
+        this.outputAlterBottomRightY.disabled = disabled
+        this.outputAlterCoordinateCombined.disabled = disabled
+        this.buttonAlterCoordinateCopy.disabled = disabled || !this.outputAlterCoordinateCombined.value
+        this.checkboxAlterEnabled.disabled = disabled
+        if (disabled) this.checkboxAlterEnabled.checked = false
+    }
+
+    private getAlterState(frame: FrameComponent): AlterPreviewState {
+        let state = this.alterStates.get(frame)
+        if (!state) {
+            state = {
+                enabled: false,
+                values: this.getFrameCoordinateValues(frame),
+            }
+            this.alterStates.set(frame, state)
+        }
+        return state
+    }
+
+    private syncAlterValuesFromFrame(frame: FrameComponent, state: AlterPreviewState): void {
+        state.values = this.getFrameCoordinateValues(frame)
+    }
+
+    private clampAlterValues(frame: FrameComponent, values: AlterValues): AlterValues {
+        const marginLimits = EditorController.getMarginLimits()
+        const widthLimit = marginLimits.max - marginLimits.min
+        const width = this.clamp(values.width, 0, widthLimit)
+        const maxX = Math.max(marginLimits.min, marginLimits.max - width)
+        const x = this.clamp(values.x, marginLimits.min, maxX)
+        const height = this.clamp(values.height, 0, 0.6)
+        const maxY = Math.max(0, 0.6 - height)
+        const y = this.clamp(values.y, 0, maxY)
+
+        return {
+            x: Number(x.toFixed(5)),
+            y: Number(y.toFixed(5)),
+            width: Number(width.toFixed(5)),
+            height: Number(height.toFixed(5)),
+        }
+    }
+
+    private clamp(value: number, min: number, max: number): number {
+        if (min > max) return min
+        if (value < min) return min
+        if (value > max) return max
+        return value
+    }
+
+    private showAlterOverlay(frame: FrameComponent, state: AlterPreviewState): void {
+        if (this.alterActiveFrame && this.alterActiveFrame !== frame) {
+            const previous = this.alterStates.get(this.alterActiveFrame)
+            if (previous) this.hideAlterOverlay(this.alterActiveFrame, previous)
+        }
+
+        let overlay = state.overlay
+        if (overlay && !frame.layerDiv.contains(overlay)) {
+            overlay.remove()
+            overlay = undefined
+        }
+
+        if (!overlay) {
+            overlay = this.createAlterOverlay(frame, state)
+            state.overlay = overlay
+        }
+
+        overlay.style.display = ''
+        this.positionAlterOverlay(frame, overlay, state.values)
+        this.alterActiveFrame = frame
+    }
+
+    private hideAlterOverlay(frame: FrameComponent, state?: AlterPreviewState): void {
+        const target = state ?? this.alterStates.get(frame)
+        if (target?.overlay) {
+            target.overlay.remove()
+            target.overlay = undefined
+        }
+        if (this.alterActiveFrame === frame) {
+            this.alterActiveFrame = null
+        }
+    }
+
+    private hideActiveAlterOverlay(): void {
+        if (!this.alterActiveFrame) return
+        const state = this.alterStates.get(this.alterActiveFrame)
+        if (state) this.hideAlterOverlay(this.alterActiveFrame, state)
+    }
+
+    private createAlterOverlay(frame: FrameComponent, state: AlterPreviewState): HTMLDivElement {
+        const overlay = frame.custom.getElement().cloneNode(true) as HTMLDivElement
+        overlay.style.opacity = '0.55'
+        overlay.style.pointerEvents = 'auto'
+        overlay.style.cursor = 'move'
+        overlay.style.outline = '2px dashed #FFD54F'
+        overlay.style.outlineOffset = '0px'
+        overlay.dataset.alterPreview = 'true'
+        frame.layerDiv.appendChild(overlay)
+        this.attachAlterOverlayEvents(frame, state, overlay)
+        return overlay
+    }
+
+    private attachAlterOverlayEvents(frame: FrameComponent, state: AlterPreviewState, overlay: HTMLDivElement): void {
+        overlay.addEventListener('mousedown', (ev) => this.onAlterOverlayMouseDown(ev, frame, state))
+    }
+
+    private onAlterOverlayMouseDown(ev: MouseEvent, frame: FrameComponent, state: AlterPreviewState): void {
+        if (ev.button !== 0) return
+        ev.preventDefault()
+        ev.stopPropagation()
+
+        const projectTree = ProjectTree.getInstance()
+        projectTree.select(frame)
+
+        const workspaceImage = Editor.getInstance().workspaceImage
+        const rect = workspaceImage.getBoundingClientRect()
+        const horizontalMargin = EditorController.getInnerMargin()
+        const marginLimits = EditorController.getMarginLimits()
+        const start = { ...state.values }
+        const startX = ev.clientX
+        const startY = ev.clientY
+        const workspaceWidth = Math.max(1, workspaceImage.width - 2 * horizontalMargin)
+        const rectWidth = Math.max(1, rect.width - 2 * horizontalMargin)
+        const horizontalScale = workspaceWidth > 0 ? workspaceWidth : rectWidth
+        const verticalScale = Math.max(1, rect.height)
+
+        this.showAlterOverlay(frame, state)
+        document.body.style.cursor = 'grabbing'
+
+        const onMove = (moveEv: MouseEvent) => {
+            const deltaX = moveEv.clientX - startX
+            const deltaY = moveEv.clientY - startY
+
+            const maxX = Math.max(marginLimits.min, marginLimits.max - start.width)
+            const maxY = Math.max(0, 0.6 - start.height)
+
+            const newX = start.x + (deltaX * 0.8) / horizontalScale
+            const newY = start.y - (deltaY * 0.6) / verticalScale
+
+            state.values.x = Number(this.clamp(newX, marginLimits.min, maxX).toFixed(5))
+            state.values.y = Number(this.clamp(newY, 0, maxY).toFixed(5))
+            this.refreshAlterUI(frame, state)
+        }
+
+        const onUp = () => {
+            window.removeEventListener('mousemove', onMove)
+            window.removeEventListener('mouseup', onUp)
+            document.body.style.cursor = 'default'
+            this.refreshAlterUI(frame, state)
+        }
+
+        window.addEventListener('mousemove', onMove)
+        window.addEventListener('mouseup', onUp)
+    }
+
+    private positionAlterOverlay(frame: FrameComponent, overlay: HTMLDivElement, values: AlterValues): void {
+        const editor = Editor.getInstance()
+        const workspaceImage = editor.workspaceImage
+        const rect = workspaceImage.getBoundingClientRect()
+        const horizontalMargin = EditorController.getInnerMargin()
+        const workspaceWidth = Math.max(1, workspaceImage.width - 2 * horizontalMargin)
+        const widthPx = (values.width / 0.8) * workspaceWidth
+        overlay.style.width = `${widthPx}px`
+
+        const heightPx = (values.height / 0.6) * Math.max(1, rect.height)
+        overlay.style.height = `${heightPx}px`
+
+        const leftPx = (values.x * (rect.width - 2 * horizontalMargin)) / 0.8 + rect.left + horizontalMargin
+        const topPx = rect.bottom - (values.y * rect.height) / 0.6 - heightPx - 120
+
+        overlay.style.left = `${leftPx}px`
+        overlay.style.top = `${topPx}px`
+    }
+
     private readonly list = ['Red', 'Blue', 'Teal', 'Purple', 'Yellow', 'Orange', 'Green', 'Pink', 'Gray', 'LightBlue', 'DArkGreen', 'Brown']
+    private readonly alterStates = new WeakMap<FrameComponent, AlterPreviewState>()
+    private alterActiveFrame: FrameComponent | null = null
+    private updatingAlterFields = false
 
     setupLists(frame: FrameComponent) {
         const listEl = document.getElementById('WC3TextureList')
@@ -1423,4 +1824,26 @@ export class ParameterEditor {
             }
         }
     }
+}
+
+type AlterValueKey = 'x' | 'y' | 'width' | 'height'
+
+interface AlterValues {
+    x: number
+    y: number
+    width: number
+    height: number
+}
+
+interface CoordinateNumbers {
+    topLeftX: number
+    topLeftY: number
+    bottomRightX: number
+    bottomRightY: number
+}
+
+interface AlterPreviewState {
+    enabled: boolean
+    values: AlterValues
+    overlay?: HTMLDivElement
 }
