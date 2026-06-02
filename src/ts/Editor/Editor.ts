@@ -17,6 +17,7 @@ import { AppUIWoodenTexture, AppUIBrownColors, AppUIPurpleColors, AppUIBlueColor
 import { Titlebar, Color, RGBA } from 'custom-electron-titlebar'
 import SaveDocument from '../Persistence/SaveDocument'
 import { GUIEvents } from '../ClassesAndFunctions/GUIEvents'
+import RenameTextureFolder from '../ClassesAndFunctions/RenameTextureFolder'
 
 export class Editor {
     private static instance?: Editor
@@ -105,6 +106,7 @@ export class Editor {
         this.fileMenu.addRibbonOption(new RibbonOption('Open', new LoadDocument()))
         this.fileMenu.addRibbonOption(new RibbonOption('Save', new SaveDocument()))
         this.fileMenu.addRibbonOption(new RibbonOption('Save As', new SaveASDocument()))
+        this.fileMenu.addRibbonOption(new RibbonOption('Rename Texture Folder', new RenameTextureFolder()))
 
         const expRib = new RibbonOption('Export', null)
         this.fileMenu.addRibbonOption(expRib)

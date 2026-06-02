@@ -142,7 +142,7 @@ export default class CustomComplex extends FrameBaseContent implements CustomCom
         else return this.textureBackDiskPath
     }
 
-    public setDiskTexture(Input: File | string, which: 'normal' | 'back'): void {
+    public setDiskTexture(Input: File | string, which: 'normal' | 'back', updateWc3Path = true): void {
         let Image: HTMLImageElement | undefined
         if (which == 'normal') {
             Image = this.elemImage
@@ -171,7 +171,7 @@ export default class CustomComplex extends FrameBaseContent implements CustomCom
                 if (Image) Image.src = file.path
             }
 
-            if (ParameterEditor.getInstance().checkboxPathFill.checked) {
+            if (updateWc3Path && ParameterEditor.getInstance().checkboxPathFill.checked) {
                 const prefix = ProjectTree.TexturePrefix ?? ''
                 const override = (ProjectTree.TextureExtOverride ?? '').trim()
                 let outName = file.name
@@ -202,7 +202,7 @@ export default class CustomComplex extends FrameBaseContent implements CustomCom
                 }
             })
 
-            if (ParameterEditor.getInstance().checkboxPathFill.checked) {
+            if (updateWc3Path && ParameterEditor.getInstance().checkboxPathFill.checked) {
                 const prefix = ProjectTree.TexturePrefix ?? ''
                 const override = (ProjectTree.TextureExtOverride ?? '').trim()
                 let outName = basename(Input)
