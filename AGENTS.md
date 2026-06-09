@@ -16,7 +16,8 @@ Rules:
 This is an Electron/TypeScript tool for designing Warcraft III Reforged UI frames and exporting them as JASS, Lua, or TypeScript code for use in maps.
 
 Use the matching project skill before deeper work:
-- `wc3-ui-designer` for editor state, frame movement, menus, persistence, save/load, and undo/redo work.
+- `wc3-ui-designer` for editor state, frame movement, menus, persistence, save/load, and general editor behavior.
+- `wc3-undo-commands` when a frame mutation must be undoable/redoable — authoring or changing a `Commands/Implementation/` command (hide, reorder, reparent, batch move, etc.).
 - `wc3-export-safety` for export templates, generated Warcraft III code, frame event triggers, TOC/FDF handling, and map-import behavior.
 
 Keep changes clean, minimal, and aligned with the existing project structure. Do not over-engineer helper functions. Remove dead code during reworks.

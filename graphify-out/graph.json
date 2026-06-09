@@ -837,7 +837,7 @@
       "source_file": "src/ts/ClassesAndFunctions/Export.ts",
       "source_location": "L81",
       "id": "classesandfunctions_export_export",
-      "community": 38,
+      "community": 2,
       "norm_label": "export"
     },
     {
@@ -846,7 +846,7 @@
       "source_file": "src/ts/ClassesAndFunctions/Export.ts",
       "source_location": "L86",
       "id": "classesandfunctions_export_export_constructor",
-      "community": 38,
+      "community": 2,
       "norm_label": ".constructor()"
     },
     {
@@ -1152,7 +1152,7 @@
       "source_file": "src/ts/Commands/Redo.ts",
       "source_location": "L1",
       "id": "src_ts_commands_redo_ts",
-      "community": 74,
+      "community": 15,
       "norm_label": "redo.ts"
     },
     {
@@ -1161,7 +1161,7 @@
       "source_file": "src/ts/Commands/Redo.ts",
       "source_location": "L4",
       "id": "commands_redo_redo",
-      "community": 74,
+      "community": 15,
       "norm_label": "redo"
     },
     {
@@ -1170,7 +1170,7 @@
       "source_file": "src/ts/Commands/Redo.ts",
       "source_location": "L5",
       "id": "commands_redo_redo_run",
-      "community": 74,
+      "community": 15,
       "norm_label": ".run()"
     },
     {
@@ -1179,7 +1179,7 @@
       "source_file": "src/ts/Commands/Redoable.ts",
       "source_location": "L1",
       "id": "src_ts_commands_redoable_ts",
-      "community": 74,
+      "community": 40,
       "norm_label": "redoable.ts"
     },
     {
@@ -1188,7 +1188,7 @@
       "source_file": "src/ts/Commands/Redoable.ts",
       "source_location": "L3",
       "id": "commands_redoable_redoable",
-      "community": 74,
+      "community": 40,
       "norm_label": "redoable"
     },
     {
@@ -1242,7 +1242,7 @@
       "source_file": "src/ts/Commands/Undo.ts",
       "source_location": "L1",
       "id": "src_ts_commands_undo_ts",
-      "community": 74,
+      "community": 15,
       "norm_label": "undo.ts"
     },
     {
@@ -1251,7 +1251,7 @@
       "source_file": "src/ts/Commands/Undo.ts",
       "source_location": "L4",
       "id": "commands_undo_undo",
-      "community": 74,
+      "community": 15,
       "norm_label": "undo"
     },
     {
@@ -1260,7 +1260,7 @@
       "source_file": "src/ts/Commands/Undo.ts",
       "source_location": "L5",
       "id": "commands_undo_undo_run",
-      "community": 74,
+      "community": 15,
       "norm_label": ".run()"
     },
     {
@@ -1269,7 +1269,7 @@
       "source_file": "src/ts/Commands/Undoable.ts",
       "source_location": "L1",
       "id": "src_ts_commands_undoable_ts",
-      "community": 74,
+      "community": 40,
       "norm_label": "undoable.ts"
     },
     {
@@ -1278,7 +1278,7 @@
       "source_file": "src/ts/Commands/Undoable.ts",
       "source_location": "L1",
       "id": "commands_undoable_undoable",
-      "community": 74,
+      "community": 40,
       "norm_label": "undoable"
     },
     {
@@ -1449,7 +1449,7 @@
       "source_file": "src/ts/Commands/Implementation/ChangeFrameDiskTexture.ts",
       "source_location": "L7",
       "id": "implementation_changeframedisktexture_changeframedisktexture",
-      "community": 61,
+      "community": 5,
       "norm_label": "changeframedisktexture"
     },
     {
@@ -1458,7 +1458,7 @@
       "source_file": "src/ts/Commands/Implementation/ChangeFrameDiskTexture.ts",
       "source_location": "L13",
       "id": "implementation_changeframedisktexture_changeframedisktexture_constructor",
-      "community": 61,
+      "community": 5,
       "norm_label": ".constructor()"
     },
     {
@@ -1467,7 +1467,7 @@
       "source_file": "src/ts/Commands/Implementation/ChangeFrameDiskTexture.ts",
       "source_location": "L26",
       "id": "implementation_changeframedisktexture_changeframedisktexture_pureaction",
-      "community": 61,
+      "community": 5,
       "norm_label": ".pureaction()"
     },
     {
@@ -1476,7 +1476,7 @@
       "source_file": "src/ts/Commands/Implementation/ChangeFrameDiskTexture.ts",
       "source_location": "L43",
       "id": "implementation_changeframedisktexture_changeframedisktexture_undo",
-      "community": 61,
+      "community": 5,
       "norm_label": ".undo()"
     },
     {
@@ -1485,7 +1485,7 @@
       "source_file": "src/ts/Commands/Implementation/ChangeFrameDiskTexture.ts",
       "source_location": "L53",
       "id": "implementation_changeframedisktexture_changeframedisktexture_redo",
-      "community": 61,
+      "community": 5,
       "norm_label": ".redo()"
     },
     {
@@ -1557,7 +1557,7 @@
       "source_file": "src/ts/Commands/Implementation/ChangeFrameHidden.ts",
       "source_location": "L6",
       "id": "implementation_changeframehidden_changeframehidden",
-      "community": 36,
+      "community": 5,
       "norm_label": "changeframehidden"
     },
     {
@@ -1566,7 +1566,7 @@
       "source_file": "src/ts/Commands/Implementation/ChangeFrameHidden.ts",
       "source_location": "L11",
       "id": "implementation_changeframehidden_changeframehidden_constructor",
-      "community": 36,
+      "community": 5,
       "norm_label": ".constructor()"
     },
     {
@@ -1575,7 +1575,7 @@
       "source_file": "src/ts/Commands/Implementation/ChangeFrameHidden.ts",
       "source_location": "L18",
       "id": "implementation_changeframehidden_changeframehidden_pureaction",
-      "community": 36,
+      "community": 5,
       "norm_label": ".pureaction()"
     },
     {
@@ -1584,7 +1584,7 @@
       "source_file": "src/ts/Commands/Implementation/ChangeFrameHidden.ts",
       "source_location": "L30",
       "id": "implementation_changeframehidden_changeframehidden_undo",
-      "community": 36,
+      "community": 5,
       "norm_label": ".undo()"
     },
     {
@@ -1593,7 +1593,7 @@
       "source_file": "src/ts/Commands/Implementation/ChangeFrameHidden.ts",
       "source_location": "L45",
       "id": "implementation_changeframehidden_changeframehidden_redo",
-      "community": 36,
+      "community": 5,
       "norm_label": ".redo()"
     },
     {
@@ -1611,7 +1611,7 @@
       "source_file": "src/ts/Commands/Implementation/ChangeFrameHiddenCascade.ts",
       "source_location": "L6",
       "id": "implementation_changeframehiddencascade_changeframehiddencascade",
-      "community": 41,
+      "community": 5,
       "norm_label": "changeframehiddencascade"
     },
     {
@@ -1620,7 +1620,7 @@
       "source_file": "src/ts/Commands/Implementation/ChangeFrameHiddenCascade.ts",
       "source_location": "L11",
       "id": "implementation_changeframehiddencascade_changeframehiddencascade_constructor",
-      "community": 41,
+      "community": 5,
       "norm_label": ".constructor()"
     },
     {
@@ -1629,7 +1629,7 @@
       "source_file": "src/ts/Commands/Implementation/ChangeFrameHiddenCascade.ts",
       "source_location": "L17",
       "id": "implementation_changeframehiddencascade_changeframehiddencascade_pureaction",
-      "community": 41,
+      "community": 5,
       "norm_label": ".pureaction()"
     },
     {
@@ -1638,7 +1638,7 @@
       "source_file": "src/ts/Commands/Implementation/ChangeFrameHiddenCascade.ts",
       "source_location": "L28",
       "id": "implementation_changeframehiddencascade_changeframehiddencascade_undo",
-      "community": 41,
+      "community": 5,
       "norm_label": ".undo()"
     },
     {
@@ -1647,7 +1647,7 @@
       "source_file": "src/ts/Commands/Implementation/ChangeFrameHiddenCascade.ts",
       "source_location": "L42",
       "id": "implementation_changeframehiddencascade_changeframehiddencascade_redo",
-      "community": 41,
+      "community": 5,
       "norm_label": ".redo()"
     },
     {
@@ -1665,7 +1665,7 @@
       "source_file": "src/ts/Commands/Implementation/ChangeFrameName.ts",
       "source_location": "L6",
       "id": "implementation_changeframename_changeframename",
-      "community": 44,
+      "community": 5,
       "norm_label": "changeframename"
     },
     {
@@ -1674,7 +1674,7 @@
       "source_file": "src/ts/Commands/Implementation/ChangeFrameName.ts",
       "source_location": "L10",
       "id": "implementation_changeframename_changeframename_constructor",
-      "community": 44,
+      "community": 5,
       "norm_label": ".constructor()"
     },
     {
@@ -1683,7 +1683,7 @@
       "source_file": "src/ts/Commands/Implementation/ChangeFrameName.ts",
       "source_location": "L21",
       "id": "implementation_changeframename_changeframename_undo",
-      "community": 44,
+      "community": 5,
       "norm_label": ".undo()"
     },
     {
@@ -1692,7 +1692,7 @@
       "source_file": "src/ts/Commands/Implementation/ChangeFrameName.ts",
       "source_location": "L29",
       "id": "implementation_changeframename_changeframename_redo",
-      "community": 44,
+      "community": 5,
       "norm_label": ".redo()"
     },
     {
@@ -1701,7 +1701,7 @@
       "source_file": "src/ts/Commands/Implementation/ChangeFrameName.ts",
       "source_location": "L34",
       "id": "implementation_changeframename_changeframename_pureaction",
-      "community": 44,
+      "community": 5,
       "norm_label": ".pureaction()"
     },
     {
@@ -1728,7 +1728,7 @@
       "source_file": "src/ts/Commands/Implementation/ChangeFrameOrder.ts",
       "source_location": "L8",
       "id": "implementation_changeframeorder_changeframeorder",
-      "community": 45,
+      "community": 5,
       "norm_label": "changeframeorder"
     },
     {
@@ -1737,7 +1737,7 @@
       "source_file": "src/ts/Commands/Implementation/ChangeFrameOrder.ts",
       "source_location": "L15",
       "id": "implementation_changeframeorder_changeframeorder_constructor",
-      "community": 45,
+      "community": 5,
       "norm_label": ".constructor()"
     },
     {
@@ -1746,7 +1746,7 @@
       "source_file": "src/ts/Commands/Implementation/ChangeFrameOrder.ts",
       "source_location": "L22",
       "id": "implementation_changeframeorder_changeframeorder_pureaction",
-      "community": 45,
+      "community": 5,
       "norm_label": ".pureaction()"
     },
     {
@@ -1755,7 +1755,7 @@
       "source_file": "src/ts/Commands/Implementation/ChangeFrameOrder.ts",
       "source_location": "L47",
       "id": "implementation_changeframeorder_changeframeorder_undo",
-      "community": 45,
+      "community": 5,
       "norm_label": ".undo()"
     },
     {
@@ -1764,7 +1764,7 @@
       "source_file": "src/ts/Commands/Implementation/ChangeFrameOrder.ts",
       "source_location": "L60",
       "id": "implementation_changeframeorder_changeframeorder_redo",
-      "community": 45,
+      "community": 5,
       "norm_label": ".redo()"
     },
     {
@@ -1890,7 +1890,7 @@
       "source_file": "src/ts/Commands/Implementation/ChangeFrameTooltip.ts",
       "source_location": "L6",
       "id": "implementation_changeframetooltip_changeframetooltip",
-      "community": 65,
+      "community": 5,
       "norm_label": "changeframetooltip"
     },
     {
@@ -1899,7 +1899,7 @@
       "source_file": "src/ts/Commands/Implementation/ChangeFrameTooltip.ts",
       "source_location": "L12",
       "id": "implementation_changeframetooltip_changeframetooltip_constructor",
-      "community": 65,
+      "community": 5,
       "norm_label": ".constructor()"
     },
     {
@@ -1908,7 +1908,7 @@
       "source_file": "src/ts/Commands/Implementation/ChangeFrameTooltip.ts",
       "source_location": "L24",
       "id": "implementation_changeframetooltip_changeframetooltip_pureaction",
-      "community": 65,
+      "community": 5,
       "norm_label": ".pureaction()"
     },
     {
@@ -1917,7 +1917,7 @@
       "source_file": "src/ts/Commands/Implementation/ChangeFrameTooltip.ts",
       "source_location": "L44",
       "id": "implementation_changeframetooltip_changeframetooltip_undo",
-      "community": 65,
+      "community": 5,
       "norm_label": ".undo()"
     },
     {
@@ -1926,7 +1926,7 @@
       "source_file": "src/ts/Commands/Implementation/ChangeFrameTooltip.ts",
       "source_location": "L69",
       "id": "implementation_changeframetooltip_changeframetooltip_redo",
-      "community": 65,
+      "community": 5,
       "norm_label": ".redo()"
     },
     {
@@ -3303,7 +3303,7 @@
       "source_file": "src/ts/Editor/ChangeStack.ts",
       "source_location": "L1",
       "id": "src_ts_editor_changestack_ts",
-      "community": 74,
+      "community": 40,
       "norm_label": "changestack.ts"
     },
     {
@@ -3393,7 +3393,7 @@
       "source_file": "src/ts/Editor/Editor.ts",
       "source_location": "L22",
       "id": "editor_editor_editor",
-      "community": 3,
+      "community": 7,
       "norm_label": "editor"
     },
     {
@@ -3402,7 +3402,7 @@
       "source_file": "src/ts/Editor/Editor.ts",
       "source_location": "L25",
       "id": "editor_editor_editor_getinstance",
-      "community": 3,
+      "community": 7,
       "norm_label": ".getinstance()"
     },
     {
@@ -3411,7 +3411,7 @@
       "source_file": "src/ts/Editor/Editor.ts",
       "source_location": "L60",
       "id": "editor_editor_editor_constructor",
-      "community": 3,
+      "community": 7,
       "norm_label": ".constructor()"
     },
     {
@@ -3420,7 +3420,7 @@
       "source_file": "src/ts/Editor/Editor.ts",
       "source_location": "L88",
       "id": "editor_editor_editor_initializemenus",
-      "community": 3,
+      "community": 7,
       "norm_label": ".initializemenus()"
     },
     {
@@ -3483,7 +3483,7 @@
       "source_file": "src/ts/Editor/ParameterEditor.ts",
       "source_location": "L36",
       "id": "editor_parametereditor_parametereditor",
-      "community": 5,
+      "community": 1,
       "norm_label": "parametereditor"
     },
     {
@@ -3501,7 +3501,7 @@
       "source_file": "src/ts/Editor/ParameterEditor.ts",
       "source_location": "L139",
       "id": "editor_parametereditor_parametereditor_constructor",
-      "community": 5,
+      "community": 1,
       "norm_label": ".constructor()"
     },
     {
@@ -3555,7 +3555,7 @@
       "source_file": "src/ts/Editor/ParameterEditor.ts",
       "source_location": "L378",
       "id": "editor_parametereditor_parametereditor_changetype",
-      "community": 0,
+      "community": 1,
       "norm_label": ".changetype()"
     },
     {
@@ -3582,7 +3582,7 @@
       "source_file": "src/ts/Editor/ParameterEditor.ts",
       "source_location": "L429",
       "id": "editor_parametereditor_parametereditor_changehidden",
-      "community": 0,
+      "community": 1,
       "norm_label": ".changehidden()"
     },
     {
@@ -3591,7 +3591,7 @@
       "source_file": "src/ts/Editor/ParameterEditor.ts",
       "source_location": "L441",
       "id": "editor_parametereditor_parametereditor_changehiddencascade",
-      "community": 0,
+      "community": 1,
       "norm_label": ".changehiddencascade()"
     },
     {
@@ -3654,7 +3654,7 @@
       "source_file": "src/ts/Editor/ParameterEditor.ts",
       "source_location": "L567",
       "id": "editor_parametereditor_parametereditor_inputonclickfunc",
-      "community": 5,
+      "community": 1,
       "norm_label": ".inputonclickfunc()"
     },
     {
@@ -3663,7 +3663,7 @@
       "source_file": "src/ts/Editor/ParameterEditor.ts",
       "source_location": "L575",
       "id": "editor_parametereditor_parametereditor_inputonmouseenterfunc",
-      "community": 5,
+      "community": 1,
       "norm_label": ".inputonmouseenterfunc()"
     },
     {
@@ -3672,7 +3672,7 @@
       "source_file": "src/ts/Editor/ParameterEditor.ts",
       "source_location": "L583",
       "id": "editor_parametereditor_parametereditor_inputonmouseleavefunc",
-      "community": 5,
+      "community": 1,
       "norm_label": ".inputonmouseleavefunc()"
     },
     {
@@ -3744,7 +3744,7 @@
       "source_file": "src/ts/Editor/ParameterEditor.ts",
       "source_location": "L686",
       "id": "editor_parametereditor_parametereditor_buttoninputdisktexture",
-      "community": 5,
+      "community": 1,
       "norm_label": ".buttoninputdisktexture()"
     },
     {
@@ -3789,7 +3789,7 @@
       "source_file": "src/ts/Editor/ParameterEditor.ts",
       "source_location": "L755",
       "id": "editor_parametereditor_parametereditor_inputtextcolor",
-      "community": 5,
+      "community": 1,
       "norm_label": ".inputtextcolor()"
     },
     {
@@ -3798,7 +3798,7 @@
       "source_file": "src/ts/Editor/ParameterEditor.ts",
       "source_location": "L764",
       "id": "editor_parametereditor_parametereditor_inputhoralign",
-      "community": 5,
+      "community": 1,
       "norm_label": ".inputhoralign()"
     },
     {
@@ -3807,7 +3807,7 @@
       "source_file": "src/ts/Editor/ParameterEditor.ts",
       "source_location": "L772",
       "id": "editor_parametereditor_parametereditor_inputveralign",
-      "community": 5,
+      "community": 1,
       "norm_label": ".inputveralign()"
     },
     {
@@ -3825,7 +3825,7 @@
       "source_file": "src/ts/Editor/ParameterEditor.ts",
       "source_location": "L789",
       "id": "editor_parametereditor_parametereditor_inputarrayxgap",
-      "community": 5,
+      "community": 1,
       "norm_label": ".inputarrayxgap()"
     },
     {
@@ -3852,7 +3852,7 @@
       "source_file": "src/ts/Editor/ParameterEditor.ts",
       "source_location": "L819",
       "id": "editor_parametereditor_parametereditor_inputarraycols",
-      "community": 5,
+      "community": 1,
       "norm_label": ".inputarraycols()"
     },
     {
@@ -3897,7 +3897,7 @@
       "source_file": "src/ts/Editor/ParameterEditor.ts",
       "source_location": "L873",
       "id": "editor_parametereditor_parametereditor_originmodechanges",
-      "community": 5,
+      "community": 1,
       "norm_label": ".originmodechanges()"
     },
     {
@@ -3915,7 +3915,7 @@
       "source_file": "src/ts/Editor/ParameterEditor.ts",
       "source_location": "L901",
       "id": "editor_parametereditor_parametereditor_disablefields",
-      "community": 18,
+      "community": 1,
       "norm_label": ".disablefields()"
     },
     {
@@ -3924,7 +3924,7 @@
       "source_file": "src/ts/Editor/ParameterEditor.ts",
       "source_location": "L928",
       "id": "editor_parametereditor_parametereditor_updatefields",
-      "community": 0,
+      "community": 1,
       "norm_label": ".updatefields()"
     },
     {
@@ -3951,7 +3951,7 @@
       "source_file": "src/ts/Editor/ParameterEditor.ts",
       "source_location": "L1446",
       "id": "editor_parametereditor_parametereditor_getframecoordinatevalues",
-      "community": 18,
+      "community": 1,
       "norm_label": ".getframecoordinatevalues()"
     },
     {
@@ -3996,7 +3996,7 @@
       "source_file": "src/ts/Editor/ParameterEditor.ts",
       "source_location": "L1523",
       "id": "editor_parametereditor_parametereditor_updatealterpanel",
-      "community": 18,
+      "community": 1,
       "norm_label": ".updatealterpanel()"
     },
     {
@@ -4005,7 +4005,7 @@
       "source_file": "src/ts/Editor/ParameterEditor.ts",
       "source_location": "L1560",
       "id": "editor_parametereditor_parametereditor_applypreviewstate",
-      "community": 18,
+      "community": 1,
       "norm_label": ".applypreviewstate()"
     },
     {
@@ -4041,7 +4041,7 @@
       "source_file": "src/ts/Editor/ParameterEditor.ts",
       "source_location": "L1604",
       "id": "editor_parametereditor_parametereditor_setaltersectiondisabled",
-      "community": 18,
+      "community": 1,
       "norm_label": ".setaltersectiondisabled()"
     },
     {
@@ -4050,7 +4050,7 @@
       "source_file": "src/ts/Editor/ParameterEditor.ts",
       "source_location": "L1615",
       "id": "editor_parametereditor_parametereditor_setalterinputenabled",
-      "community": 18,
+      "community": 1,
       "norm_label": ".setalterinputenabled()"
     },
     {
@@ -4113,7 +4113,7 @@
       "source_file": "src/ts/Editor/ParameterEditor.ts",
       "source_location": "L1698",
       "id": "editor_parametereditor_parametereditor_hidealteroverlay",
-      "community": 18,
+      "community": 1,
       "norm_label": ".hidealteroverlay()"
     },
     {
@@ -4122,7 +4122,7 @@
       "source_file": "src/ts/Editor/ParameterEditor.ts",
       "source_location": "L1710",
       "id": "editor_parametereditor_parametereditor_hideactivealteroverlay",
-      "community": 18,
+      "community": 1,
       "norm_label": ".hideactivealteroverlay()"
     },
     {
@@ -4131,7 +4131,7 @@
       "source_file": "src/ts/Editor/ParameterEditor.ts",
       "source_location": "L1715",
       "id": "editor_parametereditor_parametereditor_createalteroverlay",
-      "community": 5,
+      "community": 18,
       "norm_label": ".createalteroverlay()"
     },
     {
@@ -4140,7 +4140,7 @@
       "source_file": "src/ts/Editor/ParameterEditor.ts",
       "source_location": "L1727",
       "id": "editor_parametereditor_parametereditor_attachalteroverlayevents",
-      "community": 5,
+      "community": 18,
       "norm_label": ".attachalteroverlayevents()"
     },
     {
@@ -4149,7 +4149,7 @@
       "source_file": "src/ts/Editor/ParameterEditor.ts",
       "source_location": "L1738",
       "id": "editor_parametereditor_parametereditor_onalteroverlayhover",
-      "community": 34,
+      "community": 1,
       "norm_label": ".onalteroverlayhover()"
     },
     {
@@ -4158,7 +4158,7 @@
       "source_file": "src/ts/Editor/ParameterEditor.ts",
       "source_location": "L1768",
       "id": "editor_parametereditor_parametereditor_onalteroverlaymousedown",
-      "community": 34,
+      "community": 1,
       "norm_label": ".onalteroverlaymousedown()"
     },
     {
@@ -4167,7 +4167,7 @@
       "source_file": "src/ts/Editor/ParameterEditor.ts",
       "source_location": "L1797",
       "id": "editor_parametereditor_parametereditor_cursorformode",
-      "community": 34,
+      "community": 1,
       "norm_label": ".cursorformode()"
     },
     {
@@ -4176,7 +4176,7 @@
       "source_file": "src/ts/Editor/ParameterEditor.ts",
       "source_location": "L1816",
       "id": "editor_parametereditor_parametereditor_handleoverlaydrag",
-      "community": 18,
+      "community": 1,
       "norm_label": ".handleoverlaydrag()"
     },
     {
@@ -4185,7 +4185,7 @@
       "source_file": "src/ts/Editor/ParameterEditor.ts",
       "source_location": "L1921",
       "id": "editor_parametereditor_parametereditor_endoverlaydrag",
-      "community": 18,
+      "community": 1,
       "norm_label": ".endoverlaydrag()"
     },
     {
@@ -4194,7 +4194,7 @@
       "source_file": "src/ts/Editor/ParameterEditor.ts",
       "source_location": "L1933",
       "id": "editor_parametereditor_parametereditor_resolvedragmode",
-      "community": 34,
+      "community": 1,
       "norm_label": ".resolvedragmode()"
     },
     {
@@ -4212,7 +4212,7 @@
       "source_file": "src/ts/Editor/ParameterEditor.ts",
       "source_location": "L1974",
       "id": "editor_parametereditor_parametereditor_getalterruntime",
-      "community": 34,
+      "community": 1,
       "norm_label": ".getalterruntime()"
     },
     {
@@ -4221,7 +4221,7 @@
       "source_file": "src/ts/Editor/ParameterEditor.ts",
       "source_location": "L1988",
       "id": "editor_parametereditor_parametereditor_setuplists",
-      "community": 0,
+      "community": 1,
       "norm_label": ".setuplists()"
     },
     {
@@ -5004,7 +5004,7 @@
       "source_file": "src/ts/Editor/FrameLogic/FrameBuilder.ts",
       "source_location": "L175",
       "id": "framelogic_framebuilder_framebuilder_copybuilder",
-      "community": 4,
+      "community": 34,
       "norm_label": ".copybuilder()"
     },
     {
@@ -5013,7 +5013,7 @@
       "source_file": "src/ts/Editor/FrameLogic/FrameBuilder.ts",
       "source_location": "L185",
       "id": "framelogic_framebuilder_framebuilder_copyframe",
-      "community": 4,
+      "community": 34,
       "norm_label": ".copyframe()"
     },
     {
@@ -5022,7 +5022,7 @@
       "source_file": "src/ts/Editor/FrameLogic/FrameBuilder.ts",
       "source_location": "L214",
       "id": "framelogic_framebuilder_framebuilder_copy",
-      "community": 4,
+      "community": 34,
       "norm_label": ".copy()"
     },
     {
@@ -5166,7 +5166,7 @@
       "source_file": "src/ts/Editor/FrameLogic/FrameComponent.ts",
       "source_location": "L252",
       "id": "framelogic_framecomponent_framecomponent_getalterpreview",
-      "community": 4,
+      "community": 9,
       "norm_label": ".getalterpreview()"
     },
     {
@@ -5175,7 +5175,7 @@
       "source_file": "src/ts/Editor/FrameLogic/FrameComponent.ts",
       "source_location": "L257",
       "id": "framelogic_framecomponent_framecomponent_setalterpreview",
-      "community": 4,
+      "community": 9,
       "norm_label": ".setalterpreview()"
     },
     {
@@ -5184,7 +5184,7 @@
       "source_file": "src/ts/Editor/FrameLogic/FrameComponent.ts",
       "source_location": "L261",
       "id": "framelogic_framecomponent_framecomponent_updatealterpreview",
-      "community": 4,
+      "community": 9,
       "norm_label": ".updatealterpreview()"
     },
     {
@@ -5193,7 +5193,7 @@
       "source_file": "src/ts/Editor/FrameLogic/FrameComponent.ts",
       "source_location": "L268",
       "id": "framelogic_framecomponent_framecomponent_syncalterpreviewwithframe",
-      "community": 4,
+      "community": 9,
       "norm_label": ".syncalterpreviewwithframe()"
     },
     {
@@ -5202,7 +5202,7 @@
       "source_file": "src/ts/Editor/FrameLogic/FrameComponent.ts",
       "source_location": "L274",
       "id": "framelogic_framecomponent_framecomponent_createdefaultalterpreview",
-      "community": 4,
+      "community": 9,
       "norm_label": ".createdefaultalterpreview()"
     },
     {
@@ -5211,7 +5211,7 @@
       "source_file": "src/ts/Editor/FrameLogic/FrameComponent.ts",
       "source_location": "L284",
       "id": "framelogic_framecomponent_framecomponent_save",
-      "community": 4,
+      "community": 9,
       "norm_label": ".save()"
     },
     {
@@ -5220,7 +5220,7 @@
       "source_file": "src/ts/Editor/FrameLogic/FrameComponent.ts",
       "source_location": "L306",
       "id": "framelogic_framecomponent_framecomponent_appendframe",
-      "community": 9,
+      "community": 4,
       "norm_label": ".appendframe()"
     },
     {
@@ -5229,7 +5229,7 @@
       "source_file": "src/ts/Editor/FrameLogic/FrameComponent.ts",
       "source_location": "L345",
       "id": "framelogic_framecomponent_framecomponent_movebeforesibling",
-      "community": 9,
+      "community": 4,
       "norm_label": ".movebeforesibling()"
     },
     {
@@ -5238,7 +5238,7 @@
       "source_file": "src/ts/Editor/FrameLogic/FrameComponent.ts",
       "source_location": "L370",
       "id": "framelogic_framecomponent_framecomponent_moveaftersibling",
-      "community": 9,
+      "community": 4,
       "norm_label": ".moveaftersibling()"
     },
     {
@@ -5247,7 +5247,7 @@
       "source_file": "src/ts/Editor/FrameLogic/FrameComponent.ts",
       "source_location": "L393",
       "id": "framelogic_framecomponent_framecomponent_removeframe",
-      "community": 9,
+      "community": 4,
       "norm_label": ".removeframe()"
     },
     {
@@ -5256,7 +5256,7 @@
       "source_file": "src/ts/Editor/FrameLogic/FrameComponent.ts",
       "source_location": "L419",
       "id": "framelogic_framecomponent_framecomponent_createaschild",
-      "community": 9,
+      "community": 4,
       "norm_label": ".createaschild()"
     },
     {
@@ -5265,7 +5265,7 @@
       "source_file": "src/ts/Editor/FrameLogic/FrameComponent.ts",
       "source_location": "L431",
       "id": "framelogic_framecomponent_framecomponent_destroy",
-      "community": 9,
+      "community": 4,
       "norm_label": ".destroy()"
     },
     {
@@ -5274,7 +5274,7 @@
       "source_file": "src/ts/Editor/FrameLogic/FrameComponent.ts",
       "source_location": "L451",
       "id": "framelogic_framecomponent_framecomponent_destroydeep",
-      "community": 9,
+      "community": 4,
       "norm_label": ".destroydeep()"
     },
     {
@@ -5283,7 +5283,7 @@
       "source_file": "src/ts/Editor/FrameLogic/FrameComponent.ts",
       "source_location": "L468",
       "id": "framelogic_framecomponent_framecomponent_movetoparentatindex",
-      "community": 9,
+      "community": 4,
       "norm_label": ".movetoparentatindex()"
     },
     {
@@ -5292,7 +5292,7 @@
       "source_file": "src/ts/Editor/FrameLogic/FrameComponent.ts",
       "source_location": "L500",
       "id": "framelogic_framecomponent_framecomponent_makeasparentto",
-      "community": 9,
+      "community": 4,
       "norm_label": ".makeasparentto()"
     },
     {
@@ -5301,7 +5301,7 @@
       "source_file": "src/ts/Editor/FrameLogic/FrameComponent.ts",
       "source_location": "L526",
       "id": "framelogic_framecomponent_framecomponent_getframecomponent",
-      "community": 9,
+      "community": 4,
       "norm_label": ".getframecomponent()"
     },
     {
@@ -5310,7 +5310,7 @@
       "source_file": "src/ts/Editor/FrameLogic/FrameComponent.ts",
       "source_location": "L530",
       "id": "framelogic_framecomponent_framecomponent_getchildren",
-      "community": 9,
+      "community": 4,
       "norm_label": ".getchildren()"
     },
     {
@@ -5319,7 +5319,7 @@
       "source_file": "src/ts/Editor/FrameLogic/FrameComponent.ts",
       "source_location": "L534",
       "id": "framelogic_framecomponent_framecomponent_getparent",
-      "community": 9,
+      "community": 4,
       "norm_label": ".getparent()"
     },
     {
@@ -5328,7 +5328,7 @@
       "source_file": "src/ts/Editor/FrameLogic/FrameComponent.ts",
       "source_location": "L538",
       "id": "framelogic_framecomponent_framecomponent_changeorigin",
-      "community": 9,
+      "community": 4,
       "norm_label": ".changeorigin()"
     },
     {
@@ -5922,7 +5922,7 @@
       "source_file": "src/ts/Editor/Menus/Backgrounds.ts",
       "source_location": "L1",
       "id": "src_ts_editor_menus_backgrounds_ts",
-      "community": 15,
+      "community": 2,
       "norm_label": "backgrounds.ts"
     },
     {
@@ -5958,7 +5958,7 @@
       "source_file": "src/ts/Editor/Menus/Backgrounds.ts",
       "source_location": "L17",
       "id": "menus_backgrounds_custombackground",
-      "community": 15,
+      "community": 2,
       "norm_label": "custombackground"
     },
     {
@@ -5967,7 +5967,7 @@
       "source_file": "src/ts/Editor/Menus/Backgrounds.ts",
       "source_location": "L18",
       "id": "menus_backgrounds_custombackground_run",
-      "community": 15,
+      "community": 2,
       "norm_label": ".run()"
     },
     {
@@ -6255,7 +6255,7 @@
       "source_file": "src/ts/Events/KeyboardShortcuts.ts",
       "source_location": "L1",
       "id": "src_ts_events_keyboardshortcuts_ts",
-      "community": 38,
+      "community": 2,
       "norm_label": "keyboardshortcuts.ts"
     },
     {
@@ -6993,7 +6993,7 @@
       "source_file": "src/ts/Persistence/SaveDocument.ts",
       "source_location": "L1",
       "id": "src_ts_persistence_savedocument_ts",
-      "community": 15,
+      "community": 2,
       "norm_label": "savedocument.ts"
     },
     {
@@ -7002,7 +7002,7 @@
       "source_file": "src/ts/Persistence/SaveDocument.ts",
       "source_location": "L7",
       "id": "persistence_savedocument_savedocument",
-      "community": 15,
+      "community": 2,
       "norm_label": "savedocument"
     },
     {
@@ -7011,7 +7011,7 @@
       "source_file": "src/ts/Persistence/SaveDocument.ts",
       "source_location": "L8",
       "id": "persistence_savedocument_savedocument_save",
-      "community": 15,
+      "community": 2,
       "norm_label": ".save()"
     },
     {
@@ -7020,7 +7020,7 @@
       "source_file": "src/ts/Persistence/SaveDocument.ts",
       "source_location": "L23",
       "id": "persistence_savedocument_savedocument_run",
-      "community": 15,
+      "community": 2,
       "norm_label": ".run()"
     },
     {
@@ -7456,103 +7456,130 @@
       "norm_label": "readme.md"
     },
     {
-      "label": "Reforged UI Maker (RUID)",
+      "label": "Reforged UI Maker (RUID) \u2014 Fork",
       "file_type": "document",
       "source_file": "README.md",
       "source_location": "L1",
-      "id": "warcraft_3_reforged_ui_designer_readme_reforged_ui_maker_ruid",
+      "id": "warcraft_3_reforged_ui_designer_readme_reforged_ui_maker_ruid_fork",
       "community": 35,
-      "norm_label": "reforged ui maker (ruid)"
+      "norm_label": "reforged ui maker (ruid) \u2014 fork"
     },
     {
-      "label": "Main Application Distribution Source [Hive Workshop](https://www.hiveworkshop.com/threads/warcraft-3-reforged-ui-designer-ruid.334868/).",
+      "label": "Changes in this fork",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L7",
+      "id": "warcraft_3_reforged_ui_designer_readme_changes_in_this_fork",
+      "community": 35,
+      "norm_label": "changes in this fork"
+    },
+    {
+      "label": "Multiselect",
       "file_type": "document",
       "source_file": "README.md",
       "source_location": "L11",
-      "id": "warcraft_3_reforged_ui_designer_readme_main_application_distribution_source_hive_workshop_https_www_hiveworkshop_com_threads_warcraft_3_reforged_ui_designer_ruid_334868",
+      "id": "warcraft_3_reforged_ui_designer_readme_multiselect",
       "community": 35,
-      "norm_label": "main application distribution source [hive workshop](https://www.hiveworkshop.com/threads/warcraft-3-reforged-ui-designer-ruid.334868/)."
+      "norm_label": "multiselect"
     },
     {
-      "label": "Expectations",
+      "label": "Element Linking",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L15",
-      "id": "warcraft_3_reforged_ui_designer_readme_expectations",
+      "source_location": "L16",
+      "id": "warcraft_3_reforged_ui_designer_readme_element_linking",
       "community": 35,
-      "norm_label": "expectations"
+      "norm_label": "element linking"
     },
     {
-      "label": "Technology Used",
+      "label": "Hierarchy Tree",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L19",
-      "id": "warcraft_3_reforged_ui_designer_readme_technology_used",
+      "source_location": "L21",
+      "id": "warcraft_3_reforged_ui_designer_readme_hierarchy_tree",
       "community": 35,
-      "norm_label": "technology used"
+      "norm_label": "hierarchy tree"
     },
     {
-      "label": "Contributions",
+      "label": "Frame Types",
       "file_type": "document",
       "source_file": "README.md",
       "source_location": "L26",
-      "id": "warcraft_3_reforged_ui_designer_readme_contributions",
+      "id": "warcraft_3_reforged_ui_designer_readme_frame_types",
       "community": 35,
-      "norm_label": "contributions"
+      "norm_label": "frame types"
     },
     {
-      "label": "Getting Started",
+      "label": "Button Callbacks",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L30",
-      "id": "warcraft_3_reforged_ui_designer_readme_getting_started",
+      "source_location": "L29",
+      "id": "warcraft_3_reforged_ui_designer_readme_button_callbacks",
       "community": 35,
-      "norm_label": "getting started"
+      "norm_label": "button callbacks"
     },
     {
-      "label": "Prerequisites",
+      "label": "Visibility / Hiding",
       "file_type": "document",
       "source_file": "README.md",
       "source_location": "L32",
-      "id": "warcraft_3_reforged_ui_designer_readme_prerequisites",
+      "id": "warcraft_3_reforged_ui_designer_readme_visibility_hiding",
       "community": 35,
-      "norm_label": "prerequisites"
+      "norm_label": "visibility / hiding"
     },
     {
-      "label": "Clone & Install Project",
+      "label": "Coordinate Output",
       "file_type": "document",
       "source_file": "README.md",
       "source_location": "L36",
-      "id": "warcraft_3_reforged_ui_designer_readme_clone_install_project",
+      "id": "warcraft_3_reforged_ui_designer_readme_coordinate_output",
       "community": 35,
-      "norm_label": "clone & install project"
+      "norm_label": "coordinate output"
     },
     {
-      "label": "Starting the Development Project",
+      "label": "Dummy Frame",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L53",
-      "id": "warcraft_3_reforged_ui_designer_readme_starting_the_development_project",
+      "source_location": "L40",
+      "id": "warcraft_3_reforged_ui_designer_readme_dummy_frame",
       "community": 35,
-      "norm_label": "starting the development project"
+      "norm_label": "dummy frame"
     },
     {
-      "label": "If you already have the project built, you can just run it without re-building",
+      "label": "Fake Frame Preview",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L57",
-      "id": "warcraft_3_reforged_ui_designer_readme_if_you_already_have_the_project_built_you_can_just_run_it_without_re_building",
+      "source_location": "L44",
+      "id": "warcraft_3_reforged_ui_designer_readme_fake_frame_preview",
       "community": 35,
-      "norm_label": "if you already have the project built, you can just run it without re-building"
+      "norm_label": "fake frame preview"
     },
     {
-      "label": "Packing the Project",
+      "label": "Textures",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L61",
-      "id": "warcraft_3_reforged_ui_designer_readme_packing_the_project",
+      "source_location": "L51",
+      "id": "warcraft_3_reforged_ui_designer_readme_textures",
       "community": 35,
-      "norm_label": "packing the project"
+      "norm_label": "textures"
+    },
+    {
+      "label": "Undo Support",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L55",
+      "id": "warcraft_3_reforged_ui_designer_readme_undo_support",
+      "community": 35,
+      "norm_label": "undo support"
+    },
+    {
+      "label": "General QoL & Fixes",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L58",
+      "id": "warcraft_3_reforged_ui_designer_readme_general_qol_fixes",
+      "community": 35,
+      "norm_label": "general qol & fixes"
     },
     {
       "label": "SKILL.md",
@@ -7643,6 +7670,105 @@
       "id": "wc3_ui_designer_skill_verification",
       "community": 71,
       "norm_label": "verification"
+    },
+    {
+      "label": "Reforged UI Maker (RUID)",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L1",
+      "community": 35,
+      "norm_label": "reforged ui maker (ruid)",
+      "id": "warcraft_3_reforged_ui_designer_readme_reforged_ui_maker_ruid"
+    },
+    {
+      "label": "Main Application Distribution Source [Hive Workshop](https://www.hiveworkshop.com/threads/warcraft-3-reforged-ui-designer-ruid.334868/).",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L11",
+      "community": 35,
+      "norm_label": "main application distribution source [hive workshop](https://www.hiveworkshop.com/threads/warcraft-3-reforged-ui-designer-ruid.334868/).",
+      "id": "warcraft_3_reforged_ui_designer_readme_main_application_distribution_source_hive_workshop_https_www_hiveworkshop_com_threads_warcraft_3_reforged_ui_designer_ruid_334868"
+    },
+    {
+      "label": "Expectations",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L15",
+      "community": 35,
+      "norm_label": "expectations",
+      "id": "warcraft_3_reforged_ui_designer_readme_expectations"
+    },
+    {
+      "label": "Technology Used",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L19",
+      "community": 35,
+      "norm_label": "technology used",
+      "id": "warcraft_3_reforged_ui_designer_readme_technology_used"
+    },
+    {
+      "label": "Contributions",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L26",
+      "community": 35,
+      "norm_label": "contributions",
+      "id": "warcraft_3_reforged_ui_designer_readme_contributions"
+    },
+    {
+      "label": "Getting Started",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L30",
+      "community": 35,
+      "norm_label": "getting started",
+      "id": "warcraft_3_reforged_ui_designer_readme_getting_started"
+    },
+    {
+      "label": "Prerequisites",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L32",
+      "community": 35,
+      "norm_label": "prerequisites",
+      "id": "warcraft_3_reforged_ui_designer_readme_prerequisites"
+    },
+    {
+      "label": "Clone & Install Project",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L36",
+      "community": 35,
+      "norm_label": "clone & install project",
+      "id": "warcraft_3_reforged_ui_designer_readme_clone_install_project"
+    },
+    {
+      "label": "Starting the Development Project",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L53",
+      "community": 35,
+      "norm_label": "starting the development project",
+      "id": "warcraft_3_reforged_ui_designer_readme_starting_the_development_project"
+    },
+    {
+      "label": "If you already have the project built, you can just run it without re-building",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L57",
+      "community": 35,
+      "norm_label": "if you already have the project built, you can just run it without re-building",
+      "id": "warcraft_3_reforged_ui_designer_readme_if_you_already_have_the_project_built_you_can_just_run_it_without_re_building"
+    },
+    {
+      "label": "Packing the Project",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L61",
+      "community": 35,
+      "norm_label": "packing the project",
+      "id": "warcraft_3_reforged_ui_designer_readme_packing_the_project"
     },
     {
       "label": "SKILL.md",
@@ -13880,9 +14006,9 @@
       "source_file": "src/ts/Commands/Implementation/ChangeAllFrameDiskTextureFolders.ts",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "implementation_changeallframedisktexturefolders_texturepathchange",
-      "target": "framelogic_framecomponent_framecomponent",
-      "confidence_score": 1.0
+      "target": "framelogic_framecomponent_framecomponent"
     },
     {
       "relation": "method",
@@ -28552,6 +28678,226 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "readme_md",
+      "target": "warcraft_3_reforged_ui_designer_readme_reforged_ui_maker_ruid_fork",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "warcraft_3_reforged_ui_designer_readme_reforged_ui_maker_ruid_fork",
+      "target": "warcraft_3_reforged_ui_designer_readme_changes_in_this_fork",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L29",
+      "weight": 1.0,
+      "source": "warcraft_3_reforged_ui_designer_readme_changes_in_this_fork",
+      "target": "warcraft_3_reforged_ui_designer_readme_button_callbacks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "warcraft_3_reforged_ui_designer_readme_changes_in_this_fork",
+      "target": "warcraft_3_reforged_ui_designer_readme_coordinate_output",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L40",
+      "weight": 1.0,
+      "source": "warcraft_3_reforged_ui_designer_readme_changes_in_this_fork",
+      "target": "warcraft_3_reforged_ui_designer_readme_dummy_frame",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "warcraft_3_reforged_ui_designer_readme_changes_in_this_fork",
+      "target": "warcraft_3_reforged_ui_designer_readme_element_linking",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L44",
+      "weight": 1.0,
+      "source": "warcraft_3_reforged_ui_designer_readme_changes_in_this_fork",
+      "target": "warcraft_3_reforged_ui_designer_readme_fake_frame_preview",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "warcraft_3_reforged_ui_designer_readme_changes_in_this_fork",
+      "target": "warcraft_3_reforged_ui_designer_readme_frame_types",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L58",
+      "weight": 1.0,
+      "source": "warcraft_3_reforged_ui_designer_readme_changes_in_this_fork",
+      "target": "warcraft_3_reforged_ui_designer_readme_general_qol_fixes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "warcraft_3_reforged_ui_designer_readme_changes_in_this_fork",
+      "target": "warcraft_3_reforged_ui_designer_readme_hierarchy_tree",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "warcraft_3_reforged_ui_designer_readme_changes_in_this_fork",
+      "target": "warcraft_3_reforged_ui_designer_readme_multiselect",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L51",
+      "weight": 1.0,
+      "source": "warcraft_3_reforged_ui_designer_readme_changes_in_this_fork",
+      "target": "warcraft_3_reforged_ui_designer_readme_textures",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L55",
+      "weight": 1.0,
+      "source": "warcraft_3_reforged_ui_designer_readme_changes_in_this_fork",
+      "target": "warcraft_3_reforged_ui_designer_readme_undo_support",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "warcraft_3_reforged_ui_designer_readme_changes_in_this_fork",
+      "target": "warcraft_3_reforged_ui_designer_readme_visibility_hiding",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agents/skills/wc3-export-safety/SKILL.md",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "agents_skills_wc3_export_safety_skill_md",
+      "target": "wc3_export_safety_skill_wc3_export_safety"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agents/skills/wc3-export-safety/SKILL.md",
+      "source_location": "L10",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "wc3_export_safety_skill_wc3_export_safety",
+      "target": "wc3_export_safety_skill_key_files"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agents/skills/wc3-export-safety/SKILL.md",
+      "source_location": "L26",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "wc3_export_safety_skill_wc3_export_safety",
+      "target": "wc3_export_safety_skill_verification"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agents/skills/wc3-export-safety/SKILL.md",
+      "source_location": "L17",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "wc3_export_safety_skill_wc3_export_safety",
+      "target": "wc3_export_safety_skill_warcraft_iii_risk_checklist"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agents/skills/wc3-ui-designer/SKILL.md",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "agents_skills_wc3_ui_designer_skill_md",
+      "target": "wc3_ui_designer_skill_wc3_ui_designer"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agents/skills/wc3-ui-designer/SKILL.md",
+      "source_location": "L10",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "wc3_ui_designer_skill_wc3_ui_designer",
+      "target": "wc3_ui_designer_skill_project_shape"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agents/skills/wc3-ui-designer/SKILL.md",
+      "source_location": "L30",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "wc3_ui_designer_skill_wc3_ui_designer",
+      "target": "wc3_ui_designer_skill_verification"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".agents/skills/wc3-ui-designer/SKILL.md",
+      "source_location": "L22",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "wc3_ui_designer_skill_wc3_ui_designer",
+      "target": "wc3_ui_designer_skill_working_rules"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
       "source_location": "L26",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -28647,86 +28993,6 @@
       "confidence_score": 1.0,
       "source": "warcraft_3_reforged_ui_designer_readme_getting_started",
       "target": "warcraft_3_reforged_ui_designer_readme_starting_the_development_project"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".agents/skills/wc3-export-safety/SKILL.md",
-      "source_location": "L6",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "agents_skills_wc3_export_safety_skill_md",
-      "target": "wc3_export_safety_skill_wc3_export_safety"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".agents/skills/wc3-export-safety/SKILL.md",
-      "source_location": "L10",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "wc3_export_safety_skill_wc3_export_safety",
-      "target": "wc3_export_safety_skill_key_files"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".agents/skills/wc3-export-safety/SKILL.md",
-      "source_location": "L26",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "wc3_export_safety_skill_wc3_export_safety",
-      "target": "wc3_export_safety_skill_verification"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".agents/skills/wc3-export-safety/SKILL.md",
-      "source_location": "L17",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "wc3_export_safety_skill_wc3_export_safety",
-      "target": "wc3_export_safety_skill_warcraft_iii_risk_checklist"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".agents/skills/wc3-ui-designer/SKILL.md",
-      "source_location": "L6",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "agents_skills_wc3_ui_designer_skill_md",
-      "target": "wc3_ui_designer_skill_wc3_ui_designer"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".agents/skills/wc3-ui-designer/SKILL.md",
-      "source_location": "L10",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "wc3_ui_designer_skill_wc3_ui_designer",
-      "target": "wc3_ui_designer_skill_project_shape"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".agents/skills/wc3-ui-designer/SKILL.md",
-      "source_location": "L30",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "wc3_ui_designer_skill_wc3_ui_designer",
-      "target": "wc3_ui_designer_skill_verification"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": ".agents/skills/wc3-ui-designer/SKILL.md",
-      "source_location": "L22",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "wc3_ui_designer_skill_wc3_ui_designer",
-      "target": "wc3_ui_designer_skill_working_rules"
     },
     {
       "relation": "contains",
@@ -29030,5 +29296,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "e5bd3118f262ecc8386ee9db24fed89da6147b18"
+  "built_at_commit": "4bdf4bccbdd9a55a683104c94bb0703d1a5dbd87"
 }
