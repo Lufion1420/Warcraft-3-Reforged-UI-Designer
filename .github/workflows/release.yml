@@ -36,12 +36,29 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Compile + package, but disable electron-builder's own publishing so the
-      # release step below is the single source of truth for uploaded assets.
-      - name: Build and package
+      # Each of these is its own step so a failure fails the job. (A previous
+      # multi-line run only surfaced the last command's exit code, which let a
+      # half-built app/ slip through and ship a broken release.)
+      - name: Build app
+        run: npm run build
+
+      # Guard against shipping an incomplete app/ — the renderer is dead without
+      # these files, so fail loudly here rather than in users' installs.
+      - name: Verify build output
+        shell: bash
         run: |
-          npm run build
-          npx electron-builder --win --publish never
+          for f in app/index.html app/bootstrap.min.css app/files/images/backgroundWorkspace.png; do
+            if [ ! -f "$f" ]; then
+              echo "::error::Build output is incomplete — missing $f"
+              exit 1
+            fi
+          done
+          echo "Build output verified."
+
+      # Package, but disable electron-builder's own publishing so the release
+      # step below is the single source of truth for uploaded assets.
+      - name: Package
+        run: npx electron-builder --win --publish never
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
