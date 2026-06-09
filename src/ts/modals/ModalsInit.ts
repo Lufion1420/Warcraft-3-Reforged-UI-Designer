@@ -145,7 +145,7 @@ export class Modals {
                             <div class="row">
                                 <div class="col-12">
                                     <div class="card bg-secondary">
-                                        <h2 class="card-header text-white">v 2.7.2</h2>
+                                        <h2 class="card-header text-white">v 2.7.3</h2>
                                         <div class="card-body">
                                             <h4 class="text-white">Thanks to: Lufion</h4>
                                             <div class="row justify-content-center">
@@ -765,7 +765,7 @@ export class Modals {
                             <div class="row mt-3">
                                 <div class="col-12 mt-3">
                                     <div class="card">
-                                        <h2 class="card-header text-white" style="background-color: #09701a;">Version 2.7.2 has been released! <a class="link-warning" target="_blank" href="https://github.com/Lufion1420/Warcraft-3-Reforged-UI-Designer/releases/latest">Download Now</a></h2>
+                                        <h2 class="card-header text-white" style="background-color: #09701a;">Version 2.7.3 has been released! <a class="link-warning" target="_blank" href="https://github.com/Lufion1420/Warcraft-3-Reforged-UI-Designer/releases/latest">Download Now</a></h2>
                                         <div class="card-body text-white" style="background-color: #b3779e;">
                                             <h4 class="mb-3">What's new in this fork</h4>
                                             <div class="row">
