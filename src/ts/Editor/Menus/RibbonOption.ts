@@ -30,14 +30,6 @@ export class RibbonOption {
                 break
             }
 
-            case 'Hall of Fame': {
-                div.setAttribute('data-bs-toggle', 'modal')
-                div.setAttribute('data-bs-target', '#HallOfFame')
-                div.innerText = this.name
-                div.setAttribute('class', 'ribbonOption btn btn-outline-warning pt-2')
-                break
-            }
-
             case 'Tutorials': {
                 div.setAttribute('data-bs-toggle', 'modal')
                 div.setAttribute('data-bs-target', '#Tutorial')

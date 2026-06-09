@@ -7,10 +7,9 @@ export class Modals {
         this.modal_container = document.getElementById('modal-container')!
 
         this.AboutUs()
-        this.Hall_of_Fame()
         this.Changelog()
         this.Documentation()
-        this.Documentation_online()
+        this.WelcomePage()
     }
 
     AboutUs() {
@@ -145,6 +144,37 @@ export class Modals {
                         <div class="container-fluid">
                             <div class="row">
                                 <div class="col-12">
+                                    <div class="card bg-secondary">
+                                        <h2 class="card-header text-white">v 2.7.0</h2>
+                                        <div class="card-body">
+                                            <h4 class="text-white">Thanks to: Lufion</h4>
+                                            <div class="row justify-content-center">
+                                                <div class="col-5 card-text p-4">
+                                                    <ul class="list-group border border-danger border-2">
+                                                        <li class="list-group-item list-group-item-primary">New: Multiselect &mdash; select and move multiple frames at once.</li>
+                                                        <li class="list-group-item list-group-item-primary">New: Element Linking &mdash; link frames so moving one moves the others.</li>
+                                                        <li class="list-group-item list-group-item-primary">New: Hierarchy Tree drag &amp; drop, color-coded entries, and an alphabetically sorted parent selector.</li>
+                                                        <li class="list-group-item list-group-item-primary">New: SimpleButton added to the frame type list.</li>
+                                                        <li class="list-group-item list-group-item-primary">New: Button callback input fields, included in the exported code.</li>
+                                                        <li class="list-group-item list-group-item-primary">New: Dummy Frame tab &mdash; an on-screen helper frame that is not shown in the tree and ignored on export.</li>
+                                                    </ul>
+                                                </div>
+
+                                                <div class="offset-1 col-5 card-text p-4">
+                                                    <ul class="list-group border border-danger border-2">
+                                                        <li class="list-group-item list-group-item-primary">New: Hide checkbox per element, plus a cascade option to hide children too.</li>
+                                                        <li class="list-group-item list-group-item-primary">New: Read-only coordinate / X-Y output fields from the generated code.</li>
+                                                        <li class="list-group-item list-group-item-primary">New: Fake Frame Preview &mdash; resize, move via arrow keys, undo, and save/load.</li>
+                                                        <li class="list-group-item list-group-item-primary">New: Texture prefix/extension overwrite, and bulk-replace all texture paths from a folder.</li>
+                                                        <li class="list-group-item list-group-item-primary">Update: Undo support for the new features (batch move, reorder).</li>
+                                                        <li class="list-group-item list-group-item-primary">Fixed: a linking movement bug, and removed an unwanted coordinate clamp.</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 mt-5">
                                     <div class="card bg-secondary">
                                         <h2 class="card-header text-white">v 2.6.1</h2>
                                         <div class="card-body">
@@ -434,16 +464,6 @@ export class Modals {
         </div>`
     }
 
-    Hall_of_Fame() {
-        console.log('began')
-        fetch('https://nightknighto.github.io/RUID-Hall-Of-Fame/')
-            .then((res) => res.text())
-            .then((body) => {
-                this.modal_container.innerHTML += body
-                console.log(body)
-            })
-    }
-
     Documentation() {
         const data = html`<div class="modal fade" id="Tutorial" tabindex="-1" aria-labelledby="Tutorial" aria-hidden="true">
         <div class="modal-dialog modal-xl">
@@ -586,7 +606,7 @@ export class Modals {
                                                         <h5>Info menu</h5>
                                                             <ol> 
                                                                 <li><strong>About Us</strong>: Brief description of who we are, how to support us, overview of the application and history.</li>
-                                                                <li><strong>Hall of Fame</strong>: explained <a target="_blank" href="https://www.hiveworkshop.com/threads/warcraft-3-reforged-ui-designer-ruid.334868/">here</a>.</li>
+                                                                <li><strong>Tutorials</strong>: This guide.</li>
                                                                 <li><strong>Change Log</strong>: Any changes will be put here.</li>
                                                             </ol>
                                                 
@@ -731,27 +751,68 @@ export class Modals {
         this.modal_container.innerHTML += data
     }
 
-    Documentation_online() {
-        console.log('began')
-        fetch('https://nightknighto.github.io/RUID-Hall-Of-Fame/tutorial.html')
-            .then((res) => res.text())
-            .then((body) => {
-                this.modal_container.innerHTML = ''
-                this.WelcomePage()
-                this.AboutUs()
-                this.Changelog()
-                this.Hall_of_Fame()
-                this.modal_container.innerHTML += body
-            })
-    }
-
     WelcomePage() {
-        fetch('https://nightknighto.github.io/RUID-Hall-Of-Fame/welcome.html')
-            .then((res) => res.text())
-            .then((body) => {
-                this.modal_container.innerHTML += body
-                const modal = new bootstrap.Modal(document.getElementById('Welcome')!)
-                modal.show()
-            })
+        this.modal_container.innerHTML += html`<div class="modal fade" data-bs-backdrop="static" id="Welcome" tabindex="-1">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color: #257c9e;">
+                        <h3 class="modal-title text-white">Welcome</h3>
+                        <a class="btn btn-dark" style="margin-left: 2%;" target="_blank" href="https://github.com/Lufion1420/Warcraft-3-Reforged-UI-Designer">GitHub</a>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" style="background-color: #2b6670;">
+                        <div class="container-fluid">
+                            <div class="row mt-3">
+                                <div class="col-12 mt-3">
+                                    <div class="card">
+                                        <h2 class="card-header text-white" style="background-color: #09701a;">Version 2.7.0 has been released! <a class="link-warning" target="_blank" href="https://github.com/Lufion1420/Warcraft-3-Reforged-UI-Designer/releases/latest">Download Now</a></h2>
+                                        <div class="card-body text-white" style="background-color: #b3779e;">
+                                            <h4 class="mb-3">What's new in this fork</h4>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <ul class="list-group">
+                                                        <li class="list-group-item list-group-item-primary">New: Multiselect &mdash; select and move multiple frames at once.</li>
+                                                        <li class="list-group-item list-group-item-primary">New: Element Linking &mdash; link frames so moving one moves the others.</li>
+                                                        <li class="list-group-item list-group-item-primary">New: Hierarchy Tree drag &amp; drop, color-coded entries, and an alphabetically sorted parent selector.</li>
+                                                        <li class="list-group-item list-group-item-primary">New: SimpleButton added to the frame type list.</li>
+                                                        <li class="list-group-item list-group-item-primary">New: Button callback input fields, included in the exported code.</li>
+                                                        <li class="list-group-item list-group-item-primary">New: Dummy Frame tab &mdash; an on-screen helper frame, not shown in the tree and ignored on export.</li>
+                                                    </ul>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <ul class="list-group">
+                                                        <li class="list-group-item list-group-item-primary">New: Hide checkbox per element, plus a cascade option to hide children too.</li>
+                                                        <li class="list-group-item list-group-item-primary">New: Read-only coordinate / X-Y output fields from the generated code.</li>
+                                                        <li class="list-group-item list-group-item-primary">New: Fake Frame Preview &mdash; resize, move via arrow keys, undo, and save/load.</li>
+                                                        <li class="list-group-item list-group-item-primary">New: Texture prefix/extension overwrite, and bulk-replace all texture paths from a folder.</li>
+                                                        <li class="list-group-item list-group-item-primary">Update: Undo support for the new features (batch move, reorder).</li>
+                                                        <li class="list-group-item list-group-item-primary">Fixed: a linking movement bug, and removed an unwanted coordinate clamp.</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-12">
+                                    <div class="card bg-secondary text-white">
+                                        <div class="card-header">
+                                            <h2 class="card-title">About this fork</h2>
+                                        </div>
+                                        <div class="card-body">
+                                            <p>This is a community fork of the original <a class="link-warning" target="_blank" href="https://github.com/nightknighto/Warcraft-3-Reforged-UI-Designer">Reforged UI Designer</a> by NightKnight, with extra features and fixes.</p>
+                                            <p class="mb-0">See the full history in the <strong>Change Log</strong> window, or on the <a class="link-warning" target="_blank" href="https://github.com/Lufion1420/Warcraft-3-Reforged-UI-Designer/releases">Releases page</a>.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>`
+        const modal = new bootstrap.Modal(document.getElementById('Welcome')!)
+        modal.show()
     }
 }

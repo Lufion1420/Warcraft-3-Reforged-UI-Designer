@@ -36,20 +36,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # configMain.ts is git-ignored but imported by src/ts/main.ts, so the
-      # TypeScript compile needs a stub to exist on the runner.
-      - name: Create configMain.ts stub
-        shell: bash
-        run: |
-          cat > src/ts/configMain.ts <<'EOF'
-          const config = {
-              key: '',
-              namespace: ''
-          }
-
-          export default config;
-          EOF
-
       # Compile + package, but disable electron-builder's own publishing so the
       # release step below is the single source of truth for uploaded assets.
       - name: Build and package

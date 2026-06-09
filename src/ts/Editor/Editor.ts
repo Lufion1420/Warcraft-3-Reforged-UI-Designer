@@ -139,7 +139,6 @@ export class Editor {
         this.viewMenu.addRibbonOption(ribBackground)
 
         this.infoMenu.addRibbonOption(new RibbonOption('About Us', null))
-        this.infoMenu.addRibbonOption(new RibbonOption('Hall of Fame', null))
         this.infoMenu.addRibbonOption(new RibbonOption('Tutorials', null))
         this.infoMenu.addRibbonOption(new RibbonOption('Change Log', null))
 
