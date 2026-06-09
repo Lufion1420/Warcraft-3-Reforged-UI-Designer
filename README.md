@@ -2,6 +2,15 @@
 
 This is a personal fork of [nightknighto/Warcraft-3-Reforged-UI-Designer](https://github.com/nightknighto/Warcraft-3-Reforged-UI-Designer), a cross-platform desktop application for building Warcraft III UI designs and systems without code.
 
+## Download
+
+Grab the latest Windows build from the [**Releases**](https://github.com/Lufion1420/Warcraft-3-Reforged-UI-Designer/releases/latest) page:
+
+- **Installer** — `Reforged UI Designer Setup <version>.exe`
+- **Portable** — `Reforged UI Designer-<version>-win.zip` (unzip and run, no install)
+
+> Builds are unsigned, so Windows SmartScreen may warn on first launch — click **More info → Run anyway**.
+
 ---
 
 ## Changes in this fork
@@ -59,5 +68,21 @@ Everything below was added on top of the original `v2.6.1` release.
 - Various small quality-of-life improvements
 - Removed an unwanted coordinate clamp from an earlier change
 - Assorted bug fixes
+
+---
+
+## Cutting a Release (maintainers)
+
+Releases are built and published automatically by the [`release`](.github/workflows/release.yml) GitHub Actions workflow whenever a version tag is pushed:
+
+```bash
+# bump "version" in package.json first, commit it, then:
+git tag v2.7.0
+git push origin v2.7.0
+```
+
+The workflow runs on Windows, syncs the package version to the tag, packages the app with `electron-builder`, and publishes a GitHub Release with the installer and portable `.zip` attached. Auto-generated changelog notes are included; to add a curated feature description, edit the release on GitHub afterwards (or pass a `body` / `body_path` to the publish step in the workflow).
+
+> The tag must point at a commit that contains `.github/workflows/release.yml`, otherwise no build is triggered.
 </content>
 </invoke>
