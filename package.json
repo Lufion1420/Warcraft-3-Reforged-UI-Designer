@@ -24,7 +24,25 @@
         "icon": "files/icon.png",
         "appId": "org.Deadreyo.W3RUID",
         "productName": "Reforged UI Designer",
-        "buildVersion": "2.6.1"
+        "directories": {
+            "output": "dist"
+        },
+        "win": {
+            "target": [
+                {
+                    "target": "nsis",
+                    "arch": ["x64"]
+                },
+                {
+                    "target": "zip",
+                    "arch": ["x64"]
+                }
+            ]
+        },
+        "nsis": {
+            "oneClick": false,
+            "allowToChangeInstallationDirectory": true
+        }
     },
     "devDependencies": {
         "@types/dotenv": "^8.2.0",
