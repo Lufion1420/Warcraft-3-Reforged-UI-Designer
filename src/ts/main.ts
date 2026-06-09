@@ -1,5 +1,6 @@
 import { BrowserWindow, ipcMain, shell } from 'electron'
 import * as dotenv from 'dotenv'
+import * as path from 'path'
 require('electron-reload')(__dirname)
 dotenv.config();
 //wdwdwdw
@@ -89,7 +90,9 @@ export default class Main {
             frame: false,
         })
         
-        this.mainWindow.loadURL('file://' + __dirname + '/index.html')
+        // Use loadFile (not a hand-built file:// URL) so assets resolve correctly
+        // both in dev and from inside the packaged app.asar.
+        this.mainWindow.loadFile(path.join(__dirname, 'index.html'))
         if (this.devTools && env == 'DEV') this.mainWindow.webContents.openDevTools()
 
         // this.mainWindow.on('closed', this.onClose)
